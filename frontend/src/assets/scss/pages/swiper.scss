@@ -1,0 +1,10 @@
+&#swiper {
+  #main-section {
+    padding: 8rem 0;
+
+    .swiper-container {
+      margin: 8rem 0;
+      @extend .no-margin-first-last;
+    }
+  }
+}

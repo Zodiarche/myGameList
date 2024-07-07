@@ -1,0 +1,70 @@
+$slicer-breakpoints: (
+  "mobile": 0,
+  "tablet": 576px,
+  "desktop": 992px,
+  "wide": 1280px,
+  "extra-wide": 1640px,
+  "ultra-wide": 1920px
+);
+
+@mixin from($breakpoint) {
+  @if map-has-key($slicer-breakpoints, $breakpoint) {
+    $min-width: map-get($slicer-breakpoints, $breakpoint);
+
+    @media (min-width: #{$min-width}) {
+      @content;
+    }
+  } @else {
+    @error "No value found for breakpoint '#{$breakpoint}'.";
+  }
+}
+
+@mixin to($breakpoint) {
+  @if map-has-key($slicer-breakpoints, $breakpoint) {
+    $max-width: map-get($slicer-breakpoints, $breakpoint);
+
+    @media (max-width: #{$max-width}) {
+      @content;
+    }
+  } @else {
+    @error "No value found for breakpoint '#{$breakpoint}'.";
+  }
+}
+
+@mixin between($start, $end) {
+  @if map-has-key($slicer-breakpoints, $start) and map-has-key($slicer-breakpoints, $end) {
+    $min-width: map-get($slicer-breakpoints, $start);
+    $max-width: map-get($slicer-breakpoints, $end);
+
+    @media (min-width: #{$min-width}) and (max-width: #{$max-width}) {
+      @content;
+    }
+  } @else {
+    @error "No value found for one of the breakpoints '#{$start}' or '#{$end}'.";
+  }
+}
+
+@mixin at($breakpoint) {
+  @if map-has-key($slicer-breakpoints, $breakpoint) {
+    $min-width: map-get($slicer-breakpoints, $breakpoint);
+    $next-breakpoint: nth(map-keys($slicer-breakpoints), index(map-keys($slicer-breakpoints), $breakpoint) + 1);
+
+    @if $next-breakpoint {
+      $max-width: map-get($slicer-breakpoints, $next-breakpoint) - 1px;
+    } @else {
+      $max-width: null;
+    }
+
+    @if $max-width {
+      @media (min-width: #{$min-width}) and (max-width: #{$max-width}) {
+        @content;
+      }
+    } @else {
+      @media (min-width: #{$min-width}) {
+        @content;
+      }
+    }
+  } @else {
+    @error "No value found for breakpoint '#{$breakpoint}'.";
+  }
+}

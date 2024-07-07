@@ -1,0 +1,170 @@
+main {
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .title {
+    font-family: $family-default;
+    font-weight: 600; // semi-bold
+    color: $color-dark-blue;
+
+    font-style: normal;
+    line-height: normal;
+
+    br {
+      @include from("desktop") {
+        display: block;
+      }
+      display: none;
+    }
+  }
+
+  h1,
+  .h1 {
+    @include from("desktop") {
+      font-size: 5rem;
+    }
+    font-size: 3rem;
+
+    a {
+      text-decoration: none;
+
+      // &:hover, &:focus {}
+      // &:active {}
+    }
+  }
+
+  h2,
+  .h2 {
+    @include from("desktop") {
+      font-size: 4rem;
+    }
+    font-size: 3rem;
+
+    a {
+      text-decoration: none;
+
+      // &:hover, &:focus {}
+      // &:active {}
+    }
+  }
+
+  h3,
+  .h3 {
+    @include from("desktop") {
+      font-size: 3rem;
+    }
+    font-size: 2.5rem;
+
+    a {
+      text-decoration: none;
+
+      // &:hover, &:focus {}
+      // &:active {}
+    }
+  }
+
+  h4,
+  .h4 {
+    @include from("desktop") {
+      font-size: 2.5rem;
+    }
+    font-size: 2rem;
+
+    a {
+      text-decoration: none;
+
+      // &:hover, &:focus {}
+      // &:active {}
+    }
+  }
+
+  p,
+  .p {
+    font-size: 1.6rem;
+  }
+
+  p,
+  li,
+  blockquote,
+  td,
+  th,
+  button,
+  address {
+    line-height: 1.6;
+  }
+
+  ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    // padding-left: 0;
+    // margin: 0;
+  }
+
+  a:not(.btn) {
+    color: $color-dark-blue;
+
+    &:hover,
+    &:focus {
+      color: $color-light-blue;
+    }
+  }
+
+  img {
+    &.float-right,
+    &.align-right {
+      margin: {
+        left: 2rem;
+        bottom: 2rem;
+      }
+    }
+
+    &.float-left,
+    &.align-left {
+      margin: {
+        right: 2rem;
+        bottom: 2rem;
+      }
+    }
+
+    &.align-center {
+      display: block;
+    }
+  }
+
+  // strong, b {}
+
+  blockquote {
+    p {
+      &:first-child {
+        margin-top: 0;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  form {
+    @import "forms";
+  }
+
+  &#main {
+    section {
+      &#main-section {
+        padding: 8rem 0;
+        // margin-top: #{$header-height};
+
+        h1 {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  @import "./pages/contact.scss";
+  @import "./pages/swiper.scss";
+  @import "./pages/additional-pages.scss";
+  @import "./pages/sandbox/sandbox.scss";
+}

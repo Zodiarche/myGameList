@@ -1,0 +1,229 @@
+[id="header"] {
+  padding: 2rem 0;
+
+  // position: fixed;
+  // top: 0;
+  // left: 0;
+  // z-index: 999;
+
+  width: 100%;
+  // height: #{$header-height};
+
+  background-color: $color-dark-blue;
+  color: $color-white;
+
+  .cols {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .col-l {
+      flex-shrink: 0;
+
+      .site-title {
+        margin: 0;
+
+        a {
+          text-decoration: none;
+          display: inline-block;
+          text-indent: -9999rem;
+          height: 10rem;
+          width: 10rem;
+
+          background-image: image-url("agence_buzz.png");
+          background-repeat: no-repeat;
+          background-position: center center;
+          background-size: cover;
+        }
+      }
+    }
+
+    .col-r {
+      @include from("wide") {
+        width: 100%;
+      }
+
+      position: relative;
+
+      nav {
+        @include from("desktop") {
+          width: 50vw;
+        }
+
+        @include from("wide") {
+          position: static;
+          height: auto;
+          width: auto;
+          overflow-y: inherit;
+        }
+        position: fixed;
+        // top: #{$header-height};
+        left: 100%;
+        z-index: 999;
+        overflow-y: scroll;
+
+        // height: calc(100vh - #{$header-height});
+        width: 100vw;
+        transition-duration: 0.4s;
+
+        &.active {
+          @include from("desktop") {
+            left: 50%;
+          }
+          left: 0;
+
+          background-color: $color-dark-blue;
+
+          a {
+            color: $color-white;
+          }
+        }
+
+        ul {
+          @include from("wide") {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 5rem;
+            padding: 0;
+          }
+          display: block;
+          padding: 3rem;
+
+          list-style-type: none;
+          margin: 0;
+
+          li {
+            a {
+              @include from("wide") {
+                display: inline-block;
+                border: none;
+                padding: 0;
+              }
+              display: block;
+              border-bottom: solid 0.1rem $color-green;
+              padding: 1.5rem 0;
+
+              text-decoration: none;
+              font-size: 1.8rem;
+              color: $color-white;
+
+              &:hover,
+              &:focus {
+                color: $color-green;
+              }
+
+              &.active {
+                color: $color-green;
+              }
+            }
+
+            &.btn-contact {
+              a {
+                text-decoration: none;
+                display: inline-block;
+                color: $color-white;
+                border: solid 0.1rem $color-white;
+                border-radius: 1rem;
+                padding: 1.5rem 0.5rem;
+
+                &.active {
+                  color: $color-green;
+                  border-color: $color-green;
+                }
+
+                &:hover,
+                &:focus {
+                  background-color: $color-green;
+                  color: $color-dark-blue;
+                  border-color: $color-green;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  [id="menu-button"] {
+    @include from("wide") {
+      display: none;
+    }
+    display: block;
+
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    z-index: 999;
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .burger {
+      position: relative;
+      background-color: $color-white;
+      height: 0.3rem;
+      width: 4rem;
+      transition: all 0.4s ease-out;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        height: 0.3rem;
+        width: 4rem;
+        background-color: $color-white;
+        transition: all 0.1s ease-out;
+      }
+
+      &::before {
+        top: -1rem;
+      }
+      &::after {
+        top: 1rem;
+      }
+    }
+
+    .menu-title {
+      @extend .visually-hidden;
+    }
+
+    &:hover,
+    &:focus {
+      .burger {
+        &::before {
+          top: -1.2rem;
+        }
+        &::after {
+          top: 1.2rem;
+        }
+      }
+    }
+
+    &.active {
+      .burger {
+        background-color: transparent;
+        transition-duration: 0s;
+
+        &::before,
+        &::after {
+          top: 0;
+          background-color: $color-white;
+        }
+
+        &::before {
+          transform: rotate(-45deg);
+        }
+        &::after {
+          transform: rotate(45deg);
+        }
+      }
+    }
+  }
+}

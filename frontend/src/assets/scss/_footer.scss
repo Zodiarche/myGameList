@@ -1,0 +1,49 @@
+[id="footer"] {
+  background-color: $color-light-blue;
+  color: $color-dark-blue;
+  padding: 4rem 0;
+
+  .footer-top {
+    // TODO:
+  }
+
+  .footer-bottom {
+    ul {
+      @include from("desktop") {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      display: block;
+
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+
+      li {
+        font-family: $family-default;
+        font-size: 1.6rem;
+        font-weight: 400; // regular
+        color: $color-dark-blue;
+
+        @include from("desktop") {
+          &:not(:last-child)::after {
+            content: " |";
+            margin-right: 0.5rem;
+          }
+        }
+
+        a {
+          text-decoration: underline;
+          display: inline-block;
+          color: $color-dark-blue;
+
+          &:hover,
+          &:focus {
+            color: $color-white;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+@charset "UTF-8";
+
+@import "./modules/breakpoints";
+@import "fonts";
+
+/* Dimensions */
+$max-width: 1280px;
+// $border-width:
+// $header-height:
+
+/* Colors classic */
+$color-black: black;
+$color-white: white;
+/* Colors custom */
+$color-light-blue: #b2d0dc;
+$color-dark-blue: #223a8c;
+$color-green: #91c88d;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  font-size: calc(1em * 0.625);
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  background-color: transparent;
+  color: $color-dark-blue;
+  font-family: $family-default;
+  font-size: 1.6rem;
+  font-weight: 400; // regular
+
+  &.active {
+    overflow-y: hidden;
+  }
+
+  #wrapper {
+    flex: 1 0 auto;
+  }
+
+  #footer {
+    flex-shrink: 0;
+  }
+
+  noscript {
+    div {
+      margin: 0 2rem;
+    }
+  }
+
+  /* Stylesheets classic */
+  @import "commons";
+  @import "content";
+  @import "header";
+  @import "footer";
+
+  /* Stylesheets custom */
+  @import "swiper";
+  @import "anime";
+}

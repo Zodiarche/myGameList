@@ -1,0 +1,34 @@
+&#sandbox {
+  #main-section {
+    padding: 8rem 0;
+
+    .nav {
+      ul {
+        @include from("desktop") {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 2rem;
+        }
+        display: block;
+
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+
+        li {
+          @include from("desktop") {
+            margin: 0;
+          }
+          margin: 1rem 0;
+
+          .show-hide-button {
+            &.active {
+              color: $color-green;
+            }
+          }
+        }
+      }
+    }
+  }
+}

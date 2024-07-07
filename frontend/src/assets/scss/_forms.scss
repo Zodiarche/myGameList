@@ -1,0 +1,101 @@
+label,
+.label {
+  display: block;
+}
+
+[type="text"],
+[type="email"],
+[type="password"],
+[type="tel"],
+[type="number"],
+[type="search"],
+[type="url"],
+[type="date"],
+textarea,
+select {
+  display: block;
+  width: 100%;
+  background-color: transparent;
+  color: $color-dark-blue;
+
+  font-family: $family-default;
+  outline: none;
+  border: solid 0.1rem $color-dark-blue;
+  border-radius: 2.5rem;
+  transition-duration: 0.4s;
+  padding: 1rem;
+
+  &::placeholder {
+    color: $color-dark-blue;
+    font-family: $family-default;
+    opacity: 1;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: $color-white;
+    color: $color-dark-blue;
+
+    &::placeholder {
+      color: $color-dark-blue;
+    }
+  }
+}
+
+.grid-field-container {
+  @include from("desktop") {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  display: block;
+
+  margin-top: 2rem;
+
+  .field {
+    @include from("desktop") {
+      margin: 0;
+    }
+    margin: 2rem 0;
+  }
+}
+
+.field {
+  margin-top: 2rem;
+}
+
+.flex-rgpd-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+
+  input[type="checkbox"] {
+    flex-shrink: 0;
+  }
+}
+
+[type="submit"] {
+  @extend .btn;
+
+  // Création d'espace pour reCAPTCHA
+  margin-bottom: 2rem;
+
+  &:hover,
+  &:focus {
+    background-color: $color-light-blue;
+    color: $color-dark-blue;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: rgba($color: $color-dark-blue, $alpha: 0.5);
+    color: rgba($color: $color-white, $alpha: 0.5);
+
+    &:hover,
+    &:focus {
+      background-color: rgba($color: $color-dark-blue, $alpha: 0.5);
+      color: rgba($color: $color-white, $alpha: 0.5);
+    }
+  }
+}
