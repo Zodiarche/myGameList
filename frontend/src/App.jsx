@@ -1,9 +1,15 @@
+import React from "react";
+
+import Header from "./Header";
+import UserList from "./UserList";
+
 const App = () => {
   return (
-    <>
-      <p>Testing</p>
-    </>
-  )
-}
+    <div className="App">
+      <Header />
+      <UserList />
+    </div>
+  );
+};
 
-export default App
+export default App;
