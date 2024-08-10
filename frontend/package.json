@@ -6,11 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
     "watch": "sass --watch --style=compressed --no-source-map src/assets/scss/main.scss src/assets/css/main.css"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.51.23",
     "normalize.css": "^8.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

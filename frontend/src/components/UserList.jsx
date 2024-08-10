@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { fetchUsers } from "../services/api";
 
 const UserList = () => {
-  const [users, setUsers] = useState([]);
+  const {
+    data: users,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: fetchUsers,
+  });
 
-  useEffect(() => {
-    const getUsers = async () => {
-      const users = await fetchUsers();
-      setUsers(users);
-    };
+  console.log(users)
 
-    getUsers();
-  }, []);
+  if (isLoading) return <div>Chargement...</div>;
+  if (error) return <div>Erreur : {error.message}</div>;
 
   return (
     <div className="UserList">
