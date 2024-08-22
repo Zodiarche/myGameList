@@ -1,32 +1,13 @@
-$colors: ();
-
-@each $color-name, $color-code in $colors {
-  .color-#{$color-name} {
-    color: $color-code;
-  }
-
-  .bg-#{$color-name} {
-    background: $color-code;
-  }
-}
-
-/* CLASSES DE BASE */
 a,
 input,
 button {
   transition-duration: 0.4s;
 }
+
 a:active,
 input:active,
 button:active {
   transition-duration: 0s;
-}
-
-.float-left {
-  float: left;
-}
-.float-right {
-  float: right;
 }
 
 .txt-center {
@@ -148,7 +129,7 @@ iframe {
 
   background-color: $color-dark-blue;
   color: $color-white;
-  font-family: $family-default;
+  font-family: $family-neue-haas-unica;
   font-size: 2rem;
   font-weight: 700; // bold
   border: none;
@@ -157,7 +138,7 @@ iframe {
 
   &:hover,
   &:focus {
-    background-color: $color-green;
+    background-color: $color-red;
     color: $color-dark-blue;
   }
 
@@ -178,7 +159,7 @@ iframe {
     padding-right: 4rem;
   }
 
-  @include from("wide") {
+  @include from("extra-wide") {
     padding-left: 0;
     padding-right: 0;
   }

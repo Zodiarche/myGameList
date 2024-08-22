@@ -18,7 +18,7 @@ select {
   background-color: transparent;
   color: $color-dark-blue;
 
-  font-family: $family-default;
+  font-family: $family-neue-haas-unica;
   outline: none;
   border: solid 0.1rem $color-dark-blue;
   border-radius: 2.5rem;
@@ -27,7 +27,7 @@ select {
 
   &::placeholder {
     color: $color-dark-blue;
-    font-family: $family-default;
+    font-family: $family-neue-haas-unica;
     opacity: 1;
   }
 

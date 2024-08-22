@@ -6,13 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "watch": "sass --watch --style=compressed --no-source-map src/assets/scss/main.scss src/assets/css/main.css"
+    "watch": "sass --watch --style=compressed --no-source-map src/scss/main.scss src/css/main.css"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.51.23",
     "normalize.css": "^8.0.1",
     "react": "^18.3.1",
+    "react-burger-menu": "^3.0.9",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.1",
+    "react-use": "^17.5.1",
     "sass": "^1.77.5"
   },
   "devDependencies": {

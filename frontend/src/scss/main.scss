@@ -4,17 +4,17 @@
 @import "fonts";
 
 /* Dimensions */
-$max-width: 1280px;
+$max-width: 1640px;
 // $border-width:
-// $header-height:
+$header-height: 11.5rem;
 
 /* Colors classic */
 $color-black: black;
-$color-white: white;
+$color-white: #fffce4;
 /* Colors custom */
-$color-light-blue: #b2d0dc;
-$color-dark-blue: #223a8c;
-$color-green: #91c88d;
+$color-light-blue: #b8bcd4;
+$color-dark-blue: #383a47;
+$color-red: #d05454;
 
 * {
   box-sizing: border-box;
@@ -29,13 +29,13 @@ html {
 body {
   position: relative;
 
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   height: 100%;
 
-  background-color: transparent;
+  background-color: $color-white;
   color: $color-dark-blue;
-  font-family: $family-default;
+  font-family: $family-neue-haas-unica;
   font-size: 1.6rem;
   font-weight: 400; // regular
 
