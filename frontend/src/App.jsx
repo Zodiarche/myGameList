@@ -1,8 +1,8 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import Header from "./components/Header";
-import GameList from "./components/UserList";
-import { BrowserRouter } from "react-router-dom";
+import Header from './components/Header';
+import GameList from './components/UserList';
+import { BrowserRouter } from 'react-router-dom';
 
 const queryClient = new QueryClient();
 

@@ -154,7 +154,6 @@ main {
     section {
       &#main-section {
         padding: 8rem 0;
-        // margin-top: #{$header-height};
 
         h1 {
           margin-top: 0;
@@ -163,8 +162,5 @@ main {
     }
   }
 
-  @import "./pages/contact.scss";
-  @import "./pages/swiper.scss";
   @import "./pages/additional-pages.scss";
-  @import "./pages/sandbox/sandbox.scss";
 }

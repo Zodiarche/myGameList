@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchGames } from "../services/api";
+import { useQuery } from '@tanstack/react-query';
+import { fetchGames } from '../services/api';
 
 const GameList = () => {
   const {
@@ -7,7 +7,7 @@ const GameList = () => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["games"],
+    queryKey: ['games'],
     queryFn: fetchGames,
   });
 
@@ -24,11 +24,7 @@ const GameList = () => {
             <h3>{game.name}</h3>
             <p>Released: {game.released}</p>
             <p>Rating: {game.rating}</p>
-            <img
-              src={game.background_image}
-              alt={game.name}
-              style={{ width: "200px" }}
-            />
+            <img src={game.background_image} alt={game.name} style={{ width: '200px' }} />
           </li>
         ))}
       </ul>

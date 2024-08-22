@@ -1,9 +1,9 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useEvent } from "react-use";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useEvent } from 'react-use';
 
-import MenuButton from "./MenuButton";
-import Navigation from "./Navigation";
+import MenuButton from './MenuButton';
+import Navigation from './Navigation';
 
 /**
  * Gère le clic sur le bouton de menu pour ouvrir ou fermer la navigation.
@@ -12,25 +12,25 @@ import Navigation from "./Navigation";
 const handleMenuButtonClick = (event) => {
   event.preventDefault();
 
-  const navigation = document.getElementById("header-nav");
+  const navigation = document.getElementById('header-nav');
   const menuButton = event.currentTarget;
 
   if (!navigation) {
-    console.error("Navigation introuvable.");
+    console.error('Navigation introuvable.');
     return;
   }
 
   if (!menuButton) {
-    console.error("MenuButton introuvable.");
+    console.error('MenuButton introuvable.');
     return;
   }
 
-  const pressed = menuButton.getAttribute("aria-pressed") === "true";
+  const pressed = menuButton.getAttribute('aria-pressed') === 'true';
 
-  menuButton.setAttribute("aria-pressed", String(!pressed));
-  document.body.classList.toggle("active");
-  menuButton.classList.toggle("active");
-  navigation.classList.toggle("active");
+  menuButton.setAttribute('aria-pressed', String(!pressed));
+  document.body.classList.toggle('active');
+  menuButton.classList.toggle('active');
+  navigation.classList.toggle('active');
 };
 
 /**
@@ -38,13 +38,13 @@ const handleMenuButtonClick = (event) => {
  * @param {Event} event - L'événement de clic.
  */
 const handleDocumentClick = (event) => {
-  const menuButton = document.getElementById("menu-button");
-  const navigation = document.getElementById("header-nav");
-  const tarteaucitron = document.getElementById("tarteaucitronRoot");
-  const links = document.querySelectorAll(".header__navigation-menu-item a");
+  const menuButton = document.getElementById('menu-button');
+  const navigation = document.getElementById('header-nav');
+  const tarteaucitron = document.getElementById('tarteaucitronRoot');
+  const links = document.querySelectorAll('.header__navigation-menu-item a');
 
   if (!menuButton || !navigation) {
-    console.error("MenuButton ou navigation introuvables.");
+    console.error('MenuButton ou navigation introuvables.');
     return;
   }
 
@@ -53,9 +53,7 @@ const handleDocumentClick = (event) => {
     !navigation.contains(event.target) &&
     (!tarteaucitron || !tarteaucitron.contains(event.target));
 
-  const clickedOnLink = Array.from(links).some((link) =>
-    link.contains(event.target)
-  );
+  const clickedOnLink = Array.from(links).some((link) => link.contains(event.target));
 
   if (!clickedOutsideMenu && !clickedOnLink) return;
 
@@ -75,23 +73,23 @@ const handleWindowResize = () => {
  * Ferme le menu et réinitialise les attributs associés.
  */
 const closeMenu = () => {
-  const menuButton = document.getElementById("menu-button");
-  const navigation = document.getElementById("header-nav");
+  const menuButton = document.getElementById('menu-button');
+  const navigation = document.getElementById('header-nav');
 
   if (!menuButton) {
-    console.error("MenuButton introuvable lors de la tentative de fermeture.");
+    console.error('MenuButton introuvable lors de la tentative de fermeture.');
     return;
   }
 
   if (!navigation) {
-    console.error("Navigation introuvable lors de la tentative de fermeture.");
+    console.error('Navigation introuvable lors de la tentative de fermeture.');
     return;
   }
 
-  menuButton.setAttribute("aria-pressed", "false");
-  document.body.classList.remove("active");
-  menuButton.classList.remove("active");
-  navigation.classList.remove("active");
+  menuButton.setAttribute('aria-pressed', 'false');
+  document.body.classList.remove('active');
+  menuButton.classList.remove('active');
+  navigation.classList.remove('active');
 };
 
 /**
@@ -99,8 +97,8 @@ const closeMenu = () => {
  * @returns {JSX.Element}
  */
 const Header = () => {
-  useEvent("click", handleDocumentClick, document);
-  useEvent("resize", handleWindowResize, window);
+  useEvent('click', handleDocumentClick, document);
+  useEvent('resize', handleWindowResize, window);
 
   return (
     <header id="header" className="header">
