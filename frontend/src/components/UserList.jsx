@@ -14,6 +14,9 @@ const GameList = () => {
   if (isLoading) return <div>Chargement...</div>;
   if (error) return <div>Erreur : {error.message}</div>;
 
+  const games = gamesData.results;
+  console.log(games)
+
   return (
     <div className="GameList">
       <h2>Liste des jeux</h2>
