@@ -1,9 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useEvent } from 'react-use';
 
 import MenuButton from './MenuButton';
-import Navigation from './Navigation';
+import { HeaderNavigation } from './Navigation';
 
 /**
  * Gère le clic sur le bouton de menu pour ouvrir ou fermer la navigation.
@@ -113,7 +112,7 @@ const Header = () => {
           </div>
 
           <div className="header__cols--right">
-            <Navigation />
+            <HeaderNavigation />
             <MenuButton onClick={handleMenuButtonClick} />
           </div>
         </div>

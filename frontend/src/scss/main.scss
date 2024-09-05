@@ -29,8 +29,8 @@ html {
 body {
   position: relative;
 
-  // display: flex;
-  // flex-direction: column;
+  display: flex;
+  flex-direction: column;
   height: 100%;
 
   background-color: $color-white;
@@ -43,17 +43,17 @@ body {
     overflow-y: hidden;
   }
 
-  #wrapper {
-    flex: 1 0 auto;
-  }
+  #root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-  #footer {
-    flex-shrink: 0;
-  }
+    #wrapper {
+      flex: 1 0 auto;
+    }
 
-  noscript {
-    div {
-      margin: 0 2rem;
+    #footer {
+      flex-shrink: 0;
     }
   }
 

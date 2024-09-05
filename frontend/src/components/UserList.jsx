@@ -3,7 +3,7 @@ import { fetchGames } from '../services/api';
 
 const GameList = () => {
   const {
-    data: games,
+    data: gamesData,
     error,
     isLoading,
   } = useQuery({
@@ -14,15 +14,15 @@ const GameList = () => {
   if (isLoading) return <div>Chargement...</div>;
   if (error) return <div>Erreur : {error.message}</div>;
 
-  const games = gamesData.results;
-  console.log(games)
+  const games = gamesData?.results;
+  console.log(games);
 
   return (
     <div className="GameList">
       <h2>Liste des jeux</h2>
 
       <ul>
-        {games.map((game) => (
+        {games?.map((game) => (
           <li key={game._id}>
             <h3>{game.name}</h3>
             <p>Released: {game.released}</p>

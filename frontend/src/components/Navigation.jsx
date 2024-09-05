@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 /**
@@ -6,7 +5,7 @@ import { Link } from 'react-router-dom';
  *
  * @returns {JSX.Element}
  */
-const Navigation = () => {
+export const HeaderNavigation = () => {
   return (
     <nav id="header-nav" className="header__navigation">
       <ul className="header__navigation-menu">
@@ -34,4 +33,31 @@ const Navigation = () => {
   );
 };
 
-export default Navigation;
+/**
+ * Composant de navigation pour le pied de page bas du site.
+ *
+ * @returns {JSX.Element}
+ */
+export const FooterNavigation = () => {
+  return (
+    <nav className="footer__navigation">
+      <ul className="footer__navigation-menu">
+        <li className="footer__navigation-menu-item">
+          <Link to="https://github.com/Zodiarche">&copy; Benjamin GUILLEMIN 2024</Link>
+        </li>
+
+        <li className="footer__navigation-menu-item">
+          <Link to="/legal-notice">Mentions légales</Link>
+        </li>
+
+        <li className="footer__navigation-menu-item">
+          <Link to="/privacy-policy">Politique de confidentialités</Link>
+        </li>
+
+        <li className="footer__navigation-menu-item">
+          <Link to="/sitemap">Plan du site</Link>
+        </li>
+      </ul>
+    </nav>
+  );
+};
