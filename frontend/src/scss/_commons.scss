@@ -132,14 +132,15 @@ iframe {
   font-family: $family-neue-haas-unica;
   font-size: 2rem;
   font-weight: 700; // bold
-  border: none;
+  border: solid 0.1rem $color-dark-blue;
   border-radius: 2rem;
   padding: 1.5rem 3rem;
 
   &:hover,
   &:focus {
-    background-color: $color-red;
+    background-color: $color-white;
     color: $color-dark-blue;
+    border: solid 0.1rem $color-dark-blue;
   }
 
   &:active {
@@ -181,5 +182,57 @@ iframe {
 
   &:last-of-type {
     margin-bottom: 0;
+  }
+}
+
+.scroll {
+  @include from("wide") {
+    display: inline-block;
+  }
+  display: none;
+
+  transition: transform 0.2s ease;
+
+  .a1 {
+    fill: $color-dark-blue;
+    font-family: $family-neue-haas-unica;
+    font-size: 1.5rem;
+  }
+  .b1,
+  .f1 {
+    fill: none;
+  }
+  .b1 {
+    stroke: $color-dark-blue;
+    stroke-width: 0.2rem;
+  }
+
+  .c1,
+  .d1 {
+    transition-duration: 0.2s;
+  }
+
+  .c1 {
+    fill: $color-light-blue;
+  }
+
+  .d1 {
+    fill: rgba($color: $color-dark-blue, $alpha: 0.5);
+  }
+
+  .e1 {
+    stroke: none;
+  }
+
+  &:hover,
+  &:focus {
+    transform: translateY(1rem);
+
+    .c1 {
+      fill: rgba($color: $color-dark-blue, $alpha: 0.5);
+    }
+    .d1 {
+      fill: $color-light-blue;
+    }
   }
 }

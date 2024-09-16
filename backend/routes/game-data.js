@@ -2,6 +2,7 @@ import express from "express";
 import {
   createGameData,
   getGameDataList,
+  getTopGames,
   getGameDataById,
   updateGameData,
   deleteGameData,
@@ -14,6 +15,9 @@ router.post("/", createGameData);
 
 // Récupération de tous les jeux
 router.get("/", getGameDataList);
+
+// Récupération les meilleurs jeux
+router.get("/top-games", getTopGames);
 
 // Récupération d'un jeu par ID
 router.get("/:id", getGameDataById);

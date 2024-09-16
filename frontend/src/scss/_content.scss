@@ -98,8 +98,8 @@ main {
   ul {
     list-style-type: disc;
     list-style-position: inside;
-    // padding-left: 0;
-    // margin: 0;
+    padding-left: 0;
+    margin: 0;
   }
 
   a:not(.btn) {
@@ -162,5 +162,6 @@ main {
     }
   }
 
+  @import "./pages/home/main.scss";
   @import "./pages/additional-pages.scss";
 }

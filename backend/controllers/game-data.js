@@ -33,6 +33,52 @@ export const getGameDataList = async (_, res) => {
 };
 
 /**
+ * Récupère une liste des jeux filtrés selon certains critères et triés.
+ * @param {Express.Request} req - L'objet de requête.
+ * @param {Express.Response} res - L'objet de réponse.
+ * @returns {Promise<void>}
+ */
+export const getTopGames = async (req, res) => {
+  try {
+    const { limit = 10, platform, tag, rating, released } = req.query;
+    const limitNum = parseInt(limit, 10);
+    const filters = {};
+
+    // Ajouter les filtres pour les paramètres de requête
+    if (platform) {
+      filters["platforms.name"] = platform;
+    }
+
+    if (tag) {
+      filters["tags.name"] = tag;
+    }
+
+    if (rating) {
+      filters["rating"] = { $gte: parseFloat(rating) };
+    }
+
+    if (released) {
+      filters["released"] = { $gte: new Date(released) };
+    }
+
+    // Récupérer les jeux les plus notés
+    const mostRatedGames = await GameData.find(filters)
+      .sort({ ratings_count: -1 }) // Trier par nombre de notations d'abord
+      .limit(limitNum * 2); // Limiter le nombre initial à une taille plus grande pour filtrer plus tard
+
+    // Trier par note parmi les jeux les plus notés
+    const topRatedGames = mostRatedGames.sort((a, b) => b.rating - a.rating);
+
+    // Limiter le résultat final au nombre demandé
+    const topGames = topRatedGames.slice(0, limitNum);
+
+    res.json(topGames);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
  * Récupère un GameData par ID.
  * @param {Express.Request} req - L'objet de requête.
  * @param {Express.Response} res - L'objet de réponse.

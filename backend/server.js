@@ -6,7 +6,6 @@ import cors from "cors";
 import userRoutes from "./routes/user.js";
 import gamesRoutes from "./routes/game-data.js";
 import gamesUserRoutes from "./routes/game-user.js";
-// import { saveGamesToDB } from "./import-games.js";
 
 dotenv.config();
 
@@ -19,10 +18,8 @@ mongoose
   .connect("mongodb://localhost:27017/myGameList")
   .then(() => {
     console.log("Connecté à MongoDB avec succès !");
-    // return saveGamesToDB();
   })
   .then(() => {
-    // console.log("L'importation des jeux est terminée.");
     app.listen(port, () =>
       console.log(`Serveur démarré sur http://localhost:${port}`)
     );

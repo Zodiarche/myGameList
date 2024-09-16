@@ -34,7 +34,7 @@ const screenshotSchema = new Schema({
 });
 
 const gameDataSchema = new Schema({
-  idGameBD: { type: String, required: true },
+  idGameBD: { type: String, required: true, unique: true },
   slug: { type: String },
   name: { type: String, required: true },
   description: { type: String },

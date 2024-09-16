@@ -1,0 +1,51 @@
+#landing-page {
+  &.landing-page {
+    @include from("desktop") {
+      margin: 12rem 0;
+    }
+    margin: 6rem 0;
+
+    .landing-page {
+      &__wrapper {
+        @extend .wrapper;
+      }
+
+      &__cols {
+        @include from("desktop") {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12rem;
+        }
+      }
+
+      &__col {
+        &--left {
+          width: 100%;
+        }
+
+        &--right {
+          @include from("desktop") {
+            width: 50%;
+          }
+          width: 100%;
+
+          flex-shrink: 0;
+        }
+      }
+
+      &__list {
+        margin-bottom: 3rem;
+      }
+
+      &__button {
+        @extend .btn;
+      }
+
+      &__image {
+        border-radius: 3rem;
+        overflow: hidden;
+      }
+    }
+  }
+}
