@@ -16,7 +16,6 @@ export let swiperTopGames = null;
  */
 const handleSwiperInstance = (swiperInstance, selector, params = {}) => {
   const selectorElement = document.querySelector(selector);
-  console.log('handleSwiperInstance :', selectorElement);
   const isSwiperActive = utils.isSwiperActive(selectorElement);
 
   utils.updateSwiperClasses(selector, isSwiperActive);

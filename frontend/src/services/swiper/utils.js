@@ -43,8 +43,6 @@ export const destroySwiper = (swiperInstance) => {
  * @returns {boolean} - Retourne `true` si Swiper doit être actif, sinon `false`.
  */
 export const isSwiperActive = (selectorElement) => {
-  console.log('isSwiperActive :', selectorElement);
-
   if (!selectorElement) return;
 
   const activationValue = selectorElement.getAttribute('data-swiper-activation');

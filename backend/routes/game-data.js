@@ -6,6 +6,7 @@ import {
   getGameDataById,
   updateGameData,
   deleteGameData,
+  searchGames,
 } from "../controllers/game-data.js";
 
 const router = express.Router();
@@ -15,6 +16,9 @@ router.post("/", createGameData);
 
 // Récupération de tous les jeux
 router.get("/", getGameDataList);
+
+// Recherche de jeux
+router.get("/search", searchGames);
 
 // Récupération les meilleurs jeux
 router.get("/top-games", getTopGames);

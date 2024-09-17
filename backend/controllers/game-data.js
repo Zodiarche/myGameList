@@ -1,4 +1,5 @@
 import GameData from "../models/game-data.js";
+import { normalizeString } from "../utils/normalizeString.js";
 
 /**
  * Crée un nouveau GameData.
@@ -73,6 +74,27 @@ export const getTopGames = async (req, res) => {
     const topGames = topRatedGames.slice(0, limitNum);
 
     res.json(topGames);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
+ * Recherche de jeux par nom avec support pour les accents et la casse.
+ * @param {Express.Request} req - L'objet de requête.
+ * @param {Express.Response} res - L'objet de réponse.
+ * @returns {Promise<void>}
+ */
+export const searchGames = async (req, res) => {
+  try {
+    const searchQuery = req.query.search ? req.query.search : "";
+    const normalizedQuery = normalizeString(searchQuery);
+
+    const gameDataList = await GameData.find({
+      name: { $regex: new RegExp(`.*${normalizedQuery}.*`, "i") },
+    });
+
+    res.json(gameDataList);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
