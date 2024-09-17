@@ -24,7 +24,7 @@ const LandingPage = () => {
 
             <p>&nbsp;</p>
 
-            <a href="#" className="scroll">
+            <a href="#top-games" className="scroll">
               <svg xmlns="http://www.w3.org/2000/svg" width="61" height="107" viewBox="0 0 61 107">
                 <g transform="translate(-320 -932)">
                   <g transform="translate(320 932)">

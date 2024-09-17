@@ -1,0 +1,71 @@
+#top-games {
+  &.top-games {
+    .top-games {
+      &__wrapper {
+        @extend .wrapper;
+      }
+
+      &__title {
+      }
+    }
+
+    .swiper {
+      position: relative;
+
+      &-button {
+        &-next,
+        &-prev {
+          @include from("tablet") {
+            width: 5.5rem;
+            height: 5.5rem;
+          }
+          width: 4rem;
+          height: 4rem;
+
+          transform: translateY(-50%);
+          margin-top: 0;
+
+          &::after {
+            content: "";
+          }
+        }
+
+        &-prev {
+          transform: translateY(-50%) rotate(180deg);
+        }
+      }
+    }
+
+    .game-card {
+      cursor: default;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 20rem;
+      border-radius: 1.6rem;
+      padding: 3rem;
+
+      background-size: cover;
+      background-repeat: no-repeat;
+
+      &__content {
+        width: 100%;
+        background-color: rgba($color: $color-black, $alpha: 0.7);
+        color: $color-white;
+        border-radius: 1.6rem;
+        padding: 1rem;
+      }
+
+      &__name {
+        font-size: 2rem;
+      }
+
+      &__list {
+        list-style-type: none;
+        display: inline-block;
+        margin: auto;
+        text-align: left;
+      }
+    }
+  }
+}

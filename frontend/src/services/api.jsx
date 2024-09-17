@@ -6,3 +6,11 @@ export const fetchTopGames = async (filters = {}) => {
   const data = await response.json();
   return data;
 };
+
+export const fetchGames = async () => {
+  const response = await fetch(`http://localhost:3000/games`);
+  if (!response.ok) throw new Error('Network response was not ok');
+
+  const data = await response.json();
+  return data;
+};

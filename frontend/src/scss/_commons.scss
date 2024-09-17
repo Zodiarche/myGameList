@@ -217,7 +217,7 @@ iframe {
   }
 
   .d1 {
-    fill: rgba($color: $color-dark-blue, $alpha: 0.5);
+    fill: $color-dark-blue;
   }
 
   .e1 {
@@ -229,10 +229,49 @@ iframe {
     transform: translateY(1rem);
 
     .c1 {
-      fill: rgba($color: $color-dark-blue, $alpha: 0.5);
+      fill: $color-dark-blue;
     }
     .d1 {
       fill: $color-light-blue;
     }
+  }
+}
+
+.swiper-navigation-button {
+  transition-duration: 0.4s;
+
+  &:hover,
+  &:focus {
+    .b {
+      fill: $color-red;
+    }
+  }
+
+  &:active {
+    filter: brightness(0.5);
+  }
+
+  .a {
+    fill: $color-white;
+    transition-duration: 0.4s;
+  }
+
+  .b {
+    fill: $color-dark-blue;
+    stroke: $color-white;
+    stroke-width: 0.2rem;
+    transition-duration: 0.4s;
+  }
+
+  .c {
+    clip-path: url(#a);
+  }
+
+  .d {
+    stroke: none;
+  }
+
+  .e {
+    fill: none;
   }
 }
