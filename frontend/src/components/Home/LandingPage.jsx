@@ -23,7 +23,14 @@ const LandingPage = () => {
                 Partagez vos listes avec vos amis et la communauté
               </li>
             </ul>
-            <a href="#" className="landing-page__button" onClick={() => setShowModal(true)}>
+            <a
+              href="#"
+              className="landing-page__button"
+              onClick={(event) => {
+                event.preventDefault();
+                setShowModal(true);
+              }}
+            >
               Rechercher un jeu
             </a>
 
@@ -40,7 +47,6 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Utilisation du composant Modal */}
         <Modal show={showModal} onClose={() => setShowModal(false)} />
       </div>
     </section>
