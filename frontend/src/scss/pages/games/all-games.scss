@@ -1,42 +1,30 @@
-#top-games {
-  &.top-games {
+#all-games {
+  &.all-games {
     @include from("desktop") {
-      margin-bottom: 12rem;
+      padding: 6rem 0;
     }
-    margin-bottom: 6rem;
+    padding: 3rem 0;
 
-    .top-games {
+    .all-games {
       &__wrapper {
-        @extend .wrapper;
+        @extend.wrapper;
       }
 
-      &__title {
+      &__cols {
+        @include from("desktop") {
+          display: flex;
+          gap: 6rem;
+        }
       }
-    }
 
-    .swiper {
-      position: relative;
-
-      &-button {
-        &-next,
-        &-prev {
-          @include from("tablet") {
-            width: 5.5rem;
-            height: 5.5rem;
-          }
-          width: 4rem;
-          height: 4rem;
-
-          transform: translateY(-50%);
-          margin-top: 0;
-
-          &::after {
-            content: "";
-          }
+      &__col {
+        &--left {
+          flex-shrink: 0;
+          width: 20%;
         }
 
-        &-prev {
-          transform: translateY(-50%) rotate(180deg);
+        &--right {
+          width: 100%;
         }
       }
     }
@@ -48,10 +36,17 @@
       align-items: center;
       height: 20rem;
       border-radius: 1.6rem;
-      padding: 3rem;
+      box-shadow: 0 0.4rem 0.8rem rgba($color: $color-dark-blue, $alpha: 0.16);
+      padding: 2rem;
 
       background-size: cover;
       background-repeat: no-repeat;
+
+      &__container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+      }
 
       &__content {
         width: 100%;

@@ -1,4 +1,6 @@
 main {
+  height: calc(100% - 11.5rem);
+
   .h1,
   .h2,
   .h3,
@@ -150,20 +152,13 @@ main {
     @import "forms";
   }
 
-  &#main {
-    section {
-      &#main-section {
-        padding: 8rem 0;
-
-        h1 {
-          margin-top: 0;
-        }
-      }
-    }
-  }
-
   @import "./pages/home/main.scss";
+  @import "./pages/games/main.scss";
   @import "./pages/additional-pages.scss";
+
   @import "./components/top-games.scss";
   @import "./components/modal.scss";
+  @import "./components/filters.scss";
+  @import "./components/pagination.scss";
+  @import "./components/loading.scss";
 }

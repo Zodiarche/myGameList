@@ -1,9 +1,9 @@
 #landing-page {
   &.landing-page {
     @include from("desktop") {
-      margin: 12rem 0;
+      padding: 12rem 0;
     }
-    margin: 6rem 0;
+    padding: 6rem 0;
 
     .landing-page {
       &__wrapper {

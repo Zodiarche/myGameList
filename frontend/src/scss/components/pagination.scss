@@ -1,0 +1,30 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+
+  &__button {
+    cursor: pointer;
+    background-color: $color-white;
+    color: $color-dark-blue;
+    border: 0.1rem solid $color-dark-blue;
+    border-radius: 0.5rem;
+
+    padding: 0.8rem 1.2rem;
+    transition-duration: 0.4s;
+
+    &:hover,
+    &:focus {
+      background-color: $color-dark-blue;
+      color: $color-white;
+    }
+
+    &--disabled {
+      cursor: default;
+      background-color: $color-dark-blue;
+      color: $color-white;
+    }
+  }
+}

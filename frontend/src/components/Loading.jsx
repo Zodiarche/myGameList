@@ -6,15 +6,17 @@ const Loading = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setDots((prevDots) => (prevDots.length < 3 ? prevDots + '.' : ''));
-    }, 200);
+    }, 400);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="loading-container">
-      <p className="loading-text">Chargement{dots}</p>
-    </div>
+    <main>
+      <div id="loading" className="loading">
+        <p className="loading__text">Chargement{dots}</p>
+      </div>
+    </main>
   );
 };
 

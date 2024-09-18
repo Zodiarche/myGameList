@@ -6,6 +6,10 @@ export const swiperTopGamesConfiguration = {
 
   breakpoints: {
     992: {
+      slidesPerView: 2,
+    },
+
+    1280: {
       slidesPerView: 3,
     },
   },

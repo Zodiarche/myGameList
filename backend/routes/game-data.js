@@ -7,6 +7,7 @@ import {
   updateGameData,
   deleteGameData,
   searchGames,
+  getFilters,
 } from "../controllers/game-data.js";
 
 const router = express.Router();
@@ -22,6 +23,9 @@ router.get("/search", searchGames);
 
 // Récupération les meilleurs jeux
 router.get("/top-games", getTopGames);
+
+// Récupération des plateformes et tags
+router.get("/filters", getFilters);
 
 // Récupération d'un jeu par ID
 router.get("/:id", getGameDataById);

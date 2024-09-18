@@ -14,3 +14,12 @@ export const fetchGames = async () => {
   const data = await response.json();
   return data;
 };
+
+export const fetchFilters = async () => {
+  const response = await fetch(`http://localhost:3000/games/filters`);
+  console.log(response);
+  if (!response.ok) throw new Error('Network response was not ok');
+
+  const data = await response.json();
+  return data;
+};

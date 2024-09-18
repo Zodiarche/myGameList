@@ -122,7 +122,11 @@ iframe {
 }
 
 .btn {
-  // a
+  @include from("desktop") {
+    padding: 1.5rem 3rem;
+  }
+  padding: 1rem 2rem;
+
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
@@ -134,7 +138,6 @@ iframe {
   font-weight: 700; // bold
   border: solid 0.1rem $color-dark-blue;
   border-radius: 2rem;
-  padding: 1.5rem 3rem;
 
   &:hover,
   &:focus {

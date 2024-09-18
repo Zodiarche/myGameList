@@ -1,0 +1,23 @@
+.filters {
+  &__group {
+    margin-bottom: 1.6rem;
+  }
+
+  &__label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  &__select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 0.1rem solid rgba($color: $color-dark-blue, $alpha: 0.5);
+    border-radius: 0.5rem;
+  }
+
+  &__group--platform,
+  &__label {
+    color: $color-red;
+  }
+}

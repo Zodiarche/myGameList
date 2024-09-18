@@ -27,7 +27,6 @@ const TopGameList = () => {
     initializeSwiperJS();
   }, [data]);
 
-  if (isLoading) return <div>Chargement...</div>;
   if (isError) return <div>Erreur : {error.message}</div>;
   if (!data || data.length <= 0) return <div>Aucun jeu trouvé.</div>;
 

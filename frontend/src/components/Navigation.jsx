@@ -18,7 +18,7 @@ export const HeaderNavigation = () => {
         </li>
 
         <li className="header__navigation-menu-item">
-          <Link to="/games">Mes jeux</Link>
+          <Link to="/games">Jeux</Link>
         </li>
 
         <li className="header__navigation-menu-item">
