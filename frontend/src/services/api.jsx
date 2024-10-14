@@ -22,3 +22,14 @@ export const fetchFilters = async () => {
   const data = await response.json();
   return data;
 };
+
+export const fetchProfile = async () => {
+  const response = await fetch('http://localhost:3000/user/profile', {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (response.ok) return response.json();
+
+  throw new Error(response.status === 401 ? 'Non autorisé' : 'Erreur de serveur');
+};

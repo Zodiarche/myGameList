@@ -45,8 +45,6 @@ const getTokenFromCookies = (cookies) => {
  * @returns {Promise<Object>} - Les données décodées du token.
  */
 const verifyToken = (token) => {
-  console.log(process.env.JWT_SECRET);
-
   return new Promise((resolve, reject) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {

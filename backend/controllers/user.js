@@ -1,6 +1,6 @@
+import user from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import user from "../models/user.js";
 
 export const loginUser = async (request, response) => {
   const { email, password } = request.body;
@@ -46,14 +46,13 @@ export const loginUser = async (request, response) => {
  */
 export const getUserProfile = async (request, response) => {
   try {
-    const userData = request.userData;
-    const user = await user.findById(userData.userId);
-    console.log("user:", user);
+    const requestUserData = request.userData;
+    const userDatabase = await user.findById(requestUserData.userId);
 
-    if (!user) {
+    if (!userDatabase) {
       return response.status(404).json({ message: "Utilisateur non trouvé" });
     }
-    response.json(user);
+    response.json(userDatabase);
   } catch (error) {
     response.status(500).json({
       message: "Erreur lors de la récupération du profil utilisateur",

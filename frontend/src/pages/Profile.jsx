@@ -1,53 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { fetchProfile } from '../services/api';
 
 const Profile = () => {
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/user/profile', {
-          method: 'GET',
-          credentials: 'include',
-        });
-
-        console.log(response);
-
-        if (!response.ok) {
-          if (response.status === 401) {
-            navigate('/login');
-          } else {
-            throw new Error('Erreur de serveur');
-          }
-        }
-
-        const data = await response.json();
-        setUser(data);
-      } catch (error) {
+  const {
+    data: user,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: fetchProfile,
+    onError: (error) => {
+      if (error.message === 'Non autorisé') {
+        navigate('/login');
+      } else {
         console.error("Erreur lors de la vérification d'authentification", error);
-        setError("Erreur lors de la vérification d'authentification");
-      } finally {
-        setLoading(false);
       }
-    };
+    },
+  });
 
-    checkAuth();
-  }, [navigate]);
-
-  if (loading) {
+  if (isLoading) {
     return <p>Chargement...</p>;
   }
 
   if (error) {
-    return <p style={{ color: 'red' }}>{error}</p>;
-  }
-
-  if (!user) {
-    return <p>Redirection vers la page de connexion...</p>;
+    return <p style={{ color: 'red' }}>{error.message}</p>;
   }
 
   return (
