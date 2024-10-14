@@ -3,45 +3,45 @@ import { normalizeString } from "../utils/normalizeString.js";
 
 /**
  * Crée un nouveau GameData.
- * @param {Express.Request} req - L'objet de requête.
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const createGameData = async (req, res) => {
-  const gameData = new GameData(req.body);
+export const createGameData = async (request, response) => {
+  const gameData = new GameData(request.body);
 
   try {
     const savedGameData = await gameData.save();
-    res.status(201).json(savedGameData);
+    response.status(201).json(savedGameData);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    response.status(400).json({ message: error.message });
   }
 };
 
 /**
  * Récupère la liste de tous les GameData.
  * @param {Express.Request} _ - L'objet de requête (non utilisé).
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const getGameDataList = async (_, res) => {
+export const getGameDataList = async (_, response) => {
   try {
     const gameDataList = await GameData.find();
-    res.json(gameDataList);
+    response.json(gameDataList);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 };
 
 /**
  * Récupère une liste des jeux filtrés selon certains critères et triés.
- * @param {Express.Request} req - L'objet de requête.
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const getTopGames = async (req, res) => {
+export const getTopGames = async (request, response) => {
   try {
-    const { limit = 10, platform, tag, rating, released } = req.query;
+    const { limit = 10, platform, tag, rating, released } = request.query;
     const limitNum = parseInt(limit, 10);
     const filters = {};
 
@@ -73,97 +73,98 @@ export const getTopGames = async (req, res) => {
     // Limiter le résultat final au nombre demandé
     const topGames = topRatedGames.slice(0, limitNum);
 
-    res.json(topGames);
+    response.json(topGames);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 };
 
 /**
  * Recherche de jeux par nom avec support pour les accents et la casse.
- * @param {Express.Request} req - L'objet de requête.
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const searchGames = async (req, res) => {
+export const searchGames = async (request, response) => {
   try {
-    const searchQuery = req.query.search ? req.query.search : "";
+    const searchQuery = request.query.search ? request.query.search : "";
     const normalizedQuery = normalizeString(searchQuery);
 
     const gameDataList = await GameData.find({
       name: { $regex: new RegExp(`.*${normalizedQuery}.*`, "i") },
     });
 
-    res.json(gameDataList);
+    response.json(gameDataList);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 };
 
 /**
  * Récupère un GameData par ID.
- * @param {Express.Request} req - L'objet de requête.
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const getGameDataById = async (req, res) => {
+export const getGameDataById = async (request, response) => {
   try {
-    const gameData = await GameData.findById(req.params.id);
-    if (!gameData) return res.status(404).json({ message: "Jeu non trouvé" });
+    const gameData = await GameData.findById(request.params.id);
+    if (!gameData)
+      return response.status(404).json({ message: "Jeu non trouvé" });
 
-    res.json(gameData);
+    response.json(gameData);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 };
 
 /**
  * Met à jour un GameData par ID.
- * @param {Express.Request} req - L'objet de requête.
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const updateGameData = async (req, res) => {
+export const updateGameData = async (request, response) => {
   try {
     const updatedGameData = await GameData.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+      request.params.id,
+      request.body,
       { new: true }
     );
     if (!updatedGameData)
-      return res.status(404).json({ message: "Jeu non trouvé" });
+      return response.status(404).json({ message: "Jeu non trouvé" });
 
-    res.json(updatedGameData);
+    response.json(updatedGameData);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    response.status(400).json({ message: error.message });
   }
 };
 
 /**
  * Supprime un GameData par ID.
- * @param {Express.Request} req - L'objet de requête.
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const deleteGameData = async (req, res) => {
+export const deleteGameData = async (request, response) => {
   try {
-    const deletedGameData = await GameData.findByIdAndDelete(req.params.id);
+    const deletedGameData = await GameData.findByIdAndDelete(request.params.id);
     if (!deletedGameData)
-      return res.status(404).json({ message: "Jeu non trouvé" });
+      return response.status(404).json({ message: "Jeu non trouvé" });
 
-    res.json({ message: "Jeu supprimé" });
+    response.json({ message: "Jeu supprimé" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 };
 
 /**
  * Récupère tous les filtres pertinents pour les jeux.
  * @param {Express.Request} _ - L'objet de requête (non utilisé).
- * @param {Express.Response} res - L'objet de réponse.
+ * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
-export const getFilters = async (_, res) => {
+export const getFilters = async (_, response) => {
   try {
     // Récupération des filtres uniques pour diverses propriétés
     const platforms = await GameData.distinct("platforms.name");
@@ -213,7 +214,7 @@ export const getFilters = async (_, res) => {
       },
     ]);
 
-    res.json({
+    response.json({
       platforms,
       tags,
       stores,
@@ -226,6 +227,6 @@ export const getFilters = async (_, res) => {
     });
   } catch (error) {
     console.error("Error fetching filters:", error.message);
-    res.status(500).json({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 };

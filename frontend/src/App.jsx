@@ -5,6 +5,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import MainHome from './pages/Home';
 import Games from './pages/Games';
+import Profile from './pages/Profile';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 
 const queryClient = new QueryClient();
 
@@ -19,8 +22,10 @@ const App = () => {
             <Route path="/" element={<MainHome />} />
             {/* <Route path="/about" element={<About />} /> */}
             <Route path="/games" element={<Games />} />
-            {/* <Route path="/profile" element={<Profile />} /> */}
+            <Route path="/profile" element={<Profile />} />
             {/* <Route path="/contact" element={<Contact />} /> */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
           </Routes>
         </div>
         <Footer />

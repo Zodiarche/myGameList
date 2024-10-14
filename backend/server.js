@@ -1,38 +1,52 @@
+// Modules tiers
+import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+
+// Modules personnalisés
 import userRoutes from "./routes/user.js";
 import gamesRoutes from "./routes/game-data.js";
 import gamesUserRoutes from "./routes/game-user.js";
+import { isAuthenticated } from "./middlewares/isAuthenticated.js";
 
 dotenv.config();
 
+const PORT = process.env.PORT;
 const app = express();
-const port = 3000;
 
-app.use(cors());
-
+/**
+ * Configuration de la connexion à MongoDB.
+ */
 mongoose
   .connect("mongodb://localhost:27017/myGameList")
   .then(() => {
-    console.log("Connecté à MongoDB avec succès !");
+    console.log("Connected to MongoDB");
   })
-  .then(() => {
-    app.listen(port, () =>
-      console.log(`Serveur démarré sur http://localhost:${port}`)
-    );
+  .catch((error) => {
+    console.error("Error connecting to MongoDB", error);
+  });
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
   })
-  .catch((error) =>
-    console.error(
-      "Erreur lors de la connexion à MongoDB ou lors de l'importation des jeux :",
-      error
-    )
-  );
+);
+app.use(cookieParser());
 
 app.use(bodyParser.json());
 
 app.use("/user", userRoutes);
 app.use("/games", gamesRoutes);
 app.use("/games-user", gamesUserRoutes);
+
+/**
+ * Démarrage du serveur.
+ */
+app.listen(PORT, () => {
+  console.log(`Server is running on port: ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
