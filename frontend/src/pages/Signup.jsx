@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchProfile, signupUser } from '../services/api';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -7,63 +9,71 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  // Vérification si l'utilisateur est déjà connecté au chargement du composant
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: fetchProfile,
+    retry: false,
+    onSuccess: () => navigate('/profile'),
+    onError: () => console.error("Erreur lors de la vérification de l'authentification"),
+  });
+
+  // Mutation pour gérer l'inscription
+  const signupMutation = useMutation({
+    mutationFn: signupUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries('userProfile');
+      navigate('/login');
+    },
+    onError: (error) => setError(error.message || 'Une erreur est survenue. Veuillez réessayer.'),
+  });
+
+  const handleSignup = (event) => {
+    event.preventDefault();
     setError('');
 
-    try {
-      const response = await fetch('http://localhost:3000/user/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      if (response.ok) {
-        navigate('/login');
-      } else {
-        const data = await response.json();
-        setError(data.message);
-      }
-    } catch (err) {
-      setError('Une erreur est survenue. Veuillez réessayer.');
-    }
+    signupMutation.mutate({ username, email, password });
   };
 
   return (
-    <div>
-      <h1>Inscription</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSignup}>
-        <div>
-          <label>Nom d'utilisateur :</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+    <main id="signup">
+      <section id="signup" className="signup">
+        <div className="signup__wrapper">
+          <h1 className="signup__title">Inscription</h1>
+
+          {error && <p className="signup__error">{error}</p>}
+
+          <form className="signup__form" onSubmit={handleSignup}>
+            <div className="signup__field-container">
+              <div className="signup__field">
+                <label className="signup__label">Nom d'utilisateur :</label>
+                <input className="signup__input" type="text" value={username} onChange={(event) => setUsername(event.target.value)} />
+              </div>
+
+              <div className="signup__field">
+                <label className="signup__label">Email :</label>
+                <input className="signup__input" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+              </div>
+
+              <div className="signup__field">
+                <label className="signup__label">Mot de passe :</label>
+                <input className="signup__input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+              </div>
+            </div>
+
+            <button className="signup__submit" type="submit" disabled={signupMutation.isLoading}>
+              {signupMutation.isLoading ? 'Inscription en cours...' : "S'inscrire"}
+            </button>
+          </form>
+
+          <p className="signup__login">
+            Vous avez déjà un compte ? <a href="/login">Connectez-vous ici</a>.
+          </p>
         </div>
-        <div>
-          <label>Email :</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div>
-          <label>Mot de passe :</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">S'inscrire</button>
-      </form>
-      <p>
-        Vous avez déjà un compte ? <a href="/login">Connectez-vous ici</a>.
-      </p>
-    </div>
+      </section>
+    </main>
   );
 };
 

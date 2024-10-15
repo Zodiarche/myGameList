@@ -14,12 +14,7 @@
       }
 
       &__title {
-        @include from("desktop") {
-          margin-bottom: 4rem;
-        }
-        margin-bottom: 3rem;
-
-        margin-top: 0;
+        margin: 0;
       }
 
       &__success {
@@ -89,10 +84,6 @@
 
       &__form {
         margin-top: 3rem;
-
-        &:first-of-type {
-          margin-top: 0;
-        }
       }
 
       &__label {

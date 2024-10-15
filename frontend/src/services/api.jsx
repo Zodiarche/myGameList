@@ -175,3 +175,27 @@ export const logoutUser = async () => {
 
   return response.json();
 };
+
+/**
+ * Inscrit un nouvel utilisateur avec un nom d'utilisateur, une adresse e-mail et un mot de passe.
+ * @param {Object} userData - Les informations de l'utilisateur à inscrire.
+ * @param {string} userData.username - Le nom d'utilisateur choisi.
+ * @param {string} userData.email - L'adresse e-mail de l'utilisateur.
+ * @param {string} userData.password - Le mot de passe de l'utilisateur.
+ * @returns {Promise<Object>} Les données utilisateur après l'inscription.
+ * @throws {Error} Si l'inscription échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const signupUser = async ({ username, email, password }) => {
+  const response = await fetch('http://localhost:3000/user/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Échec de l'inscription");
+  }
+
+  return await response.json();
+};

@@ -1,0 +1,56 @@
+#signup {
+  &.signup {
+    @include from("desktop") {
+      display: block;
+      padding: 12rem 0;
+    }
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    .signup {
+      &__wrapper {
+        @extend.wrapper;
+      }
+
+      &__title {
+        margin: 0;
+      }
+
+      &__error {
+        @extend .states;
+        @extend .states__error;
+      }
+
+      &__field {
+        @extend .field;
+
+        &-container {
+          @extend .field-container;
+        }
+      }
+
+      &__form {
+        margin-top: 3rem;
+      }
+
+      &__label {
+      }
+
+      &__input {
+      }
+
+      &__submit {
+        // Les styles de base sont dans forms.scss
+        display: block;
+        border-radius: 2.5rem;
+        margin-top: 2rem;
+      }
+
+      &__login {
+        margin-top: 2rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+}

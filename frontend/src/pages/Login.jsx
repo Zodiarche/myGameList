@@ -11,7 +11,7 @@ const Login = () => {
   const queryClient = useQueryClient();
 
   // Vérification si l'utilisateur est déjà connecté au chargement du composant
-  const { data: userProfile, isError: authError } = useQuery({
+  const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
     queryFn: fetchProfile,
     retry: false,
@@ -43,7 +43,6 @@ const Login = () => {
           <h1 className="login__title">Connexion</h1>
 
           {error && <p className="login__error">{error}</p>}
-          {authError && <p className="login__error">Échec de la vérification de l'authentification</p>}
 
           <form className="login__form" onSubmit={handleLogin}>
             <div className="login__field-container">

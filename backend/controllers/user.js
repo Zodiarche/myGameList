@@ -48,7 +48,7 @@ export const getUserProfile = async (request, response) => {
 };
 
 /**
- * Crée un nouvel user.
+ * Crée un nouvel utilisateur après vérification des données du formulaire.
  * @param {Express.Request} request - L'objet de requête.
  * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
@@ -56,18 +56,35 @@ export const getUserProfile = async (request, response) => {
 export const createUser = async (request, response) => {
   const { username, email, password } = request.body;
 
+  // Validation du formulaire : Retourne dès qu'une erreur est trouvée
+  if (!username || username.length < 3) {
+    return response.status(400).json({ field: 'username', message: 'Le nom d’utilisateur doit comporter au moins 3 caractères.' });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    return response.status(400).json({ field: 'email', message: "L'adresse email est invalide." });
+  }
+
+  if (!password || password.length < 6) {
+    return response.status(400).json({ field: 'password', message: 'Le mot de passe doit comporter au moins 6 caractères.' });
+  }
+
   try {
     // Vérification si l'utilisateur existe déjà
     const existingUser = await user.findOne({ email });
-    if (existingUser) return response.status(400).json({ message: 'Cet utilisateur existe déjà.' });
+    if (existingUser) {
+      return response.status(400).json({ message: 'Cet utilisateur existe déjà.' });
+    }
 
+    // Hashage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new user({ username, email, password: hashedPassword });
     const savedUser = await newUser.save();
 
     response.status(201).json(savedUser);
   } catch (error) {
-    response.status(400).json({ message: error.message });
+    response.status(500).json({ message: error.message });
   }
 };
 
@@ -165,7 +182,7 @@ export const deleteUser = async (request, response) => {
  * @returns {Promise<void>}
  */
 export const logoutUser = async (_, response) => {
-  response.clearCookie('Token', {
+  response.clearCookie('token', {
     path: '/',
     httpOnly: true,
     secure: true,
