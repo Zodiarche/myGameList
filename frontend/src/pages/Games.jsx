@@ -4,8 +4,10 @@ import { fetchGames, fetchFilters } from '../services/api';
 import usePagination from '../hooks/usePagination';
 import GameFilters from '../components/GameFilters';
 import Loading from '../components/Loading';
+import { useNavigate } from 'react-router-dom';
 
 const Games = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     platform: '',
     tag: '',
@@ -20,7 +22,6 @@ const Games = () => {
   const [availableFilters, setAvailableFilters] = useState({});
   const gamesPerPage = 12;
 
-  // Fetch des jeux via React Query
   const {
     data: games = [],
     isLoading,
@@ -80,7 +81,10 @@ const Games = () => {
     });
   };
 
-  if (isLoading) return <Loading />;
+  const handleGameClick = (gameId) => {
+    navigate(`/games/${gameId}`);
+  };
+
   if (isError) return <div>Erreur: {error.message}</div>;
 
   return (
@@ -96,20 +100,24 @@ const Games = () => {
               </div>
 
               <div className="all-games__col all-games__col--right">
-                <div className="game-card__container">
-                  {currentGames.map((game) => (
-                    <div className="game-card" style={{ backgroundImage: `url(${game.background_image})` }} key={game._id}>
-                      <div className="game-card__content">
-                        <p className="game-card__name">{game.name}</p>
-                        <ul className="game-card__list">
-                          <li className="game-card__item">Année de sortie: {new Date(game.released).getFullYear()}</li>
-                          <li className="game-card__item">Note: {game.rating} / 5</li>
-                          <li className="game-card__item">Nombre de votes: {game.ratings_count}</li>
-                        </ul>
+                {isLoading ? (
+                  <Loading />
+                ) : (
+                  <div className="game-card__container">
+                    {currentGames.map((game) => (
+                      <div className="game-card" style={{ backgroundImage: `url(${game.background_image})` }} key={game._id} onClick={() => handleGameClick(game._id)}>
+                        <div className="game-card__content">
+                          <p className="game-card__name">{game.name}</p>
+                          <ul className="game-card__list">
+                            <li className="game-card__item">Année de sortie: {new Date(game.released).getFullYear()}</li>
+                            <li className="game-card__item">Note: {game.rating} / 5</li>
+                            <li className="game-card__item">Nombre de votes: {game.ratings_count}</li>
+                          </ul>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
 
                 <div>{renderPageButtons()}</div>
               </div>

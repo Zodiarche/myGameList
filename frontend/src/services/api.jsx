@@ -199,3 +199,21 @@ export const signupUser = async ({ username, email, password }) => {
 
   return await response.json();
 };
+
+/**
+ * Récupère les données d'un jeu spécifique par ID.
+ * @param {string} id - L'identifiant du jeu à récupérer.
+ * @returns {Promise<Object>} Les données du jeu.
+ * @throws {Error} Si la réponse du serveur n'est pas correcte ou si le jeu n'est pas trouvé.
+ */
+export const fetchGameById = async (id) => {
+  const response = await fetch(`http://localhost:3000/games/${id}`);
+
+  if (!response.ok) {
+    if (response.status === 404) throw new Error('Jeu non trouvé');
+    throw new Error("La réponse réseau n'était pas correcte");
+  }
+
+  const data = await response.json();
+  return data;
+};

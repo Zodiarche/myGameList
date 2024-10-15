@@ -80,12 +80,20 @@
   }
 
   &__game-item {
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     border: solid 0.1rem $color-dark-blue;
     border-radius: 1rem;
+    transition-duration: 0.4s;
+
+    &:hover,
+    &:focus {
+      background-color: $color-dark-blue;
+      color: $color-white;
+    }
   }
 
   &__no-results {

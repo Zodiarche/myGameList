@@ -1,0 +1,113 @@
+#game-details {
+  &.game-details {
+    @include from("desktop") {
+      padding: 12rem 0;
+    }
+    padding: 6rem 0;
+
+    .game-details {
+      &__wrapper {
+        @extend.wrapper;
+      }
+
+      &__cols {
+        @include from("desktop") {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12rem;
+        }
+        display: block;
+      }
+
+      &__col {
+        &--left {
+          flex-shrink: 0;
+          width: 40%;
+        }
+
+        &--right {
+          flex-grow: 1;
+
+          img {
+            border-radius: 2rem;
+          }
+        }
+      }
+
+      &__title {
+      }
+
+      &__subtitle {
+      }
+
+      &__list {
+        @include from("desktop") {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @include from("wide") {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        @include from("extra-wide") {
+          grid-template-columns: repeat(5, 1fr);
+        }
+        grid-template-columns: repeat(2, 1fr);
+
+        list-style-type: none;
+        text-align: center;
+        display: grid;
+        gap: 1.6rem;
+      }
+
+      &__item {
+        display: block;
+        min-height: 100%;
+        border: solid 0.1rem $color-dark-blue;
+        border-radius: 1.5rem;
+        padding: 1rem;
+        margin: 0;
+      }
+
+      &__read-more {
+        @extend .btn;
+        margin-top: 2rem;
+        padding: 0.5rem 2rem;
+      }
+    }
+
+    .swiper {
+      position: relative;
+
+      &-slide {
+        height: 100%;
+
+        img {
+          border-radius: 2rem;
+        }
+      }
+
+      &-button {
+        &-next,
+        &-prev {
+          @include from("tablet") {
+            width: 5.5rem;
+            height: 5.5rem;
+          }
+          width: 4rem;
+          height: 4rem;
+
+          transform: translateY(-50%);
+          margin-top: 0;
+
+          &::after {
+            content: none;
+          }
+        }
+
+        &-prev {
+          transform: translateY(-50%) rotate(180deg);
+        }
+      }
+    }
+  }
+}

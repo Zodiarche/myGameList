@@ -42,16 +42,29 @@
     }
 
     .game-card {
-      cursor: default;
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 20rem;
+      border: solid 0.5rem $color-white;
       border-radius: 1.6rem;
+      box-shadow: 0 0.4rem 0.8rem rgba($color: $color-dark-blue, $alpha: 0.16);
       padding: 3rem;
+      transition-duration: 0.4s;
 
       background-size: cover;
       background-repeat: no-repeat;
+
+      &:hover,
+      &:focus {
+        border: solid 0.5rem $color-red;
+        transform: scale(0.95);
+      }
+
+      &__container {
+        padding: 3rem 0;
+      }
 
       &__content {
         width: 100%;

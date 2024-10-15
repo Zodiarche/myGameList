@@ -1,56 +1,7 @@
-.swiper-slide {
+.swiper {
   cursor: grab;
+}
+
+.swiper-slide {
   text-align: center;
-  padding: 2rem 0;
-
-  a {
-    img {
-      box-shadow: 0 0 1.6rem rgba($color: $color-black, $alpha: 0.16);
-      border-radius: 2rem;
-    }
-  }
-}
-
-#templateNavigation {
-  .swiper-button-prev {
-    color: $color-dark-blue;
-  }
-
-  .swiper-button-next {
-    color: $color-dark-blue;
-  }
-}
-
-#templatePagination {
-  .swiper-pagination {
-    position: static;
-    display: flex;
-    justify-content: center;
-    height: 1rem;
-    margin-top: 4rem;
-  }
-
-  .swiper-pagination-bullet {
-    width: 1rem;
-    height: auto;
-    background-color: $color-dark-blue;
-    opacity: inherit;
-    border-radius: 0.5rem;
-  }
-
-  .swiper-pagination-bullet-active {
-    background-color: $color-red;
-  }
-}
-
-#templateScrollbar {
-  .swiper-scrollbar {
-    position: static;
-    background-color: $color-dark-blue;
-    margin-top: 4rem;
-
-    .swiper-scrollbar-drag {
-      background-color: $color-red;
-    }
-  }
 }

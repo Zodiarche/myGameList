@@ -1,7 +1,8 @@
 import * as utils from './utils.js';
-import { swiperTopGamesConfiguration } from './constants.js';
+import { swiperTopGamesConfiguration, swiperScreenshotsConfiguration } from './constants.js';
 
 export let swiperTopGames = null;
+export let swiperScreenshots = null;
 
 /**
  * @module SwiperJS/Main
@@ -35,9 +36,7 @@ const handleSwiperInstance = (swiperInstance, selector, params = {}) => {
  * Gère l'activation ou la désactivation des instances Swiper en fonction de la largeur de la fenêtre.
  */
 export const initializeSwiperJS = () => {
-  swiperTopGames = handleSwiperInstance(
-    swiperTopGames,
-    '#swiperTopGames',
-    swiperTopGamesConfiguration
-  );
+  swiperTopGames = handleSwiperInstance(swiperTopGames, '#swiperTopGames', swiperTopGamesConfiguration);
+
+  swiperScreenshots = handleSwiperInstance(swiperScreenshots, '#swiperScreenshots', swiperScreenshotsConfiguration);
 };
