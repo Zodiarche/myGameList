@@ -2,19 +2,7 @@
 
 @import "./modules/breakpoints";
 @import "fonts";
-
-/* Dimensions */
-$max-width: 1640px;
-// $border-width:
-$header-height: 11.5rem;
-
-/* Colors classic */
-$color-black: black;
-$color-white: #fffce4;
-/* Colors custom */
-$color-light-blue: #b8bcd4;
-$color-dark-blue: #383a47;
-$color-red: #d05454;
+@import "variables";
 
 * {
   box-sizing: border-box;
@@ -62,6 +50,7 @@ body {
   @import "content";
   @import "header";
   @import "footer";
+  @import "forms";
 
   /* Stylesheets custom */
   @import "swiper";

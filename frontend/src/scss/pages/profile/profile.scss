@@ -1,0 +1,129 @@
+#profile {
+  &.profile {
+    @include from("desktop") {
+      padding: 12rem 0;
+    }
+
+    .profile {
+      &__wrapper {
+        @extend .wrapper;
+      }
+
+      &__profile-settings {
+      }
+
+      &__title {
+        @include from("desktop") {
+          margin-bottom: 4rem;
+        }
+        margin-bottom: 3rem;
+
+        margin-top: 0;
+      }
+
+      &__success {
+        @extend .states;
+        @extend .states__success;
+      }
+
+      &__error {
+        @extend .states;
+        @extend .states__error;
+      }
+
+      &__cols {
+        @include from("desktop") {
+          display: flex;
+          justify-content: space-between;
+          gap: 12rem;
+        }
+      }
+
+      &__col {
+        &--left {
+          flex-shrink: 0;
+        }
+
+        &--right {
+          flex-grow: 1;
+        }
+      }
+
+      &__navigation {
+        @include from("desktop") {
+          position: sticky;
+          top: 1rem;
+          left: 0;
+          background-color: $color-dark-blue;
+          color: $color-white;
+          border-radius: 2rem;
+          padding: 3rem 6rem;
+        }
+      }
+
+      &__list {
+        list-style-type: none;
+        padding-left: 0;
+        margin: 0;
+
+        a {
+          text-decoration: none;
+          color: $color-white;
+          font-size: 2rem;
+
+          &:hover,
+          &:focus {
+            color: $color-red;
+          }
+        }
+      }
+
+      &__field {
+        @extend .field;
+
+        &-container {
+          @extend .field-container;
+        }
+      }
+
+      &__form {
+        margin-top: 3rem;
+
+        &:first-of-type {
+          margin-top: 0;
+        }
+      }
+
+      &__label {
+      }
+
+      &__input {
+      }
+
+      &__submit {
+        // Les styles de base sont dans forms.scss
+        display: block;
+        border-radius: 2.5rem;
+        margin-top: 1rem;
+      }
+
+      &__delete {
+        @extend .btn;
+        display: block;
+        background-color: $color-red;
+        border: solid 0.1rem $color-white;
+        font-size: inherit;
+        border-radius: 2.5rem;
+        margin-top: 3rem;
+        margin-left: auto;
+
+        &:hover,
+        &:focus {
+          background-color: $color-white;
+          color: $color-red;
+          border: solid 0.1rem $color-red;
+        }
+      }
+    }
+  }
+}

@@ -22,7 +22,7 @@ export const HeaderNavigation = () => {
         </li>
 
         <li className="header__navigation-menu-item">
-          <Link to="/profile">Profil</Link>
+          <Link to="/login">Profil</Link>
         </li>
 
         <li className="header__navigation-menu-item">

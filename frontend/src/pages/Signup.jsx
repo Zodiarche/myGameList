@@ -21,11 +21,10 @@ const Signup = () => {
       });
 
       if (response.ok) {
-        // Rediriger l'utilisateur vers la page de profil après inscription
-        navigate('/profile');
+        navigate('/login');
       } else {
         const data = await response.json();
-        setError(data.message); // Afficher l'erreur renvoyée par le backend
+        setError(data.message);
       }
     } catch (err) {
       setError('Une erreur est survenue. Veuillez réessayer.');

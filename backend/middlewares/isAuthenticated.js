@@ -24,7 +24,7 @@ export const isAuthenticated = async (request, response, next) => {
     request.userData = decoded;
     next();
   } catch (err) {
-    return response.status(401).json({ message: "Token invalide ou expiré" });
+    return response.status(403).json({ message: "Token invalide ou expiré" });
   }
 };
 
@@ -45,13 +45,5 @@ const getTokenFromCookies = (cookies) => {
  * @returns {Promise<Object>} - Les données décodées du token.
  */
 const verifyToken = (token) => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(decoded);
-      }
-    });
-  });
+  return jwt.verify(token, process.env.JWT_SECRET);
 };

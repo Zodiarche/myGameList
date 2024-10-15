@@ -1,38 +1,26 @@
-import user from "../models/user.js";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import user from '../models/user.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 export const loginUser = async (request, response) => {
   const { email, password } = request.body;
 
   try {
     const existingUser = await user.findOne({ email });
-    if (!existingUser) {
-      return response.status(404).json({ message: "Utilisateur non trouvé" });
-    }
+    if (!existingUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      existingUser.password
-    );
-    if (!isPasswordValid) {
-      return response.status(400).json({ message: "Mot de passe incorrect" });
-    }
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+    if (!isPasswordValid) return response.status(400).json({ message: 'Mot de passe incorrect' });
 
-    const token = jwt.sign(
-      { userId: existingUser._id, email: existingUser.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ userId: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-    // Stocker le token dans un cookie
-    response.cookie("token", token, {
+    response.cookie('token', token, {
       httpOnly: true,
       secure: true,
-      sameSite: "Strict",
+      sameSite: 'Strict',
     });
 
-    response.status(200).json({ message: "Connexion réussie", token });
+    response.status(200).json({ message: 'Connexion réussie', token });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
@@ -47,15 +35,14 @@ export const loginUser = async (request, response) => {
 export const getUserProfile = async (request, response) => {
   try {
     const requestUserData = request.userData;
-    const userDatabase = await user.findById(requestUserData.userId);
 
-    if (!userDatabase) {
-      return response.status(404).json({ message: "Utilisateur non trouvé" });
-    }
+    const userDatabase = await user.findById(requestUserData.userId);
+    if (!userDatabase) return response.status(404).json({ message: 'Utilisateur non trouvé' });
+
     response.json(userDatabase);
   } catch (error) {
     response.status(500).json({
-      message: "Erreur lors de la récupération du profil utilisateur",
+      message: 'Erreur lors de la récupération du profil utilisateur',
     });
   }
 };
@@ -72,22 +59,12 @@ export const createUser = async (request, response) => {
   try {
     // Vérification si l'utilisateur existe déjà
     const existingUser = await user.findOne({ email });
-    if (existingUser) {
-      return response
-        .status(400)
-        .json({ message: "Cet utilisateur existe déjà." });
-    }
+    if (existingUser) return response.status(400).json({ message: 'Cet utilisateur existe déjà.' });
 
-    // Hash du mot de passe avec bcrypt
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new user({
-      username,
-      email,
-      password: hashedPassword,
-    });
-
+    const newUser = new user({ username, email, password: hashedPassword });
     const savedUser = await newUser.save();
+
     response.status(201).json(savedUser);
   } catch (error) {
     response.status(400).json({ message: error.message });
@@ -119,8 +96,7 @@ export const getUsers = async (_, response) => {
 export const getUserById = async (request, response) => {
   try {
     const user = await user.findById(request.params.id);
-    if (!user)
-      return response.status(404).json({ message: "Utilisateur non trouvé" });
+    if (!user) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
     response.json(user);
   } catch (error) {
@@ -136,15 +112,21 @@ export const getUserById = async (request, response) => {
  */
 export const updateUser = async (request, response) => {
   try {
-    const updatedUser = await user.findByIdAndUpdate(
-      request.params.id,
-      request.body,
-      {
-        new: true,
-      }
-    );
-    if (!updatedUser)
-      return response.status(404).json({ message: "Utilisateur non trouvé" });
+    const { oldPassword, newPassword, ...otherUpdates } = request.body;
+
+    const existingUser = await user.findById(request.params.id);
+    if (!existingUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
+
+    if (oldPassword && newPassword) {
+      const isPasswordValid = await bcrypt.compare(oldPassword, existingUser.password);
+      if (!isPasswordValid) return response.status(400).json({ message: 'Ancien mot de passe incorrect.' });
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      otherUpdates.password = hashedPassword;
+    }
+
+    const updatedUser = await user.findByIdAndUpdate(request.params.id, { $set: otherUpdates }, { new: true });
+    if (!updatedUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
     response.json(updatedUser);
   } catch (error) {
@@ -161,10 +143,16 @@ export const updateUser = async (request, response) => {
 export const deleteUser = async (request, response) => {
   try {
     const deletedUser = await user.findByIdAndDelete(request.params.id);
-    if (!deletedUser)
-      return response.status(404).json({ message: "Utilisateur non trouvé" });
+    if (!deletedUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
-    response.json({ message: "Utilisateur supprimé" });
+    response.clearCookie('token', {
+      path: '/',
+      httpOnly: true,
+      secure: true,
+      sameSite: 'Strict',
+    });
+
+    response.json({ message: 'Utilisateur supprimé et token effacé' });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }

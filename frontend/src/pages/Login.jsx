@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -7,9 +7,24 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError(''); // Réinitialiser l'erreur
+  // Utilitaire pour lire les cookies
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  useEffect(() => {
+    const token = getCookie('token');
+    if (!token) return;
+
+    navigate('/profile');
+  }, [navigate]);
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    setError('');
 
     try {
       const response = await fetch('http://localhost:3000/user/login', {
@@ -37,14 +52,19 @@ const Login = () => {
       <form onSubmit={handleLogin}>
         <div>
           <label>Email :</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
         </div>
         <div>
           <label>Mot de passe :</label>
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             required
           />
         </div>

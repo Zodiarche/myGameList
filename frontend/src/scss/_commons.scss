@@ -59,41 +59,41 @@ button:active {
   text-align: center;
   line-height: 1.6;
   border-radius: 1rem;
-  padding: 0 1rem;
+  padding: 1rem;
 
   ul {
     list-style: none;
   }
 
-  &.info {
+  &__info {
     display: block;
     background-color: #f9f9f9;
     color: #787878;
     border: solid 0.1rem #d9d9d9;
   }
 
-  &.warning {
+  &__warning {
     display: block;
     background-color: #fefbe9;
     color: #ffa800;
     border: solid 0.1rem #ffdd9a;
   }
 
-  &.success {
+  &__success {
     display: block;
     background-color: #dff0d8;
     color: #468847;
     border: solid 0.1rem #d6e9c6;
   }
 
-  &.error {
+  &__error {
     display: block;
     background-color: #fddede;
     color: #e64545;
     border: solid 0.1rem #fcbcbc;
   }
 
-  &.highlight {
+  &__highlight {
     display: block;
     background-color: #d9edf7;
     color: #3a87ad;
@@ -122,11 +122,6 @@ iframe {
 }
 
 .btn {
-  @include from("desktop") {
-    padding: 1.5rem 3rem;
-  }
-  padding: 1rem 2rem;
-
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
@@ -134,10 +129,11 @@ iframe {
   background-color: $color-dark-blue;
   color: $color-white;
   font-family: $family-neue-haas-unica;
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700; // bold
   border: solid 0.1rem $color-dark-blue;
   border-radius: 2rem;
+  padding: 1rem 2rem;
 
   &:hover,
   &:focus {
@@ -178,7 +174,7 @@ iframe {
   overflow: hidden;
 }
 
-.no-margin-first-last {
+.no-margin-outside {
   &:first-of-type {
     margin-top: 0;
   }

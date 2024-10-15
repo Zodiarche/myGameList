@@ -44,33 +44,25 @@ const Games = () => {
   const filteredGames = useMemo(() => {
     let filtered = [...games];
     if (filters.platform) {
-      filtered = filtered.filter((game) =>
-        game.platforms.some((platform) => platform.name === filters.platform)
-      );
+      filtered = filtered.filter((game) => game.platforms.some((platform) => platform.name === filters.platform));
     }
     if (filters.tag) {
       filtered = filtered.filter((game) => game.tags.some((tag) => tag.name === filters.tag));
     }
     if (filters.store) {
-      filtered = filtered.filter((game) =>
-        game.stores.some((store) => store.name === filters.store)
-      );
+      filtered = filtered.filter((game) => game.stores.some((store) => store.name === filters.store));
     }
     if (filters.esrbRating) {
       filtered = filtered.filter((game) => game.esrb_rating?.name === filters.esrbRating);
     }
     if (filters.releaseYear) {
-      filtered = filtered.filter(
-        (game) => new Date(game.released).getFullYear() === parseInt(filters.releaseYear, 10)
-      );
+      filtered = filtered.filter((game) => new Date(game.released).getFullYear() === parseInt(filters.releaseYear, 10));
     }
     if (filters.userRating) {
       filtered = filtered.filter((game) => game.rating === parseFloat(filters.userRating));
     }
     if (filters.metacriticRating) {
-      filtered = filtered.filter(
-        (game) => game.metacritic === parseInt(filters.metacriticRating, 10)
-      );
+      filtered = filtered.filter((game) => game.metacritic === parseInt(filters.metacriticRating, 10));
     }
     if (filters.playtime) {
       filtered = filtered.filter((game) => game.playtime >= parseInt(filters.playtime, 10));
@@ -79,10 +71,7 @@ const Games = () => {
   }, [games, filters]);
 
   // Utilisation du hook de pagination
-  const { currentItems: currentGames, renderPageButtons } = usePagination(
-    filteredGames,
-    gamesPerPage
-  );
+  const { currentItems: currentGames, renderPageButtons } = usePagination(filteredGames, gamesPerPage);
 
   const handleFilterChange = (e) => {
     setFilters({
@@ -103,27 +92,17 @@ const Games = () => {
 
             <div className="all-games__cols">
               <div className="all-games__col all-games__col--left">
-                <GameFilters
-                  filters={filters}
-                  availableFilters={availableFilters}
-                  handleFilterChange={handleFilterChange}
-                />
+                <GameFilters filters={filters} availableFilters={availableFilters} handleFilterChange={handleFilterChange} />
               </div>
 
               <div className="all-games__col all-games__col--right">
                 <div className="game-card__container">
                   {currentGames.map((game) => (
-                    <div
-                      className="game-card"
-                      style={{ backgroundImage: `url(${game.background_image})` }}
-                      key={game._id}
-                    >
+                    <div className="game-card" style={{ backgroundImage: `url(${game.background_image})` }} key={game._id}>
                       <div className="game-card__content">
                         <p className="game-card__name">{game.name}</p>
                         <ul className="game-card__list">
-                          <li className="game-card__item">
-                            Année de sortie: {new Date(game.released).getFullYear()}
-                          </li>
+                          <li className="game-card__item">Année de sortie: {new Date(game.released).getFullYear()}</li>
                           <li className="game-card__item">Note: {game.rating} / 5</li>
                           <li className="game-card__item">Nombre de votes: {game.ratings_count}</li>
                         </ul>

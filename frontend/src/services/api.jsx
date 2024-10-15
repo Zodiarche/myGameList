@@ -24,12 +24,61 @@ export const fetchFilters = async () => {
 };
 
 export const fetchProfile = async () => {
-  const response = await fetch('http://localhost:3000/user/profile', {
-    method: 'GET',
-    credentials: 'include',
-  });
-
+  const response = await fetch('http://localhost:3000/user/profile', { method: 'GET', credentials: 'include' });
   if (response.ok) return response.json();
 
-  throw new Error(response.status === 401 ? 'Non autorisé' : 'Erreur de serveur');
+  throw new Error(response.status === 401 ? 'Unauthorized' : 'Erreur de serveur');
+};
+
+export const updateUser = async ({ id, username, email, password }) => {
+  try {
+    const response = await fetch(`http://localhost:3000/user/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
+    });
+
+    console.log(JSON.stringify(response, null, 2));
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to update user');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+};
+
+export const deleteUser = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:3000/user/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to delete user');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
 };
