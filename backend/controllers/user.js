@@ -157,3 +157,20 @@ export const deleteUser = async (request, response) => {
     response.status(500).json({ message: error.message });
   }
 };
+
+/**
+ * Deconnecte un user.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
+ * @returns {Promise<void>}
+ */
+export const logoutUser = async (_, response) => {
+  response.clearCookie('Token', {
+    path: '/',
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Strict',
+  });
+
+  response.status(200).json({ message: 'Déconnexion réussie, token effacé.' });
+};

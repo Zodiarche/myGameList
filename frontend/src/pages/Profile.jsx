@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { fetchProfile, updateUser, deleteUser } from '../services/api';
+import { fetchProfile, updateUser, deleteUser, logoutUser } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
@@ -102,6 +102,15 @@ const Profile = () => {
     deleteMutation.mutate(user._id);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      navigate('/login');
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion', error);
+    }
+  };
+
   if (isLoading) return <p>Chargement...</p>;
   if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
 
@@ -196,6 +205,17 @@ const Profile = () => {
                       }}
                     >
                       Mes jeux
+                    </a>
+                  </li>
+                  <li className="profile__item">
+                    <a
+                      href="#"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        handleLogout();
+                      }}
+                    >
+                      Déconnexion
                     </a>
                   </li>
                 </ul>
