@@ -10,17 +10,27 @@
         @extend.wrapper;
       }
 
+      &__title {
+        margin-top: 0;
+      }
+
       &__cols {
         @include from("desktop") {
           display: flex;
           gap: 6rem;
         }
+        display: block;
       }
 
       &__col {
         &--left {
-          flex-shrink: 0;
-          width: 20%;
+          @include from("desktop") {
+            flex-shrink: 0;
+            width: 20%;
+            margin-bottom: 0;
+          }
+          width: 100%;
+          margin-bottom: 6rem;
         }
 
         &--right {
@@ -30,6 +40,11 @@
     }
 
     .game-card {
+      @include from("tablet") {
+        margin-bottom: 0;
+      }
+      margin-bottom: 2rem;
+
       cursor: default;
       display: flex;
       justify-content: center;
@@ -43,9 +58,18 @@
       background-repeat: no-repeat;
 
       &__container {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
+        @include from("tablet") {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+        }
+        @include from("wide") {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @include from("extra-wide") {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        display: block;
       }
 
       &__content {

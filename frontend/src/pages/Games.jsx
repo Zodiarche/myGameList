@@ -88,7 +88,7 @@ const Games = () => {
       <main id="games">
         <section id="all-games" className="all-games">
           <div className="all-games__wrapper">
-            <h1>Liste des Jeux</h1>
+            <h1 className="all-games__title">Liste des Jeux</h1>
 
             <div className="all-games__cols">
               <div className="all-games__col all-games__col--left">
