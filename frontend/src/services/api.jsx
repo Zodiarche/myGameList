@@ -1,4 +1,42 @@
 /**
+ * Effectue un appel API avec les paramètres fournis.
+ * @param {string} url - L'URL de l'API à appeler.
+ * @param {Object} [options={}] - Options pour la requête, telles que la méthode HTTP, le corps, les en-têtes et les informations d'authentification.
+ * @param {string} [options.method='GET'] - La méthode HTTP à utiliser (GET, POST, PUT, DELETE, etc.).
+ * @param {Object} [options.body] - Le corps de la requête, si nécessaire.
+ * @param {Object} [options.headers={}] - Les en-têtes HTTP supplémentaires à ajouter à la requête.
+ * @param {string} [options.credentials='include'] - Les informations d'authentification à inclure dans la requête (e.g., cookies).
+ * @returns {Promise<Object>} La réponse JSON de l'API.
+ * @throws {Error} Si l'appel API échoue ou si une erreur est renvoyée par le serveur.
+ */
+const apiCall = async (url, { method = 'GET', body, headers = {}, credentials = 'include' } = {}) => {
+  try {
+    const options = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
+      credentials,
+    };
+
+    if (body) options.body = JSON.stringify(body);
+
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || `Erreur ${response.status}: ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`Erreur lors de l'appel API à ${url}:`, error.message);
+    throw error;
+  }
+};
+
+/**
  * Récupère les jeux les plus populaires avec des filtres optionnels.
  * @param {Object} [filters={}] - Objets contenant les filtres appliqués aux jeux.
  * @returns {Promise<Object>} Les données des jeux populaires filtrés.
@@ -6,15 +44,7 @@
  */
 export const fetchTopGames = async (filters = {}) => {
   const params = new URLSearchParams(filters).toString();
-  const response = await fetch(`http://localhost:3000/games/top-games?${params}`);
-
-  if (!response.ok) {
-    if (response.status === 404) throw new Error('Jeu introuvable');
-    throw new Error("La réponse réseau n'était pas correcte");
-  }
-
-  const data = await response.json();
-  return data;
+  return await apiCall(`http://localhost:3000/games/top-games?${params}`);
 };
 
 /**
@@ -23,15 +53,7 @@ export const fetchTopGames = async (filters = {}) => {
  * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun jeu n'est trouvé.
  */
 export const fetchGames = async () => {
-  const response = await fetch(`http://localhost:3000/games`);
-
-  if (!response.ok) {
-    if (response.status === 404) throw new Error('Jeux introuvables');
-    throw new Error("La réponse réseau n'était pas correcte");
-  }
-
-  const data = await response.json();
-  return data;
+  return await apiCall(`http://localhost:3000/games`);
 };
 
 /**
@@ -40,15 +62,7 @@ export const fetchGames = async () => {
  * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun filtre n'est trouvé.
  */
 export const fetchFilters = async () => {
-  const response = await fetch(`http://localhost:3000/games/filters`);
-
-  if (!response.ok) {
-    if (response.status === 404) throw new Error('Filtres introuvables');
-    throw new Error("La réponse réseau n'était pas correcte");
-  }
-
-  const data = await response.json();
-  return data;
+  return await apiCall(`http://localhost:3000/games/filters`);
 };
 
 /**
@@ -57,14 +71,7 @@ export const fetchFilters = async () => {
  * @throws {Error} Si l'utilisateur n'est pas autorisé ou s'il y a une erreur de serveur.
  */
 export const fetchProfile = async () => {
-  const response = await fetch('http://localhost:3000/user/profile', { method: 'GET', credentials: 'include' });
-
-  if (!response.ok) {
-    if (response.status === 401) throw new Error('Non autorisé');
-    throw new Error('Erreur de serveur');
-  }
-
-  return response.json();
+  return await apiCall(`http://localhost:3000/user/profile`, { method: 'GET' });
 };
 
 /**
@@ -78,30 +85,10 @@ export const fetchProfile = async () => {
  * @throws {Error} Si la mise à jour échoue ou si une erreur est renvoyée par le serveur.
  */
 export const updateUser = async ({ id, username, email, password }) => {
-  try {
-    const response = await fetch(`http://localhost:3000/user/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Échec de la mise à jour de l'utilisateur");
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
-    throw error;
-  }
+  return await apiCall(`http://localhost:3000/user/${id}`, {
+    method: 'PUT',
+    body: { username, email, password },
+  });
 };
 
 /**
@@ -111,26 +98,7 @@ export const updateUser = async ({ id, username, email, password }) => {
  * @throws {Error} Si la suppression échoue ou si une erreur est renvoyée par le serveur.
  */
 export const deleteUser = async (id) => {
-  try {
-    const response = await fetch(`http://localhost:3000/user/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Échec de la suppression de l'utilisateur");
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Erreur lors de la suppression de l'utilisateur :", error);
-    throw error;
-  }
+  return await apiCall(`http://localhost:3000/user/${id}`, { method: 'DELETE' });
 };
 
 /**
@@ -142,19 +110,10 @@ export const deleteUser = async (id) => {
  * @throws {Error} Si la connexion échoue ou si une erreur est renvoyée par le serveur.
  */
 export const loginUser = async ({ email, password }) => {
-  const response = await fetch('http://localhost:3000/user/login', {
+  return await apiCall('http://localhost:3000/user/login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'include',
-    body: JSON.stringify({ email, password }),
+    body: { email, password },
   });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Échec de la connexion');
-  }
-
-  return await response.json();
 };
 
 /**
@@ -163,17 +122,7 @@ export const loginUser = async ({ email, password }) => {
  * @throws {Error} Si la déconnexion échoue ou si une erreur est renvoyée par le serveur.
  */
 export const logoutUser = async () => {
-  const response = await fetch('http://localhost:3000/user/logout', {
-    method: 'POST',
-    credentials: 'include',
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || 'Échec de la déconnexion');
-  }
-
-  return response.json();
+  return await apiCall('http://localhost:3000/user/logout', { method: 'POST' });
 };
 
 /**
@@ -186,60 +135,53 @@ export const logoutUser = async () => {
  * @throws {Error} Si l'inscription échoue ou si une erreur est renvoyée par le serveur.
  */
 export const signupUser = async ({ username, email, password }) => {
-  const response = await fetch('http://localhost:3000/user/signup', {
+  return await apiCall('http://localhost:3000/user/signup', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, email, password }),
+    body: { username, email, password },
   });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Échec de l'inscription");
-  }
-
-  return await response.json();
 };
 
 /**
- * Récupère les données d'un jeu spécifique par ID.
- * @param {string} id - L'identifiant du jeu à récupérer.
+ * Récupère un jeu en fonction de son identifiant.
+ * @param {number} id - L'identifiant du jeu à récupérer.
  * @returns {Promise<Object>} Les données du jeu.
- * @throws {Error} Si la réponse du serveur n'est pas correcte ou si le jeu n'est pas trouvé.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const fetchGameById = async (id) => {
-  const response = await fetch(`http://localhost:3000/games/${id}`);
-
-  if (!response.ok) {
-    if (response.status === 404) throw new Error('Jeu non trouvé');
-    throw new Error("La réponse réseau n'était pas correcte");
-  }
-
-  const data = await response.json();
-  return data;
+  return await apiCall(`http://localhost:3000/games/${id}`);
 };
 
+/**
+ * Récupère la liste des utilisateurs associés aux jeux.
+ * @returns {Promise<Object>} Les données des utilisateurs de jeux.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
 export const fetchGameUsers = async () => {
-  const response = await fetch('http://localhost:3000/game-users');
-  if (!response.ok) throw new Error('Erreur de récupération des jeux utilisateur');
-  return response.json();
+  return await apiCall('http://localhost:3000/game-users');
 };
 
+/**
+ * Crée un nouvel utilisateur de jeu avec les données fournies.
+ * @param {Object} gameData - Les données de l'utilisateur de jeu.
+ * @returns {Promise<Object>} Les données de l'utilisateur de jeu créé.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
 export const createGameUser = async (gameData) => {
-  const response = await fetch('http://localhost:3000/game-users', {
+  return await apiCall('http://localhost:3000/game-users', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(gameData),
+    body: gameData,
   });
-  if (!response.ok) throw new Error('Erreur lors de la création du jeu utilisateur');
-  return response.json();
 };
 
+/**
+ * Met à jour les données d'un utilisateur de jeu existant.
+ * @param {Object} gameData - Les données à jour de l'utilisateur de jeu.
+ * @returns {Promise<Object>} Les données de l'utilisateur de jeu mis à jour.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
 export const updateGameUser = async (gameData) => {
-  const response = await fetch(`http://localhost:3000/game-users/${gameData.id}`, {
+  return await apiCall(`http://localhost:3000/game-users/${gameData.id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(gameData),
+    body: gameData,
   });
-  if (!response.ok) throw new Error('Erreur lors de la mise à jour du jeu utilisateur');
-  return response.json();
 };
