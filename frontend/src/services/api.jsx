@@ -1,8 +1,4 @@
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const URL = process.env.URL;
+import { apiUrl } from '../utils/constants';
 
 /**
  * Effectue un appel API avec les paramètres fournis.
@@ -50,7 +46,7 @@ const apiCall = async (url, { method = 'GET', body, headers = {}, credentials = 
  */
 export const fetchTopGames = async (filters = {}) => {
   const params = new URLSearchParams(filters).toString();
-  return await apiCall(`${URL}/games/top-games?${params}`);
+  return await apiCall(`${apiUrl}/games/top-games?${params}`);
 };
 
 /**
@@ -59,7 +55,7 @@ export const fetchTopGames = async (filters = {}) => {
  * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun jeu n'est trouvé.
  */
 export const fetchGames = async () => {
-  return await apiCall(`${URL}/games`);
+  return await apiCall(`${apiUrl}/games`);
 };
 
 /**
@@ -68,7 +64,7 @@ export const fetchGames = async () => {
  * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun filtre n'est trouvé.
  */
 export const fetchFilters = async () => {
-  return await apiCall(`${URL}/games/filters`);
+  return await apiCall(`${apiUrl}/games/filters`);
 };
 
 /**
@@ -77,7 +73,7 @@ export const fetchFilters = async () => {
  * @throws {Error} Si l'utilisateur n'est pas autorisé ou s'il y a une erreur de serveur.
  */
 export const fetchProfile = async () => {
-  return await apiCall(`${URL}/user/profile`, { method: 'GET' });
+  return await apiCall(`${apiUrl}/user/profile`, { method: 'GET' });
 };
 
 /**
@@ -91,7 +87,7 @@ export const fetchProfile = async () => {
  * @throws {Error} Si la mise à jour échoue ou si une erreur est renvoyée par le serveur.
  */
 export const updateUser = async ({ id, username, email, password }) => {
-  return await apiCall(`${URL}/user/${id}`, {
+  return await apiCall(`${apiUrl}/user/${id}`, {
     method: 'PUT',
     body: { username, email, password },
   });
@@ -104,7 +100,7 @@ export const updateUser = async ({ id, username, email, password }) => {
  * @throws {Error} Si la suppression échoue ou si une erreur est renvoyée par le serveur.
  */
 export const deleteUser = async (id) => {
-  return await apiCall(`${URL}/user/${id}`, { method: 'DELETE' });
+  return await apiCall(`${apiUrl}/user/${id}`, { method: 'DELETE' });
 };
 
 /**
@@ -116,7 +112,7 @@ export const deleteUser = async (id) => {
  * @throws {Error} Si la connexion échoue ou si une erreur est renvoyée par le serveur.
  */
 export const loginUser = async ({ email, password }) => {
-  return await apiCall(`${URL}/user/login`, {
+  return await apiCall(`${apiUrl}/user/login`, {
     method: 'POST',
     body: { email, password },
   });
@@ -128,7 +124,7 @@ export const loginUser = async ({ email, password }) => {
  * @throws {Error} Si la déconnexion échoue ou si une erreur est renvoyée par le serveur.
  */
 export const logoutUser = async () => {
-  return await apiCall(`${URL}/user/logout`, { method: 'POST' });
+  return await apiCall(`${apiUrl}/user/logout`, { method: 'POST' });
 };
 
 /**
@@ -141,7 +137,7 @@ export const logoutUser = async () => {
  * @throws {Error} Si l'inscription échoue ou si une erreur est renvoyée par le serveur.
  */
 export const signupUser = async ({ username, email, password }) => {
-  return await apiCall(`${URL}/user/signup`, {
+  return await apiCall(`${apiUrl}/user/signup`, {
     method: 'POST',
     body: { username, email, password },
   });
@@ -154,7 +150,7 @@ export const signupUser = async ({ username, email, password }) => {
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const fetchGameById = async (id) => {
-  return await apiCall(`${URL}/games/${id}`);
+  return await apiCall(`${apiUrl}/games/${id}`);
 };
 
 /**
@@ -163,7 +159,7 @@ export const fetchGameById = async (id) => {
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const fetchGameUsers = async () => {
-  return await apiCall(`${URL}/game-users`);
+  return await apiCall(`${apiUrl}/game-users`);
 };
 
 /**
@@ -173,7 +169,7 @@ export const fetchGameUsers = async () => {
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const createGameUser = async (gameData) => {
-  return await apiCall(`${URL}/game-users`, {
+  return await apiCall(`${apiUrl}/game-users`, {
     method: 'POST',
     body: gameData,
   });
@@ -186,7 +182,7 @@ export const createGameUser = async (gameData) => {
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const updateGameUser = async (gameData) => {
-  return await apiCall(`${URL}/game-users/${gameData.id}`, {
+  return await apiCall(`${apiUrl}/game-users/${gameData.id}`, {
     method: 'PUT',
     body: gameData,
   });
