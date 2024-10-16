@@ -105,6 +105,8 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await logoutUser();
+      queryClient.removeQueries(['userProfile']);
+      queryClient.setQueryData(['userProfile'], null);
       navigate('/login');
     } catch (error) {
       console.error('Erreur lors de la déconnexion', error);

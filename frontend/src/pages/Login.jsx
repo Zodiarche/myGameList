@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchProfile, loginUser } from '../services/api';
@@ -15,9 +15,12 @@ const Login = () => {
     queryKey: ['userProfile'],
     queryFn: fetchProfile,
     retry: false,
-    onSuccess: (data) => navigate('/profile'),
-    onError: () => console.error("Erreur lors de la vérification de l'authentification"),
   });
+
+  useEffect(() => {
+    if (!userProfile && !userProfile?._id) return;
+    navigate('/profile');
+  }, [userProfile, navigate]);
 
   // Mutation pour gérer la connexion
   const loginMutation = useMutation({
