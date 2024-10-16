@@ -1,4 +1,4 @@
-import GameUser from "../models/game-user.js";
+import GameUser from '../models/game-user.js';
 
 /**
  * Crée un nouveau GameUser.
@@ -8,7 +8,6 @@ import GameUser from "../models/game-user.js";
  */
 export const createGameUser = async (request, response) => {
   const gameUser = new GameUser(request.body);
-
   try {
     const savedGameUser = await gameUser.save();
     response.status(201).json(savedGameUser);
@@ -25,7 +24,8 @@ export const createGameUser = async (request, response) => {
  */
 export const getGameUsers = async (request, response) => {
   try {
-    const gameUserList = await GameUser.find().populate("idUser idGameBD");
+    const userId = request.userData.userId;
+    const gameUserList = await GameUser.find({ idUser: userId }).populate('idUser idGameBD');
 
     response.json(gameUserList);
   } catch (error) {
@@ -41,11 +41,8 @@ export const getGameUsers = async (request, response) => {
  */
 export const getGameUserById = async (request, response) => {
   try {
-    const gameUser = await GameUser.findById(request.params.id).populate(
-      "idUser idGameBD"
-    );
-    if (!gameUser)
-      return response.status(404).json({ message: "GameUser non trouvé" });
+    const gameUser = await GameUser.findById(request.params.id).populate('idUser idGameBD');
+    if (!gameUser) return response.status(404).json({ message: 'GameUser non trouvé' });
 
     response.json(gameUser);
   } catch (error) {
@@ -61,13 +58,8 @@ export const getGameUserById = async (request, response) => {
  */
 export const updateGameUser = async (request, response) => {
   try {
-    const updatedGameUser = await GameUser.findByIdAndUpdate(
-      request.params.id,
-      request.body,
-      { new: true }
-    );
-    if (!updatedGameUser)
-      return response.status(404).json({ message: "GameUser non trouvé" });
+    const updatedGameUser = await GameUser.findByIdAndUpdate(request.params.id, request.body, { new: true });
+    if (!updatedGameUser) return response.status(404).json({ message: 'GameUser non trouvé' });
 
     response.json(updatedGameUser);
   } catch (error) {
@@ -84,10 +76,9 @@ export const updateGameUser = async (request, response) => {
 export const deleteGameUser = async (request, response) => {
   try {
     const deletedGameUser = await GameUser.findByIdAndDelete(request.params.id);
-    if (!deletedGameUser)
-      return response.status(404).json({ message: "GameUser non trouvé" });
+    if (!deletedGameUser) return response.status(404).json({ message: 'GameUser non trouvé' });
 
-    response.json({ message: "GameUser supprimé" });
+    response.json({ message: 'GameUser supprimé' });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }

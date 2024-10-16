@@ -217,3 +217,29 @@ export const fetchGameById = async (id) => {
   const data = await response.json();
   return data;
 };
+
+export const fetchGameUsers = async () => {
+  const response = await fetch('http://localhost:3000/game-users');
+  if (!response.ok) throw new Error('Erreur de récupération des jeux utilisateur');
+  return response.json();
+};
+
+export const createGameUser = async (gameData) => {
+  const response = await fetch('http://localhost:3000/game-users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gameData),
+  });
+  if (!response.ok) throw new Error('Erreur lors de la création du jeu utilisateur');
+  return response.json();
+};
+
+export const updateGameUser = async (gameData) => {
+  const response = await fetch(`http://localhost:3000/game-users/${gameData.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(gameData),
+  });
+  if (!response.ok) throw new Error('Erreur lors de la mise à jour du jeu utilisateur');
+  return response.json();
+};
