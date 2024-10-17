@@ -98,9 +98,9 @@ const GameDetails = () => {
                 <li className="game-details__item">Metacritic: {game.metacritic}</li>
                 <li>
                   <a href="#" className={`game-details__button ${!user ? 'disabled' : ''}`} onClick={user ? handleAddToCollectionClick : (event) => event.preventDefault()}>
-                    Ajouter à ma collection
+                    Ajouter à ma bibliothèque
                   </a>
-                  {!user && <p className="states__error">Veuillez vous connecter pour ajouter des jeux à votre collection.</p>}
+                  {!user && <p className="states__error">Veuillez vous connecter pour ajouter des jeux à votre bibliothèque.</p>}
                 </li>
               </ul>
             </div>

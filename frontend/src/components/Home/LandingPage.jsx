@@ -10,7 +10,7 @@ const LandingPage = () => {
         <div className="landing-page__cols">
           <div className="landing-page__col landing-page__col--left">
             <h1 className="landing-page__title">myGameList, créer votre bibliothèque de jeux !</h1>
-            <p className="landing-page__description">Rassemblez votre collection de jeux et votre classement personnel en un seul endroit et partagez-la !</p>
+            <p className="landing-page__description">Rassemblez votre bibliothèque de jeux et votre classement personnel en un seul endroit et partagez-la !</p>
             <ul className="landing-page__list">
               <li className="landing-page__item">Trouvez et notez des jeux facilement</li>
               <li className="landing-page__item">Organisez vos jeux par statut (À faire, En cours, Terminé, etc.)</li>
