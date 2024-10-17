@@ -60,8 +60,6 @@ const MyGames = () => {
     <div>
       <h2>Ma Bibliothèque de Jeux</h2>
       {/* Liste des jeux */}
-      <h3>Ajouter un Nouveau Jeu</h3>
-      {/* Formulaire pour ajouter un jeu */}
     </div>
   );
 };

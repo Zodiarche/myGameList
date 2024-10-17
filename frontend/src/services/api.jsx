@@ -159,7 +159,7 @@ export const fetchGameById = async (id) => {
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const fetchGameUsers = async () => {
-  return await apiCall(`${apiUrl}/game-users`);
+  return await apiCall(`${apiUrl}/games-user`);
 };
 
 /**
@@ -169,7 +169,7 @@ export const fetchGameUsers = async () => {
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const createGameUser = async (gameData) => {
-  return await apiCall(`${apiUrl}/game-users`, {
+  return await apiCall(`${apiUrl}/games-user`, {
     method: 'POST',
     body: gameData,
   });
@@ -182,8 +182,20 @@ export const createGameUser = async (gameData) => {
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const updateGameUser = async (gameData) => {
-  return await apiCall(`${apiUrl}/game-users/${gameData.id}`, {
+  return await apiCall(`${apiUrl}/games-user/${gameData.id}`, {
     method: 'PUT',
     body: gameData,
   });
+};
+
+/**
+ * Fonction de requête asynchrone pour récupérer les jeux à partir d'une API en fonction de la recherche.
+ *
+ * @param {string} searchQuery - La chaîne de recherche utilisée pour trouver les jeux.
+ * @returns {Promise<Object[]>} - Retourne une promesse qui se résout en une liste de jeux sous forme d'objet JSON.
+ * @throws {Error} - Lance une erreur si la requête échoue.
+ */
+export const fetchGamesBySearch = async (searchQuery) => {
+  const params = new URLSearchParams({ search: searchQuery }).toString();
+  return await apiCall(`${apiUrl}/games/search?${params}`);
 };

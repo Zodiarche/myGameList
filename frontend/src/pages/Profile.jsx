@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
-import { fetchProfile, updateUser, deleteUser, logoutUser, fetchGameUsers, updateGameUser, createGameUser, fetchGames } from '../services/api';
+import React, { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { logoutUser } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import ProfileSettings from '../components/ProfileSettings';
 import MyGames from '../components/MyGames';
 
 const Profile = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
 

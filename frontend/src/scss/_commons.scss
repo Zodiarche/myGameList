@@ -66,6 +66,7 @@ button:active {
   }
 
   &__info {
+    @extend .states;
     display: block;
     background-color: #f9f9f9;
     color: #787878;
@@ -73,6 +74,7 @@ button:active {
   }
 
   &__warning {
+    @extend .states;
     display: block;
     background-color: #fefbe9;
     color: #ffa800;
@@ -80,6 +82,7 @@ button:active {
   }
 
   &__success {
+    @extend .states;
     display: block;
     background-color: #dff0d8;
     color: #468847;
@@ -87,6 +90,7 @@ button:active {
   }
 
   &__error {
+    @extend .states;
     display: block;
     background-color: #fddede;
     color: #e64545;
@@ -94,6 +98,7 @@ button:active {
   }
 
   &__highlight {
+    @extend .states;
     display: block;
     background-color: #d9edf7;
     color: #3a87ad;

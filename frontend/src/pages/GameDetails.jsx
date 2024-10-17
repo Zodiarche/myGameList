@@ -1,14 +1,17 @@
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { fetchGameById } from '../services/api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createGameUser, fetchGameById, fetchProfile } from '../services/api';
 import Loading from '../components/Loading';
 import SwiperNavigationButton from '../components/swiperNavigationButton';
 import { initializeSwiperJS } from '../services/swiper/main.js';
 import { useEffect, useState } from 'react';
+import { ModalAddNote } from '../components/Modal.jsx';
 
 const GameDetails = () => {
   const { id } = useParams();
   const [showMoreTags, setShowMoreTags] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
   const TAGS_LIMIT = 5;
 
   const {
@@ -21,6 +24,13 @@ const GameDetails = () => {
     queryFn: () => fetchGameById(id),
   });
 
+  const { data: user } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: fetchProfile,
+    retry: false,
+  });
+
+  // Initialisation du Swiper
   useEffect(() => {
     if (!game) return;
 
@@ -30,27 +40,68 @@ const GameDetails = () => {
     initializeSwiperJS();
   }, [game]);
 
+  // Mutation pour ajouter un jeu à la collection de l'utilisateur
+  const mutation = useMutation({
+    mutationFn: createGameUser,
+    onSuccess: () => {
+      alert('Jeu ajouté à votre bibliothèque !');
+      setIsModalOpen(false);
+    },
+    onError: (error) => {
+      console.error("Erreur lors de l'ajout du jeu", error);
+    },
+  });
+
+  const handleSubmit = ({ note, etat, commentaire }) => {
+    const hour = new Date().getTime();
+
+    mutation.mutate({
+      idGameBD: id,
+      note,
+      etat,
+      commentaire,
+      heure: hour,
+      idUser: user._id,
+    });
+  };
+
   if (isLoading) return <Loading />;
   if (isError) return <div>Erreur: {error.message}</div>;
 
   // Fonction pour afficher plus ou moins de tags
   const displayedTags = showMoreTags ? game.tags : game.tags.slice(0, TAGS_LIMIT);
 
+  // Fonction pour gérer le clic sur le bouton
+  const handleAddToCollectionClick = (event) => {
+    event.preventDefault();
+    if (!user) {
+      setShowError(true);
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <main id="game-details">
       <section id="game-details" className="game-details">
         <div className="game-details__wrapper">
+          <h1 className="game-details__title">{game.name}</h1>
+          <p>{game.description}</p>
+
           <div className="game-details__cols">
             <div className="game-details__col game-details__col--left">
-              <h1 className="game-details__title">{game.name}</h1>
-              <p>{game.description}</p>
-
-              <ul>
-                <li>Année de sortie: {new Date(game.released).getFullYear()}</li>
-                <li>Note: {game.rating} / 5</li>
-                <li>Nombre de votes: {game.ratings_count}</li>
-                <li>Temps de jeu: {game.playtime} heures</li>
-                <li>Metacritic: {game.metacritic}</li>
+              <ul className="game-details__list game-details__list--overview">
+                <li className="game-details__item">Année de sortie: {new Date(game.released).getFullYear()}</li>
+                <li className="game-details__item">Note: {game.rating} / 5</li>
+                <li className="game-details__item">Nombre de votes: {game.ratings_count}</li>
+                <li className="game-details__item">Temps de jeu: {game.playtime} heures</li>
+                <li className="game-details__item">Metacritic: {game.metacritic}</li>
+                <li>
+                  <a href="#" className={`game-details__button ${!user ? 'disabled' : ''}`} onClick={user ? handleAddToCollectionClick : (event) => event.preventDefault()}>
+                    Ajouter à ma collection
+                  </a>
+                  {!user && <p className="states__error">Veuillez vous connecter pour ajouter des jeux à votre collection.</p>}
+                </li>
               </ul>
             </div>
 
@@ -132,6 +183,8 @@ const GameDetails = () => {
           </div>
         </div>
       </section>
+
+      <ModalAddNote show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} />
     </main>
   );
 };

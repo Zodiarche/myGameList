@@ -8,6 +8,7 @@ import GameUser from '../models/game-user.js';
  */
 export const createGameUser = async (request, response) => {
   const gameUser = new GameUser(request.body);
+
   try {
     const savedGameUser = await gameUser.save();
     response.status(201).json(savedGameUser);

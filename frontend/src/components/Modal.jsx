@@ -4,21 +4,7 @@ import { debounce } from 'lodash';
 import { normalizeString } from '../utils/normalizeString';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
-
-/**
- * Fonction de requête asynchrone pour récupérer les jeux à partir d'une API en fonction de la recherche.
- *
- * @param {string} searchQuery - La chaîne de recherche utilisée pour trouver les jeux.
- * @returns {Promise<Object[]>} - Retourne une promesse qui se résout en une liste de jeux sous forme d'objet JSON.
- * @throws {Error} - Lance une erreur si la requête échoue.
- */
-const fetchGames = async (searchQuery) => {
-  const response = await fetch(`http://localhost:3000/games/search?search=${encodeURIComponent(searchQuery)}`);
-  if (!response.ok) {
-    throw new Error('Erreur lors de la récupération des jeux');
-  }
-  return response.json();
-};
+import { fetchGamesBySearch } from '../services/api';
 
 /**
  * Composant Modal pour afficher une boîte de dialogue de recherche de jeux vidéo.
@@ -27,7 +13,7 @@ const fetchGames = async (searchQuery) => {
  * @param {boolean} props.show - Indique si le modal est visible ou non.
  * @param {function} props.onClose - Fonction appelée lorsque le modal est fermé.
  */
-const Modal = memo(({ show, onClose }) => {
+export const ModalSearchGame = memo(({ show, onClose }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const modalRef = useRef(null);
@@ -39,16 +25,14 @@ const Modal = memo(({ show, onClose }) => {
     refetch,
   } = useQuery({
     queryKey: ['games', searchQuery],
-    queryFn: () => fetchGames(normalizeString(searchQuery)),
+    queryFn: () => fetchGamesBySearch(normalizeString(searchQuery)),
     enabled: false,
   });
 
-  /**
-   * Fonction de recherche avec délai (debounce) pour limiter le nombre de requêtes API.
-   */
   const debouncedSearch = useCallback(
     debounce(() => {
       if (!searchQuery.trim()) return;
+
       refetch();
     }, 300),
     [searchQuery, refetch]
@@ -57,9 +41,6 @@ const Modal = memo(({ show, onClose }) => {
   // Effet pour déclencher la recherche lorsque la chaîne de recherche change.
   useEffect(() => debouncedSearch(), [searchQuery, debouncedSearch]);
 
-  /**
-   * Remet la chaîne de recherche à une chaîne vide.
-   */
   const handleClearSearch = useCallback(() => setSearchQuery(''), []);
 
   /**
@@ -70,6 +51,7 @@ const Modal = memo(({ show, onClose }) => {
   const handleKeyDown = useCallback(
     (event) => {
       if (event.key !== 'Enter') return;
+
       debouncedSearch();
     },
     [debouncedSearch]
@@ -171,4 +153,89 @@ const Modal = memo(({ show, onClose }) => {
   );
 });
 
-export default Modal;
+/**
+ * Composant Modal pour ajouter une note à un jeu.
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {boolean} props.show - Indique si le modal est visible ou non.
+ * @param {function} props.onClose - Fonction appelée lorsque le modal est fermé.
+ * @param {function} props.onSubmit - Fonction appelée lors de la soumission du formulaire pour ajouter une note.
+ */
+export const ModalAddNote = memo(({ show, onClose, onSubmit }) => {
+  const modalRef = useRef(null);
+  const [note, setNote] = useState(0);
+  const [commentaire, setCommentaire] = useState('');
+  const [etat, setEtat] = useState(0);
+
+  /**
+   * Ferme le modal si un clic est effectué en dehors du contenu du modal.
+   *
+   * @param {MouseEvent} event - L'événement de clic.
+   */
+  const handleClickOutside = useCallback(
+    (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
+
+  // Ajoute un écouteur pour fermer le modal en cas de clic à l'extérieur.
+  useEffect(() => {
+    if (!show) return;
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [show, handleClickOutside]);
+
+  /**
+   * Gestion de la soumission du formulaire.
+   *
+   * @param {Event} event - L'événement de soumission du formulaire.
+   */
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSubmit({ note, etat, commentaire });
+    onClose();
+  };
+
+  if (!show) return null;
+
+  return (
+    <div className="modal">
+      <div className="modal__content" ref={modalRef}>
+        <span
+          className="modal__close"
+          onClick={() => {
+            onClose();
+          }}
+        >
+          &times;
+        </span>
+        <h2 className="modal__title">Ajouter une note au jeu</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Note (sur 5) :
+            <input type="number" value={note} min="0" max="5" onChange={(event) => setNote(event.target.value)} />
+          </label>
+          <label>
+            État :
+            <select value={etat} onChange={(event) => setEtat(event.target.value)}>
+              <option value={0}>À jouer</option>
+              <option value={1}>Joué</option>
+              <option value={2}>Abandonné</option>
+              <option value={3}>Terminé</option>
+            </select>
+          </label>
+          <label>
+            Commentaire :
+            <textarea value={commentaire} onChange={(event) => setCommentaire(event.target.value)} />
+          </label>
+          <button type="submit">Ajouter à ma collection</button>
+        </form>
+      </div>
+    </div>
+  );
+});
