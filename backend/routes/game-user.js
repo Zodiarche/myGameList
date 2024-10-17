@@ -1,6 +1,5 @@
 import express from 'express';
 import { createGameUser, getGameUsers, getGameUserById, updateGameUser, deleteGameUser } from '../controllers/game-user.js';
-import { isAuthenticated } from '../middlewares/isAuthenticated.js';
 
 const router = express.Router();
 
@@ -8,7 +7,7 @@ const router = express.Router();
 router.post('/', createGameUser);
 
 // Récupération de tous les GameUsers
-router.get('/', isAuthenticated, getGameUsers);
+router.get('/', getGameUsers);
 
 // Récupération d'un GameUser par ID
 router.get('/:id', getGameUserById);

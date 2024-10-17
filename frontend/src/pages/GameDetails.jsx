@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createGameUser, fetchGameById, fetchProfile } from '../services/api';
+import { createGameUser, fetchGameById, fetchGameUserById, fetchProfile } from '../services/api';
 import Loading from '../components/Loading';
 import SwiperNavigationButton from '../components/swiperNavigationButton';
 import { initializeSwiperJS } from '../services/swiper/main.js';
 import { useEffect, useState } from 'react';
-import { ModalAddNote } from '../components/Modal.jsx';
+import { ModalAddNote, ModalEditGame } from '../components/Modal.jsx';
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -28,6 +28,14 @@ const GameDetails = () => {
     queryKey: ['userProfile'],
     queryFn: fetchProfile,
     retry: false,
+  });
+
+  const { data: gameUser } = useQuery({
+    queryKey: ['gameUser', id],
+    queryFn: () => {
+      return fetchGameUserById(id, user._id);
+    },
+    enabled: !!user,
   });
 
   // Initialisation du Swiper
@@ -98,7 +106,7 @@ const GameDetails = () => {
                 <li className="game-details__item">Metacritic: {game.metacritic}</li>
                 <li>
                   <a href="#" className={`game-details__button ${!user ? 'disabled' : ''}`} onClick={user ? handleAddToCollectionClick : (event) => event.preventDefault()}>
-                    Ajouter à ma bibliothèque
+                    {gameUser ? 'Modifier dans ma bibliothèque' : 'Ajouter à ma bibliothèque'}
                   </a>
                   {!user && <p className="states__error">Veuillez vous connecter pour ajouter des jeux à votre bibliothèque.</p>}
                 </li>
@@ -184,7 +192,7 @@ const GameDetails = () => {
         </div>
       </section>
 
-      <ModalAddNote show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} />
+      {gameUser ? <ModalEditGame show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} game={gameUser} /> : <ModalAddNote show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} />}
     </main>
   );
 };

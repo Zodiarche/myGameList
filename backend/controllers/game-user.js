@@ -42,7 +42,10 @@ export const getGameUsers = async (request, response) => {
  */
 export const getGameUserById = async (request, response) => {
   try {
-    const gameUser = await GameUser.findById(request.params.id).populate('idUser idGameBD');
+    const { userId } = request.query;
+    const gameId = request.params.id;
+
+    const gameUser = await GameUser.findOne({ idUser: userId, idGameBD: gameId }).populate('idUser idGameBD');
     if (!gameUser) return response.status(404).json({ message: 'GameUser non trouvé' });
 
     response.json(gameUser);

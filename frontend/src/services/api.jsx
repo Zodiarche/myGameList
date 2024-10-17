@@ -199,6 +199,16 @@ export const deleteGameUser = async (gameUserId) => {
 };
 
 /**
+ * Récupère un jeu en fonction de son identifiant.
+ * @param {number} id - L'identifiant du jeu à récupérer.
+ * @returns {Promise<Object>} Les données du jeu.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const fetchGameUserById = async (idGame, idUser) => {
+  return await apiCall(`${apiUrl}/games-user/${idGame}?userId=${idUser}`);
+};
+
+/**
  * Fonction de requête asynchrone pour récupérer les jeux à partir d'une API en fonction de la recherche.
  *
  * @param {string} searchQuery - La chaîne de recherche utilisée pour trouver les jeux.
