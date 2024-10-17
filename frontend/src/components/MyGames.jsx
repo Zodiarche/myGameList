@@ -1,30 +1,16 @@
-// src/components/MyGames.js
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchGameUsers, updateGameUser, createGameUser, fetchGames } from '../services/api';
+import { fetchGameUsers, updateGameUser } from '../services/api';
+import { ModalEditGame } from './Modal';
 
 const MyGames = () => {
   const queryClient = useQueryClient();
-  const [newGameId, setNewGameId] = useState('');
-  const [newNote, setNewNote] = useState('');
-  const [newHeure, setNewHeure] = useState('');
-  const [newEtat, setNewEtat] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
 
   const { data: gamesInLibrary, isLoading } = useQuery({
     queryKey: ['gameUsers'],
     queryFn: fetchGameUsers,
-  });
-
-  const { data: allGames } = useQuery({
-    queryKey: ['games'],
-    queryFn: fetchGames,
-  });
-
-  const addGameMutation = useMutation({
-    mutationFn: createGameUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries('gameUsers');
-    },
   });
 
   const updateGameMutation = useMutation({
@@ -34,33 +20,56 @@ const MyGames = () => {
     },
   });
 
-  const handleAddGame = () => {
-    addGameMutation.mutate({
-      idGameBD: newGameId,
-      heure: parseInt(newHeure, 10),
-      etat: parseInt(newEtat, 10),
-      note: parseInt(newNote, 10),
-    });
-    setNewGameId('');
-    setNewNote('');
-    setNewHeure('');
-    setNewEtat('');
+  const handleEditGame = (game) => {
+    setSelectedGame(game);
+    setIsModalOpen(true);
   };
 
-  const handleUpdateGame = (gameId, updatedState) => {
+  const handleSubmitEditGame = (updatedGameData) => {
     updateGameMutation.mutate({
-      id: gameId,
-      etat: updatedState,
+      id: selectedGame._id,
+      ...updatedGameData,
     });
+  };
+
+  const getGameStatus = (etat) => {
+    switch (etat) {
+      case 0:
+        return 'À jouer';
+      case 1:
+        return 'En cours';
+      case 2:
+        return 'Abandonné';
+      case 3:
+        return 'Terminé';
+      default:
+        return 'Inconnu';
+    }
   };
 
   if (isLoading) return <p>Chargement des jeux...</p>;
 
   return (
-    <div>
-      <h2>Ma Bibliothèque de Jeux</h2>
-      {/* Liste des jeux */}
-    </div>
+    <main id="my-games">
+      <section id="my-games" className="my-games">
+        <h2 className="my-games__title">Ma Bibliothèque</h2>
+
+        <ul className="my-games__list">
+          {gamesInLibrary &&
+            gamesInLibrary.map((game) => (
+              <li className="my-games__item" key={game._id}>
+                <h3 className="my-games__subtitle">{game.idGameBD.name}</h3>
+                <p className="my-games__status">État : {getGameStatus(game.etat)}</p>
+                <p className="my-games__rating">Note : {game.note}</p>
+                <p className="my-games__comment">Commentaire : {game.commentaire || 'Pas de commentaire'}</p>
+                <button onClick={() => handleEditGame(game)}>Modifier</button>
+              </li>
+            ))}
+        </ul>
+
+        {selectedGame && <ModalEditGame show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmitEditGame} game={selectedGame} />}
+      </section>
+    </main>
   );
 };
 

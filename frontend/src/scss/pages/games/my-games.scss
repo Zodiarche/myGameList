@@ -1,0 +1,54 @@
+#my-games {
+  &.my-games {
+    .my-games {
+      &__title {
+        @include from("desktop") {
+          margin-bottom: 4rem;
+        }
+        margin-bottom: 3rem;
+
+        margin-top: 0;
+      }
+
+      &__list {
+        @include from("desktop") {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @include from("wide") {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        @include from("extra-wide") {
+          grid-template-columns: repeat(5, 1fr);
+        }
+        grid-template-columns: repeat(2, 1fr);
+
+        list-style-type: none;
+        display: grid;
+        gap: 1.6rem;
+      }
+
+      &__item {
+        display: block;
+        min-height: 100%;
+        border: solid 0.1rem $color-dark-blue;
+        border-radius: 1.5rem;
+        padding: 1rem;
+        margin: 0;
+      }
+
+      &__subtitle {
+        font-size: 2rem;
+        margin-top: 0;
+      }
+
+      &__status {
+      }
+
+      &__rating {
+      }
+
+      &__comment {
+      }
+    }
+  }
+}
