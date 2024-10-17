@@ -57,12 +57,12 @@ const MyGames = () => {
         <ul className="my-games__list">
           {gamesInLibrary &&
             gamesInLibrary.map((game) => (
-              <li className="my-games__item" key={game._id}>
+              <li className="my-games__item" key={game._id} onClick={() => handleEditGame(game)}>
                 <h3 className="my-games__subtitle">{game.idGameBD.name}</h3>
+
                 <p className="my-games__status">État : {getGameStatus(game.etat)}</p>
                 <p className="my-games__rating">Note : {game.note}</p>
                 <p className="my-games__comment">Commentaire : {game.commentaire || 'Pas de commentaire'}</p>
-                <button onClick={() => handleEditGame(game)}>Modifier</button>
               </li>
             ))}
         </ul>

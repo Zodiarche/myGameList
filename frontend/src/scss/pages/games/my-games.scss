@@ -28,12 +28,19 @@
       }
 
       &__item {
-        display: block;
-        min-height: 100%;
+        gap: 2rem;
         border: solid 0.1rem $color-dark-blue;
         border-radius: 1.5rem;
-        padding: 1rem;
+        transition-duration: 0.4s;
+        padding: 2rem;
         margin: 0;
+
+        &:hover,
+        &:focus {
+          background-color: $color-dark-blue;
+          color: $color-white;
+          transform: scale(1.03);
+        }
       }
 
       &__subtitle {
@@ -48,6 +55,7 @@
       }
 
       &__comment {
+        margin-bottom: 0;
       }
     }
   }

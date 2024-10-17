@@ -99,4 +99,36 @@
   &__no-results {
     color: $color-dark-blue;
   }
+
+  &__field {
+    @extend .field;
+
+    &-container {
+      @extend .field-container;
+    }
+  }
+
+  &__submit {
+    margin-top: 3rem;
+  }
+
+  &__delete {
+    @extend .btn;
+    display: block;
+    background-color: $color-red;
+    border: solid 0.1rem $color-white;
+    font-size: inherit;
+    margin-top: 3rem;
+    margin-left: auto;
+
+    &:hover,
+    &:focus {
+      background-color: $color-white;
+      color: $color-red;
+      border: solid 0.1rem $color-red;
+    }
+  }
+
+  &__textarea {
+  }
 }

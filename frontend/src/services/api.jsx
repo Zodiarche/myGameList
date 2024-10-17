@@ -189,6 +189,16 @@ export const updateGameUser = async (gameData) => {
 };
 
 /**
+ * Supprime un jeu de la bibliothèque d'un utilisateur.
+ * @param {number} gameUserId - L'identifiant du jeu utilisateur à supprimer.
+ * @returns {Promise<Object>} Les données de la suppression.
+ * @throws {Error} Si la suppression échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const deleteGameUser = async (gameUserId) => {
+  return await apiCall(`${apiUrl}/games-user/${gameUserId}`, { method: 'DELETE' });
+};
+
+/**
  * Fonction de requête asynchrone pour récupérer les jeux à partir d'une API en fonction de la recherche.
  *
  * @param {string} searchQuery - La chaîne de recherche utilisée pour trouver les jeux.
