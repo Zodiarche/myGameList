@@ -214,9 +214,22 @@ export const fetchGameUserById = async (idGame, idUser) => {
  *
  * @param {string} searchQuery - La chaîne de recherche utilisée pour trouver les jeux.
  * @returns {Promise<Object[]>} - Retourne une promesse qui se résout en une liste de jeux sous forme d'objet JSON.
- * @throws {Error} - Lance une erreur si la requête échoue.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
 export const fetchGamesBySearch = async (searchQuery) => {
   const params = new URLSearchParams({ search: searchQuery }).toString();
   return await apiCall(`${apiUrl}/games/search?${params}`);
+};
+
+/**
+ * Crée un nouveau jeu avec les données fournies.
+ * @param {Object} gameData - Les données du jeu à créer.
+ * @returns {Promise<Object>} Les données du jeu créé.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const createGameData = async (gameData) => {
+  return await apiCall(`${apiUrl}/games`, {
+    method: 'POST',
+    body: gameData,
+  });
 };

@@ -1,14 +1,23 @@
 import React, { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { logoutUser } from '../services/api';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchProfile, logoutUser } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+
 import ProfileSettings from '../components/ProfileSettings';
 import MyGames from '../components/MyGames';
+import Dashboard from '../components/Dashboard';
 
 const Profile = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState('profile');
+
+  const { data: user } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: fetchProfile,
+    retry: false,
+  });
 
   const handleLogout = async () => {
     try {
@@ -40,6 +49,7 @@ const Profile = () => {
                       Paramètres utilisateur
                     </a>
                   </li>
+
                   <li className="profile__item">
                     <a
                       href="#"
@@ -51,6 +61,21 @@ const Profile = () => {
                       Mes jeux
                     </a>
                   </li>
+
+                  {user?.isAdmin && (
+                    <li className="profile__item">
+                      <a
+                        href="#"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setActiveTab('dashboard');
+                        }}
+                      >
+                        Dashboard
+                      </a>
+                    </li>
+                  )}
+
                   <li className="profile__item">
                     <a
                       href="#"
@@ -69,6 +94,7 @@ const Profile = () => {
             <div className="profile__col profile__col--right">
               {activeTab === 'profile' && <ProfileSettings />}
               {activeTab === 'games' && <MyGames />}
+              {activeTab === 'dashboard' && <Dashboard />}
             </div>
           </div>
         </div>

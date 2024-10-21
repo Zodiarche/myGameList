@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
@@ -67,4 +67,4 @@ const gameDataSchema = new Schema({
   short_screenshots: [screenshotSchema],
 });
 
-export default mongoose.model("game-data", gameDataSchema);
+export default mongoose.model('game-data', gameDataSchema);

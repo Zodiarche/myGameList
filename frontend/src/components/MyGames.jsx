@@ -52,7 +52,7 @@ const MyGames = () => {
   return (
     <main id="my-games">
       <section id="my-games" className="my-games">
-        <h2 className="my-games__title">Ma Bibliothèque</h2>
+        <h1 className="my-games__title">Ma Bibliothèque</h1>
 
         <ul className="my-games__list">
           {gamesInLibrary &&

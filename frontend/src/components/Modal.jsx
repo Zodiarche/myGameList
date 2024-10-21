@@ -4,9 +4,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 
 import { normalizeString } from '../utils/normalizeString';
-import { fetchGamesBySearch, deleteGameUser } from '../services/api';
+import { fetchGamesBySearch, deleteGameUser, createGameData, fetchFilters } from '../services/api';
 
 import { ModalWrapper } from './ModalWrapper';
+import { renderInputField } from './render/InputField';
+import { renderTextAreaField } from './render/TextAreaField';
+import { renderScreenshotField } from './render/ScreenshotField';
 
 export const ModalSearchGame = memo(({ show, onClose }) => {
   const navigate = useNavigate();
@@ -121,9 +124,9 @@ export const ModalAddNote = memo(({ show, onClose, onSubmit }) => {
   );
 });
 
-export const ModalEditGame = ({ show, onClose, onSubmit, game }) => {
-  const [note, setNote] = useState(game?.note || 0);
+export const ModalEditGame = memo(({ show, onClose, onSubmit, game }) => {
   const [commentaire, setCommentaire] = useState(game?.commentaire || '');
+  const [note, setNote] = useState(game?.note || 0);
   const [etat, setEtat] = useState(game?.etat || 0);
   const queryClient = useQueryClient();
 
@@ -189,4 +192,153 @@ export const ModalEditGame = ({ show, onClose, onSubmit, game }) => {
       </button>
     </ModalWrapper>
   );
-};
+});
+
+// FIXME: ça ne fonctionne pas, on a des objets en BDD, donc il faut donner les valeurs différement, c'est compliqué.
+export const ModalAddGame = memo(({ show, onClose }) => {
+  const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
+  const [gameData, setGameData] = useState({
+    idGameBD: '',
+    name: '',
+    description: '',
+    platforms: [],
+    stores: [],
+    released: '',
+    background_image: '',
+    tags: [],
+    esrb_rating: '',
+    short_screenshots: [],
+  });
+
+  const {
+    data: filterOptions = {},
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['filters'],
+    queryFn: fetchFilters,
+    enabled: show,
+  });
+
+  const handleInputChange = ({ target: { name, value } }) => {
+    updateGameData(name, value);
+  };
+
+  const handleSelectChange = ({ target: { value } }, key, isMultiSelect = true) => {
+    updateGameData(key, isMultiSelect ? addUniqueItem(gameData[key], value) : value);
+  };
+
+  const updateGameData = (key, value) => {
+    setGameData((prevData) => ({ ...prevData, [key]: value }));
+  };
+
+  const addUniqueItem = (array, item) => [...new Set([...array, item])];
+
+  const handleItemRemove = (item, key) => {
+    updateGameData(
+      key,
+      gameData[key].filter((i) => i !== item)
+    );
+  };
+
+  const handleScreenshotInputChange = ({ target: { value } }) => {
+    setNewScreenshotUrl(value);
+  };
+
+  const isValidImageUrl = (url) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
+  };
+
+  const handleScreenshotAdd = async () => {
+    if (await isValidImageUrl(newScreenshotUrl.trim())) {
+      updateGameData('short_screenshots', addUniqueItem(gameData.short_screenshots, newScreenshotUrl.trim()));
+      setNewScreenshotUrl('');
+    } else {
+      alert("L'URL fournie n'est pas une image valide. Veuillez vérifier le lien.");
+    }
+  };
+
+  const handleScreenshotRemove = (screenshot) => {
+    setGameData((prevData) => ({
+      ...prevData,
+      short_screenshots: prevData.short_screenshots.filter((img) => img !== screenshot),
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await createGameData(gameData);
+      onClose();
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du jeu :", error);
+    }
+  };
+
+  if (isLoading) return <p>Chargement des filtres...</p>;
+  if (error) return <p>Erreur lors de la récupération des filtres.</p>;
+
+  const renderSelectField = (label, key, options, isMultiSelect = true) => (
+    <div className="modal__field">
+      <label className="modal__label">{label} :</label>
+      <div className="modal__multi-input">
+        <select className="modal__select" value="" onChange={(e) => handleSelectChange(e, key, isMultiSelect)}>
+          <option value="" disabled>
+            Choisissez {label}
+          </option>
+          {options
+            ?.filter((option) => (isMultiSelect ? !gameData[key].includes(option) : true))
+            ?.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+        </select>
+      </div>
+      {renderSelectedItems(gameData[key], key)}
+    </div>
+  );
+
+  const renderSelectedItems = (items, key) =>
+    items.length > 0 && (
+      <>
+        <div>&nbsp;</div>
+        <div className="modal__results">
+          {Array.isArray(items) ? (
+            items.map((item, index) => (
+              <div key={index} className="modal__game-item" onClick={() => handleItemRemove(item, key)}>
+                <p>{item}</p>
+              </div>
+            ))
+          ) : (
+            <div className="modal__game-item" onClick={() => handleItemRemove(items, key)}>
+              <p>{items}</p>
+            </div>
+          )}
+        </div>
+      </>
+    );
+
+  return (
+    <ModalWrapper show={show} onClose={onClose} title="Ajouter un nouveau jeu">
+      <form className="modal__form" onSubmit={handleSubmit}>
+        {renderInputField('Nom du jeu', 'name', gameData.name, handleInputChange)}
+        {renderTextAreaField('Description', 'description', gameData.description, handleInputChange)}
+        {renderSelectField('Plateformes', 'platforms', filterOptions.platforms)}
+        {renderSelectField('Stores', 'stores', filterOptions.stores)}
+        {renderSelectField('Tags', 'tags', filterOptions.tags)}
+        {renderSelectField('ESRB Rating', 'esrb_rating', filterOptions.esrbRatings, false)}
+        {renderInputField('Date de sortie', 'released', gameData.released, handleInputChange, 'date')}
+        {renderScreenshotField(newScreenshotUrl, handleScreenshotInputChange, handleScreenshotAdd, gameData.short_screenshots, handleScreenshotRemove)}
+        <button className="modal__submit" type="submit">
+          Ajouter le jeu
+        </button>
+      </form>
+    </ModalWrapper>
+  );
+});
