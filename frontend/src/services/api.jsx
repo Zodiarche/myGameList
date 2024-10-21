@@ -233,3 +233,13 @@ export const createGameData = async (gameData) => {
     body: gameData,
   });
 };
+
+/**
+ * Supprime un jeu en fonction de son identifiant.
+ * @param {string} gameId - L'identifiant du jeu à supprimer.
+ * @returns {Promise<Object>} Les données de la suppression.
+ * @throws {Error} Si la suppression échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const deleteGameData = async (gameId) => {
+  return await apiCall(`${apiUrl}/games/${gameId}`, { method: 'DELETE' });
+};

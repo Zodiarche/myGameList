@@ -80,6 +80,75 @@ export const ModalSearchGame = memo(({ show, onClose }) => {
   );
 });
 
+export const ModalSearchGameToDelete = memo(({ show, onClose, onSelectGame }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const {
+    data: games,
+    error,
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ['games', searchQuery],
+    queryFn: () => fetchGamesBySearch(normalizeString(searchQuery)),
+    enabled: searchQuery.trim() !== '',
+  });
+
+  const debouncedSearch = useCallback(
+    debounce(() => {
+      if (!searchQuery.trim()) return;
+      refetch();
+    }, 300),
+    [searchQuery, refetch]
+  );
+
+  useEffect(() => debouncedSearch(), [searchQuery, debouncedSearch]);
+
+  const handleClearSearch = useCallback(() => setSearchQuery(''), []);
+
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.key === 'Enter') debouncedSearch();
+    },
+    [debouncedSearch]
+  );
+
+  const renderStates = () => {
+    if (isLoading) return <p className="states__highlight">Votre recherche est en cours...</p>;
+    if (error) return <p className="states__error">Une erreur est survenue durant la recherche.</p>;
+    if (!games || games.length === 0) return <p className="states__info">Aucun résultat.</p>;
+
+    return null;
+  };
+
+  const renderGames = () => {
+    if (!games || games.length === 0) return null;
+
+    return games.map((game) => (
+      <div key={game._id} className="modal__game-item" onClick={() => onSelectGame(game._id, refetch)}>
+        <p>{game.name}</p>
+      </div>
+    ));
+  };
+
+  return (
+    <ModalWrapper show={show} onClose={onClose} title="Rechercher vos jeux">
+      <div className="modal__search-input-container">
+        <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onKeyDown={handleKeyDown} placeholder="Entrez le nom du jeu..." />
+        {searchQuery && (
+          <button onClick={handleClearSearch} className="modal__clear-button">
+            ❌
+          </button>
+        )}
+      </div>
+
+      {renderStates()}
+
+      <div className="modal__results">{renderGames()}</div>
+    </ModalWrapper>
+  );
+});
+
 export const ModalAddNote = memo(({ show, onClose, onSubmit }) => {
   const [note, setNote] = useState(0);
   const [commentaire, setCommentaire] = useState('');
