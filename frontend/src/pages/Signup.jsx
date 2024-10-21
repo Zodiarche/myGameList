@@ -7,6 +7,7 @@ const Signup = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -37,7 +38,7 @@ const Signup = () => {
     event.preventDefault();
     setError('');
 
-    signupMutation.mutate({ username, email, password });
+    signupMutation.mutate({ username, email, password, isAdmin });
   };
 
   return (
@@ -64,6 +65,13 @@ const Signup = () => {
                 <label className="signup__label">Mot de passe :</label>
                 <input className="signup__input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
               </div>
+            </div>
+
+            <div className="signup__field">
+              <label className="signup__label signup__label--admin">
+                <input type="checkbox" checked={isAdmin} onChange={(event) => setIsAdmin(event.target.checked)} />
+                Administrateur
+              </label>
             </div>
 
             <button className="signup__submit" type="submit" disabled={signupMutation.isLoading}>

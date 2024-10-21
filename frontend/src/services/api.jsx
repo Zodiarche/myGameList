@@ -133,13 +133,14 @@ export const logoutUser = async () => {
  * @param {string} userData.username - Le nom d'utilisateur choisi.
  * @param {string} userData.email - L'adresse e-mail de l'utilisateur.
  * @param {string} userData.password - Le mot de passe de l'utilisateur.
+ * @param {Boolean} userData.isAdmin - Si l'utilisateur est un administrateur.
  * @returns {Promise<Object>} Les données utilisateur après l'inscription.
  * @throws {Error} Si l'inscription échoue ou si une erreur est renvoyée par le serveur.
  */
-export const signupUser = async ({ username, email, password }) => {
+export const signupUser = async ({ username, email, password, isAdmin }) => {
   return await apiCall(`${apiUrl}/user/signup`, {
     method: 'POST',
-    body: { username, email, password },
+    body: { username, email, password, isAdmin },
   });
 };
 

@@ -54,20 +54,23 @@ export const getUserProfile = async (request, response) => {
  * @returns {Promise<void>}
  */
 export const createUser = async (request, response) => {
-  const { username, email, password } = request.body;
-
-  // Validation du formulaire : Retourne dès qu'une erreur est trouvée
-  if (!username || username.length < 3) {
-    return response.status(400).json({ field: 'username', message: 'Le nom d’utilisateur doit comporter au moins 3 caractères.' });
-  }
-
+  const { username, email, password, isAdmin } = request.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!email || !emailRegex.test(email)) {
-    return response.status(400).json({ field: 'email', message: "L'adresse email est invalide." });
+
+  if (!username || typeof username !== 'string' || username.length < 3) {
+    return response.status(400).json({ field: 'username', message: 'Le nom d’utilisateur doit être une chaîne de caractères et comporter au moins 3 caractères.' });
   }
 
-  if (!password || password.length < 6) {
-    return response.status(400).json({ field: 'password', message: 'Le mot de passe doit comporter au moins 6 caractères.' });
+  if (!email || typeof email !== 'string' || !emailRegex.test(email)) {
+    return response.status(400).json({ field: 'email', message: "L'adresse email doit être une chaîne de caractères valide." });
+  }
+
+  if (!password || typeof password !== 'string' || password.length < 6) {
+    return response.status(400).json({ field: 'password', message: 'Le mot de passe doit être une chaîne de caractères et comporter au moins 6 caractères.' });
+  }
+
+  if (typeof isAdmin !== 'boolean') {
+    return response.status(400).json({ field: 'isAdmin', message: "La valeur d'administrateur doit être un booléen." });
   }
 
   try {
@@ -77,9 +80,8 @@ export const createUser = async (request, response) => {
       return response.status(400).json({ message: 'Cet utilisateur existe déjà.' });
     }
 
-    // Hashage du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new user({ username, email, password: hashedPassword });
+    const newUser = new user({ username, email, password: hashedPassword, isAdmin });
     const savedUser = await newUser.save();
 
     response.status(201).json(savedUser);

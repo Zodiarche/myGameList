@@ -35,6 +35,14 @@
       }
 
       &__label {
+        &--admin {
+          margin-left: 0;
+          margin-bottom: 0;
+
+          input {
+            margin-right: 0.5rem;
+          }
+        }
       }
 
       &__input {
