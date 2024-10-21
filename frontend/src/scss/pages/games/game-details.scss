@@ -25,8 +25,10 @@
           @include from("desktop") {
             flex-shrink: 0;
             width: 40%;
+            margin-bottom: 0;
           }
           width: 100%;
+          margin-bottom: 3rem;
         }
 
         &--right {
@@ -108,10 +110,17 @@
     .swiper {
       position: relative;
 
+      &-wrapper {
+        height: 30rem;
+      }
+
       &-slide {
         height: 100%;
 
         img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
           border-radius: 2rem;
         }
       }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ModalAddGame, ModalSearchGameToDelete } from './Modal';
+import { ModalAddGame, ModalSearchGame } from './Modal';
 import { deleteGameData } from '../services/api';
 
 const Dashboard = () => {
@@ -39,7 +39,7 @@ const Dashboard = () => {
           </div>
 
           <ModalAddGame show={isAddGameModalOpen} onClose={() => setAddGameModalOpen(false)} />
-          <ModalSearchGameToDelete show={isSearchGameModalOpen} onClose={() => setSearchGameModalOpen(false)} onSelectGame={(gameId, refetchGames) => handleSelectGameForDeletion(gameId, refetchGames)} />
+          <ModalSearchGame show={isSearchGameModalOpen} onClose={() => setSearchGameModalOpen(false)} isForDeletion={true} onSelectGame={handleSelectGameForDeletion} />
         </div>
       </section>
     </main>

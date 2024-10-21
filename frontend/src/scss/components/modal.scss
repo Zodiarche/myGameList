@@ -11,13 +11,17 @@
   z-index: 9999;
 
   &__content {
+    @include from("desktop") {
+      padding: 3rem 6rem;
+    }
+    padding: 1.5rem 2rem;
+
     position: relative;
-    height: 80%;
-    width: 80%;
+    height: 90%;
+    width: 90%;
     background-color: $color-white;
     border-radius: 1rem;
     overflow-y: auto;
-    padding: 3rem 6rem;
   }
 
   &__close {
@@ -74,9 +78,20 @@
   }
 
   &__results {
+    @include from("desktop") {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @include from("wide") {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    @include from("extra-wide") {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    grid-template-columns: repeat(2, 1fr);
+
+    text-align: center;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: 1.6rem;
   }
 
   &__game-item {
