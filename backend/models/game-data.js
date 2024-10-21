@@ -2,18 +2,6 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const platformSchema = new Schema({
-  id: { type: Number },
-  name: { type: String },
-  slug: { type: String },
-});
-
-const storeSchema = new Schema({
-  id: { type: Number },
-  name: { type: String },
-  slug: { type: String },
-});
-
 const ratingSchema = new Schema({
   id: { type: Number },
   title: { type: String },
@@ -21,26 +9,13 @@ const ratingSchema = new Schema({
   percent: { type: Number },
 });
 
-const tagSchema = new Schema({
-  id: { type: Number },
-  name: { type: String },
-  slug: { type: String },
-  language: { type: String },
-});
-
-const screenshotSchema = new Schema({
-  id: { type: Number },
-  image: { type: String },
-});
-
 const gameDataSchema = new Schema({
   idGameBD: { type: String, required: true, unique: true },
-  slug: { type: String },
   name: { type: String, required: true },
   description: { type: String },
   playtime: { type: Number },
-  platforms: [platformSchema],
-  stores: [storeSchema],
+  platforms: [{ type: String }],
+  stores: [{ type: String }],
   released: { type: Date },
   rating: { type: Number },
   ratings: [ratingSchema],
@@ -58,13 +33,11 @@ const gameDataSchema = new Schema({
   metacritic: { type: Number },
   suggestions_count: { type: Number },
   background_image: { type: String },
-  tags: [tagSchema],
+  tags: [{ type: String }],
   esrb_rating: {
-    id: { type: Number },
     name: { type: String },
-    slug: { type: String },
   },
-  short_screenshots: [screenshotSchema],
+  short_screenshots: [{ type: String }],
 });
 
 export default mongoose.model('game-data', gameDataSchema);

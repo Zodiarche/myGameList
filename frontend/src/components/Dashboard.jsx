@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { ModalAddGame, ModalSearchGame } from './Modal';
+import { ModalAddGame, ModalSearchGame, ModalEditGameData } from './Modal';
 import { deleteGameData } from '../services/api';
 
 const Dashboard = () => {
   const [isSearchGameModalOpen, setSearchGameModalOpen] = useState(false);
   const [isAddGameModalOpen, setAddGameModalOpen] = useState(false);
+  const [isEditGameModalOpen, setEditGameModalOpen] = useState(false);
+  const [isDeletionMode, setDeletionMode] = useState(false);
+  const [selectedGame, setSelectedGame] = useState(null);
 
   const handleDeleteGame = async (gameId, refetchGames) => {
     try {
@@ -26,6 +29,22 @@ const Dashboard = () => {
     handleDeleteGame(gameId, refetchGames);
   };
 
+  const handleSelectGameForEditing = (game) => {
+    setSelectedGame(game);
+    setEditGameModalOpen(true);
+    setSearchGameModalOpen(false);
+  };
+
+  const openSearchModalForEditing = () => {
+    setDeletionMode(false);
+    setSearchGameModalOpen(true);
+  };
+
+  const openSearchModalForDeletion = () => {
+    setDeletionMode(true);
+    setSearchGameModalOpen(true);
+  };
+
   return (
     <main id="dashboard">
       <section id="dashboard" className="dashboard">
@@ -36,14 +55,17 @@ const Dashboard = () => {
             <button className="dashboard__button" onClick={() => setAddGameModalOpen(true)}>
               Ajouter un jeu
             </button>
-            <button className="dashboard__button">Modifier un jeu</button>
-            <button className="dashboard__button" onClick={() => setSearchGameModalOpen(true)}>
+            <button className="dashboard__button" onClick={openSearchModalForEditing}>
+              Modifier un jeu
+            </button>
+            <button className="dashboard__button" onClick={openSearchModalForDeletion}>
               Supprimer un jeu
             </button>
           </div>
 
           <ModalAddGame show={isAddGameModalOpen} onClose={() => setAddGameModalOpen(false)} />
-          <ModalSearchGame show={isSearchGameModalOpen} onClose={() => setSearchGameModalOpen(false)} isForDeletion={true} onSelectGame={handleSelectGameForDeletion} />
+          <ModalSearchGame show={isSearchGameModalOpen} onClose={() => setSearchGameModalOpen(false)} isForDeletion={isDeletionMode} isForEditing={!isDeletionMode} onSelectGame={isDeletionMode ? handleSelectGameForDeletion : handleSelectGameForEditing} />
+          {selectedGame && <ModalEditGameData show={isEditGameModalOpen} onClose={() => setEditGameModalOpen(false)} game={selectedGame} refetch={() => setSearchGameModalOpen(true)} />}
         </div>
       </section>
     </main>

@@ -1,5 +1,5 @@
-import GameData from "../models/game-data.js";
-import { normalizeString } from "../utils/normalizeString.js";
+import GameData from '../models/game-data.js';
+import { normalizeString } from '../utils/normalizeString.js';
 
 /**
  * Crée un nouveau GameData.
@@ -47,19 +47,19 @@ export const getTopGames = async (request, response) => {
 
     // Ajouter les filtres pour les paramètres de requête
     if (platform) {
-      filters["platforms.name"] = platform;
+      filters['platforms.name'] = platform;
     }
 
     if (tag) {
-      filters["tags.name"] = tag;
+      filters['tags.name'] = tag;
     }
 
     if (rating) {
-      filters["rating"] = { $gte: parseFloat(rating) };
+      filters['rating'] = { $gte: parseFloat(rating) };
     }
 
     if (released) {
-      filters["released"] = { $gte: new Date(released) };
+      filters['released'] = { $gte: new Date(released) };
     }
 
     // Récupérer les jeux les plus notés
@@ -87,11 +87,11 @@ export const getTopGames = async (request, response) => {
  */
 export const searchGames = async (request, response) => {
   try {
-    const searchQuery = request.query.search ? request.query.search : "";
+    const searchQuery = request.query.search ? request.query.search : '';
     const normalizedQuery = normalizeString(searchQuery);
 
     const gameDataList = await GameData.find({
-      name: { $regex: new RegExp(`.*${normalizedQuery}.*`, "i") },
+      name: { $regex: new RegExp(`.*${normalizedQuery}.*`, 'i') },
     });
 
     response.json(gameDataList);
@@ -109,8 +109,7 @@ export const searchGames = async (request, response) => {
 export const getGameDataById = async (request, response) => {
   try {
     const gameData = await GameData.findById(request.params.id);
-    if (!gameData)
-      return response.status(404).json({ message: "Jeu non trouvé" });
+    if (!gameData) return response.status(404).json({ message: 'Jeu non trouvé' });
 
     response.json(gameData);
   } catch (error) {
@@ -126,13 +125,8 @@ export const getGameDataById = async (request, response) => {
  */
 export const updateGameData = async (request, response) => {
   try {
-    const updatedGameData = await GameData.findByIdAndUpdate(
-      request.params.id,
-      request.body,
-      { new: true }
-    );
-    if (!updatedGameData)
-      return response.status(404).json({ message: "Jeu non trouvé" });
+    const updatedGameData = await GameData.findByIdAndUpdate(request.params.id, request.body, { new: true });
+    if (!updatedGameData) return response.status(404).json({ message: 'Jeu non trouvé' });
 
     response.json(updatedGameData);
   } catch (error) {
@@ -149,10 +143,9 @@ export const updateGameData = async (request, response) => {
 export const deleteGameData = async (request, response) => {
   try {
     const deletedGameData = await GameData.findByIdAndDelete(request.params.id);
-    if (!deletedGameData)
-      return response.status(404).json({ message: "Jeu non trouvé" });
+    if (!deletedGameData) return response.status(404).json({ message: 'Jeu non trouvé' });
 
-    response.json({ message: "Jeu supprimé" });
+    response.json({ message: 'Jeu supprimé' });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
@@ -167,50 +160,42 @@ export const deleteGameData = async (request, response) => {
 export const getFilters = async (_, response) => {
   try {
     // Récupération des filtres uniques pour diverses propriétés
-    const platforms = await GameData.distinct("platforms.name");
-    const tags = await GameData.distinct("tags.name");
-    const stores = await GameData.distinct("stores.name");
-    const esrbRatings = await GameData.distinct("esrb_rating.name");
+    const platforms = await GameData.distinct('platforms');
+    const tags = await GameData.distinct('tags');
+    const stores = await GameData.distinct('stores');
+    const esrbRatings = await GameData.distinct('esrb_rating.name');
 
     // Pour récupérer les années de sortie uniques, on extrait l'année de la date de sortie
     const releaseYears = await GameData.aggregate([
-      { $group: { _id: { $year: "$released" } } },
+      { $group: { _id: { $year: '$released' } } },
       { $sort: { _id: 1 } }, // Tri par année croissante
-      { $project: { _id: 0, year: "$_id" } },
+      { $project: { _id: 0, year: '$_id' } },
     ]);
 
     // Filtrage par évaluations des utilisateurs (rating) - on regroupe pour obtenir les valeurs uniques
-    const userRatings = await GameData.aggregate([
-      { $group: { _id: "$rating" } },
-      { $sort: { _id: 1 } },
-      { $project: { _id: 0, rating: "$_id" } },
-    ]);
+    const userRatings = await GameData.aggregate([{ $group: { _id: '$rating' } }, { $sort: { _id: 1 } }, { $project: { _id: 0, rating: '$_id' } }]);
 
     // Filtrage par évaluations Metacritic
-    const metacriticRatings = await GameData.aggregate([
-      { $group: { _id: "$metacritic" } },
-      { $sort: { _id: 1 } },
-      { $project: { _id: 0, metacritic: "$_id" } },
-    ]);
+    const metacriticRatings = await GameData.aggregate([{ $group: { _id: '$metacritic' } }, { $sort: { _id: 1 } }, { $project: { _id: 0, metacritic: '$_id' } }]);
 
     // Filtrage par temps de jeu moyen
-    const playtimeRanges = await GameData.aggregate([
-      { $group: { _id: "$playtime" } },
-      { $sort: { _id: 1 } },
-      { $project: { _id: 0, playtime: "$_id" } },
-    ]);
+    const playtimeRanges = await GameData.aggregate([{ $group: { _id: '$playtime' } }, { $sort: { _id: 1 } }, { $project: { _id: 0, playtime: '$_id' } }]);
 
     // Statut d'ajout par les utilisateurs (regroupe par différents statuts comme "possédé", "battu", etc.)
     const addedByStatus = await GameData.aggregate([
       {
         $group: {
           _id: null,
-          owned: { $sum: "$added_by_status.owned" },
-          beaten: { $sum: "$added_by_status.beaten" },
-          toplay: { $sum: "$added_by_status.toplay" },
-          dropped: { $sum: "$added_by_status.dropped" },
-          playing: { $sum: "$added_by_status.playing" },
+          yet: { $sum: '$added_by_status.yet' },
+          owned: { $sum: '$added_by_status.owned' },
+          beaten: { $sum: '$added_by_status.beaten' },
+          toplay: { $sum: '$added_by_status.toplay' },
+          dropped: { $sum: '$added_by_status.dropped' },
+          playing: { $sum: '$added_by_status.playing' },
         },
+      },
+      {
+        $project: { _id: 0 }, // Retire le champ `_id`
       },
     ]);
 
@@ -226,7 +211,7 @@ export const getFilters = async (_, response) => {
       addedByStatus: addedByStatus[0], // Statuts des jeux ajoutés par les utilisateurs
     });
   } catch (error) {
-    console.error("Error fetching filters:", error.message);
+    console.error('Error fetching filters:', error.message);
     response.status(500).json({ message: error.message });
   }
 };

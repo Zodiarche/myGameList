@@ -1,3 +1,4 @@
+// Ajout des conditions pour l'affichage des titres et des listes
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createGameUser, fetchGameById, fetchGameUserById, fetchProfile } from '../services/api';
@@ -5,7 +6,7 @@ import Loading from '../components/Loading';
 import SwiperNavigationButton from '../components/swiperNavigationButton';
 import { initializeSwiperJS } from '../services/swiper/main.js';
 import { useEffect, useState } from 'react';
-import { ModalAddNote, ModalEditGame } from '../components/Modal.jsx';
+import { ModalAddNote, ModalEditUserGame } from '../components/Modal.jsx';
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -118,81 +119,111 @@ const GameDetails = () => {
             </div>
           </div>
 
-          <h2 className="game-details__subtitle">Plateformes</h2>
-          <ul className="game-details__list">
-            {game.platforms.map((platform) => (
-              <li className="game-details__item" key={platform.id}>
-                {platform.name}
-              </li>
-            ))}
-          </ul>
-
-          <h2 className="game-details__subtitle">Magasins</h2>
-          <ul className="game-details__list">
-            {game.stores.map((store) => (
-              <li className="game-details__item" key={store.id}>
-                {store.name}
-              </li>
-            ))}
-          </ul>
-
-          <h2 className="game-details__subtitle">Tags</h2>
-          <ul className="game-details__list">
-            {displayedTags.map((tag) => (
-              <li className="game-details__item" key={tag.id}>
-                {tag.name}
-              </li>
-            ))}
-          </ul>
-          {game.tags.length > TAGS_LIMIT && (
-            <button className="game-details__read-more" onClick={() => setShowMoreTags(!showMoreTags)}>
-              {showMoreTags ? 'Voir moins' : 'Voir plus'}
-            </button>
+          {game.platforms.length > 0 && (
+            <>
+              <h2 className="game-details__subtitle">Plateformes</h2>
+              <ul className="game-details__list">
+                {game.platforms.map((platform, index) => (
+                  <li className="game-details__item" key={index}>
+                    {platform}
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
 
-          <h2 className="game-details__subtitle">Évaluations détaillées</h2>
-          <ul className="game-details__list">
-            {game.ratings.map((rating) => (
-              <li className="game-details__item" key={rating.id}>
-                {rating.title} : {rating.count} votes ({rating.percent}%)
-              </li>
-            ))}
-          </ul>
+          {game.stores.length > 0 && (
+            <>
+              <h2 className="game-details__subtitle">Magasins</h2>
+              <ul className="game-details__list">
+                {game.stores.map((store, index) => (
+                  <li className="game-details__item" key={index}>
+                    {store}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
-          <h2 className="game-details__subtitle">Statut d'ajout par les utilisateurs</h2>
-          <ul className="game-details__list">
-            <li className="game-details__item">Possédé : {game.added_by_status.owned}</li>
-            <li className="game-details__item">Terminé : {game.added_by_status.beaten}</li>
-            <li className="game-details__item">À jouer : {game.added_by_status.toplay}</li>
-            <li className="game-details__item">Abandonné : {game.added_by_status.dropped}</li>
-            <li className="game-details__item">En cours : {game.added_by_status.playing}</li>
-          </ul>
+          {game.tags.length > 0 && (
+            <>
+              <h2 className="game-details__subtitle">Tags</h2>
+              <ul className="game-details__list">
+                {displayedTags.map((tag, index) => (
+                  <li className="game-details__item" key={index}>
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+              {game.tags.length > TAGS_LIMIT && (
+                <button className="game-details__read-more" onClick={() => setShowMoreTags(!showMoreTags)}>
+                  {showMoreTags ? 'Voir moins' : 'Voir plus'}
+                </button>
+              )}
+            </>
+          )}
 
-          <h2 className="game-details__subtitle">Classification ESRB</h2>
-          <div className="game-details__list">{game.esrb_rating ? <p className="game-details__item">{game.esrb_rating.name}</p> : <p className="game-details__item">Non classé</p>}</div>
+          {game.ratings.length > 0 && (
+            <>
+              <h2 className="game-details__subtitle">Évaluations détaillées</h2>
+              <ul className="game-details__list">
+                {game.ratings.map((rating) => (
+                  <li className="game-details__item" key={rating.id}>
+                    {rating.title} : {rating.count} votes ({rating.percent}%)
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
 
-          <h2 className="game-details__subtitle">Captures d'écran</h2>
-          <div className="swiper" id="swiperScreenshots">
-            <div className="swiper-wrapper">
-              {game.short_screenshots.map((screenshot, index) => (
-                <div className="swiper-slide" key={index}>
-                  <img src={screenshot.image} alt={`Screenshot ${index}`} />
+          {game.added_by_status && (
+            <>
+              <h2 className="game-details__subtitle">Statut d'ajout par les utilisateurs</h2>
+              <ul className="game-details__list">
+                {game.added_by_status.owned > 0 && <li className="game-details__item">Possédé : {game.added_by_status.owned}</li>}
+                {game.added_by_status.beaten > 0 && <li className="game-details__item">Terminé : {game.added_by_status.beaten}</li>}
+                {game.added_by_status.toplay > 0 && <li className="game-details__item">À jouer : {game.added_by_status.toplay}</li>}
+                {game.added_by_status.dropped > 0 && <li className="game-details__item">Abandonné : {game.added_by_status.dropped}</li>}
+                {game.added_by_status.playing > 0 && <li className="game-details__item">En cours : {game.added_by_status.playing}</li>}
+              </ul>
+            </>
+          )}
+
+          {game.esrb_rating && (
+            <>
+              <h2 className="game-details__subtitle">Classification ESRB</h2>
+              <div className="game-details__list">
+                <p className="game-details__item">{game.esrb_rating.name}</p>
+              </div>
+            </>
+          )}
+
+          {game.short_screenshots.length > 0 && (
+            <>
+              <h2 className="game-details__subtitle">Captures d'écran</h2>
+              <div className="swiper" id="swiperScreenshots">
+                <div className="swiper-wrapper">
+                  {game.short_screenshots.map((screenshot, index) => (
+                    <div className="swiper-slide" key={index}>
+                      <img src={screenshot} alt={`Screenshot ${index}`} />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
 
-            <div className="swiper-button-next">
-              <SwiperNavigationButton />
-            </div>
+                <div className="swiper-button-next">
+                  <SwiperNavigationButton />
+                </div>
 
-            <div className="swiper-button-prev">
-              <SwiperNavigationButton />
-            </div>
-          </div>
+                <div className="swiper-button-prev">
+                  <SwiperNavigationButton />
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </section>
 
-      {gameUser ? <ModalEditGame show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} game={gameUser} /> : <ModalAddNote show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} />}
+      {gameUser ? <ModalEditUserGame show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} game={gameUser} /> : <ModalAddNote show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} />}
     </main>
   );
 };

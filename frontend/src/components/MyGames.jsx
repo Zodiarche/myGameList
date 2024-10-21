@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { fetchGameUsers, updateGameUser } from '../services/api';
-import { ModalEditGame } from './Modal';
+import { ModalEditUserGame } from './Modal';
 
 const MyGames = () => {
   const queryClient = useQueryClient();
@@ -67,7 +67,7 @@ const MyGames = () => {
             ))}
         </ul>
 
-        {selectedGame && <ModalEditGame show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmitEditGame} game={selectedGame} />}
+        {selectedGame && <ModalEditUserGame show={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmitEditGame} game={selectedGame} />}
       </section>
     </main>
   );

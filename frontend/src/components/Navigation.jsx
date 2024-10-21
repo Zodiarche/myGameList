@@ -14,10 +14,6 @@ export const HeaderNavigation = () => {
         </li>
 
         <li className="header__navigation-menu-item">
-          <Link to="/about">À propos de moi</Link>
-        </li>
-
-        <li className="header__navigation-menu-item">
           <Link to="/games">Jeux</Link>
         </li>
 

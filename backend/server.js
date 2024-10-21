@@ -11,6 +11,7 @@ import userRoutes from './routes/user.js';
 import gamesRoutes from './routes/game-data.js';
 import gamesUserRoutes from './routes/game-user.js';
 import { isAuthenticated } from './middlewares/isAuthenticated.js';
+import { saveGamesToDB } from './import-games.js';
 
 dotenv.config();
 
@@ -22,9 +23,12 @@ const app = express();
  */
 mongoose
   .connect('mongodb://localhost:27017/myGameList')
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
+  .then(
+    /*async*/ () => {
+      console.log('Connected to MongoDB');
+      // await saveGamesToDB();
+    }
+  )
   .catch((error) => {
     console.error('Error connecting to MongoDB', error);
   });

@@ -4,14 +4,126 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 
 import { normalizeString } from '../utils/normalizeString';
-import { fetchGamesBySearch, deleteGameUser, createGameData, fetchFilters } from '../services/api';
+import { fetchGamesBySearch, deleteGameUser, createGameData, fetchFilters, deleteGameData } from '../services/api';
 
 import { ModalWrapper } from './ModalWrapper';
-import { renderInputField } from './render/InputField';
-import { renderTextAreaField } from './render/TextAreaField';
-import { renderScreenshotField } from './render/ScreenshotField';
+import { v4 as uuidv4 } from 'uuid';
 
-export const ModalSearchGame = memo(({ show, onClose, onSelectGame, isForDeletion = false }) => {
+export const ModalEditGameData = memo(({ show, onClose, game, refetch }) => {
+  const [gameData, setGameData] = useState({
+    name: '',
+    description: '',
+    platforms: [],
+    stores: [],
+    tags: [],
+    esrb_rating: '',
+    released: '',
+    short_screenshots: [],
+  });
+
+  const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    console.log(game);
+
+    if (game) {
+      setGameData({
+        name: game.name || '',
+        description: game.description || '',
+        platforms: game.platforms || [],
+        stores: game.stores || [],
+        tags: game.tags || [],
+        esrb_rating: game.esrb_rating || '',
+        released: game.released || '',
+        short_screenshots: game.short_screenshots || [],
+      });
+    }
+  }, [game]);
+
+  const handleInputChange = ({ target: { name, value } }) => {
+    setGameData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSelectChange = ({ target: { value } }, key, isMultiSelect = true) => {
+    setGameData((prevData) => ({
+      ...prevData,
+      [key]: isMultiSelect ? addUniqueItem(prevData[key], value) : value,
+    }));
+  };
+
+  const addUniqueItem = (array, item) => [...new Set([...array, item])];
+
+  const handleScreenshotInputChange = ({ target: { value } }) => {
+    setNewScreenshotUrl(value);
+  };
+
+  const handleScreenshotAdd = async () => {
+    if (newScreenshotUrl.trim()) {
+      setGameData((prevData) => ({
+        ...prevData,
+        short_screenshots: addUniqueItem(prevData.short_screenshots, newScreenshotUrl.trim()),
+      }));
+      setNewScreenshotUrl('');
+    } else {
+      alert("L'URL fournie n'est pas une image valide. Veuillez vérifier le lien.");
+    }
+  };
+
+  const handleScreenshotRemove = (screenshot) => {
+    setGameData((prevData) => ({
+      ...prevData,
+      short_screenshots: prevData.short_screenshots.filter((img) => img !== screenshot),
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      await updateGameData({ ...gameData, id: game._id });
+      alert('Jeu modifié avec succès');
+      queryClient.invalidateQueries(['games']);
+      onClose();
+      if (refetch) refetch();
+    } catch (error) {
+      console.error('Erreur lors de la modification du jeu :', error);
+    }
+  };
+
+  const handleDeleteGame = async () => {
+    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce jeu ?')) return;
+
+    try {
+      await deleteGameData(game._id);
+      alert('Jeu supprimé avec succès');
+      queryClient.invalidateQueries(['games']);
+      onClose();
+    } catch (error) {
+      console.error('Erreur lors de la suppression du jeu:', error);
+    }
+  };
+
+  if (!show) return null;
+
+  return (
+    <ModalWrapper show={show} onClose={onClose} title="Modifier un jeu">
+      <form className="modal__form" onSubmit={handleSubmit}>
+        {renderInputField('Nom du jeu', 'name', gameData.name, handleInputChange)}
+        {renderTextAreaField('Description', 'description', gameData.description, handleInputChange)}
+        {renderInputField('Date de sortie', 'released', gameData.released, handleInputChange, 'date')}
+        {renderScreenshotField(newScreenshotUrl, handleScreenshotInputChange, handleScreenshotAdd, gameData.short_screenshots, handleScreenshotRemove)}
+        <button className="modal__submit" type="submit">
+          Mettre à jour
+        </button>
+        <button className="modal__delete" type="button" onClick={handleDeleteGame}>
+          Supprimer le jeu
+        </button>
+      </form>
+    </ModalWrapper>
+  );
+});
+
+export const ModalSearchGame = memo(({ show, onClose, onSelectGame, isForDeletion = false, isForEditing = false }) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -51,10 +163,11 @@ export const ModalSearchGame = memo(({ show, onClose, onSelectGame, isForDeletio
 
     return null;
   };
-
   const handleGameClick = (game) => {
     if (isForDeletion) {
       onSelectGame(game._id, refetch);
+    } else if (isForEditing) {
+      onSelectGame(game);
     } else {
       navigate(`/games/${game._id}`);
     }
@@ -132,7 +245,7 @@ export const ModalAddNote = memo(({ show, onClose, onSubmit }) => {
   );
 });
 
-export const ModalEditGame = memo(({ show, onClose, onSubmit, game }) => {
+export const ModalEditUserGame = memo(({ show, onClose, onSubmit, game }) => {
   const [commentaire, setCommentaire] = useState(game?.commentaire || '');
   const [note, setNote] = useState(game?.note || 0);
   const [etat, setEtat] = useState(game?.etat || 0);
@@ -202,11 +315,11 @@ export const ModalEditGame = memo(({ show, onClose, onSubmit, game }) => {
   );
 });
 
-// FIXME: ça ne fonctionne pas, on a des objets en BDD, donc il faut donner les valeurs différement, c'est compliqué.
 export const ModalAddGame = memo(({ show, onClose }) => {
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
+  const [newBackgroundImageUrl, setNewBackgroundImageUrl] = useState('');
   const [gameData, setGameData] = useState({
-    idGameBD: '',
+    idGameBD: uuidv4(),
     name: '',
     description: '',
     platforms: [],
@@ -229,7 +342,17 @@ export const ModalAddGame = memo(({ show, onClose }) => {
   });
 
   const handleInputChange = ({ target: { name, value } }) => {
-    updateGameData(name, value);
+    if (name === 'background_image') {
+      isValidImageUrl(value.trim()).then((isValid) => {
+        if (isValid) {
+          updateGameData(name, value.trim());
+        } else {
+          alert("L'URL fournie pour l'image de fond n'est pas une image valide. Veuillez vérifier le lien.");
+        }
+      });
+    } else {
+      updateGameData(name, value);
+    }
   };
 
   const handleSelectChange = ({ target: { value } }, key, isMultiSelect = true) => {
@@ -253,6 +376,10 @@ export const ModalAddGame = memo(({ show, onClose }) => {
     setNewScreenshotUrl(value);
   };
 
+  const handleBackgroundImageInputChange = ({ target: { value } }) => {
+    setNewBackgroundImageUrl(value);
+  };
+
   const isValidImageUrl = (url) => {
     return new Promise((resolve) => {
       const img = new Image();
@@ -268,6 +395,15 @@ export const ModalAddGame = memo(({ show, onClose }) => {
       setNewScreenshotUrl('');
     } else {
       alert("L'URL fournie n'est pas une image valide. Veuillez vérifier le lien.");
+    }
+  };
+
+  const handleBackgroundImageAdd = async () => {
+    if (await isValidImageUrl(newBackgroundImageUrl.trim())) {
+      updateGameData('background_image', newBackgroundImageUrl.trim());
+      setNewBackgroundImageUrl('');
+    } else {
+      alert("L'URL fournie pour l'image de fond n'est pas une image valide. Veuillez vérifier le lien.");
     }
   };
 
@@ -337,6 +473,7 @@ export const ModalAddGame = memo(({ show, onClose }) => {
       <form className="modal__form" onSubmit={handleSubmit}>
         {renderInputField('Nom du jeu', 'name', gameData.name, handleInputChange)}
         {renderTextAreaField('Description', 'description', gameData.description, handleInputChange)}
+        {renderBackgroundImageField(newBackgroundImageUrl, handleBackgroundImageInputChange, handleBackgroundImageAdd, gameData.background_image)}
         {renderSelectField('Plateformes', 'platforms', filterOptions.platforms)}
         {renderSelectField('Stores', 'stores', filterOptions.stores)}
         {renderSelectField('Tags', 'tags', filterOptions.tags)}
@@ -350,3 +487,65 @@ export const ModalAddGame = memo(({ show, onClose }) => {
     </ModalWrapper>
   );
 });
+
+export const renderInputField = (label, name, value, onChange, type = 'text') => (
+  <div className="modal__field">
+    <label className="modal__label">{label} :</label>
+    <input className="modal__input" type={type} name={name} value={value} onChange={onChange} />
+  </div>
+);
+
+export const renderScreenshotField = (url, onChange, onAdd, screenshots, onRemove) => (
+  <div className="modal__field">
+    <label className="modal__label">Captures d'écran :</label>
+    <div className="modal__multi-input">
+      <input className="modal__input" type="text" placeholder="URL de la capture d'écran" value={url} onChange={onChange} />
+      <button type="button" className="modal__add" onClick={onAdd} disabled={!url.trim()}>
+        Ajouter
+      </button>
+    </div>
+
+    {screenshots.length > 0 && (
+      <>
+        <div>&nbsp;</div>
+        <div className="modal__results">
+          {screenshots.map((screenshot, index) => (
+            <div key={index} className="modal__game-item" onClick={() => onRemove(screenshot)}>
+              <img src={screenshot} alt={`Screenshot ${index + 1}`} />
+            </div>
+          ))}
+        </div>
+      </>
+    )}
+  </div>
+);
+
+export const renderBackgroundImageField = (url, onChange, onAdd, backgroundImage) => (
+  <div className="modal__field">
+    <label className="modal__label">Image de fond :</label>
+    <div className="modal__multi-input">
+      <input className="modal__input" type="text" placeholder="URL de l'image de fond" value={url} onChange={onChange} />
+      <button type="button" className="modal__add" onClick={onAdd} disabled={!url.trim()}>
+        Ajouter
+      </button>
+    </div>
+
+    {backgroundImage && (
+      <>
+        <div>&nbsp;</div>
+        <div className="modal__results">
+          <div className="modal__game-item">
+            <img src={backgroundImage} alt="Background" />
+          </div>
+        </div>
+      </>
+    )}
+  </div>
+);
+
+export const renderTextAreaField = (label, name, value, onChange) => (
+  <div className="modal__field">
+    <label className="modal__label">{label} :</label>
+    <textarea className="modal__textarea" name={name} rows="4" value={value} onChange={onChange} />
+  </div>
+);
