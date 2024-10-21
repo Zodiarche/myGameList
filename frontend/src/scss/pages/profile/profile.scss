@@ -37,11 +37,15 @@
 
       &__col {
         &--left {
-          flex-shrink: 0;
+          @include from("desktop") {
+            flex-shrink: 0;
+          }
         }
 
         &--right {
-          flex-grow: 1;
+          @include from("desktop") {
+            flex-grow: 1;
+          }
         }
       }
 
@@ -50,11 +54,15 @@
           position: sticky;
           top: 1rem;
           left: 0;
-          background-color: $color-dark-blue;
-          color: $color-white;
-          border-radius: 2rem;
           padding: 3rem 6rem;
+          margin-bottom: 0;
         }
+        margin-bottom: 3rem;
+        padding: 2rem 4rem;
+
+        background-color: $color-dark-blue;
+        color: $color-white;
+        border-radius: 2rem;
       }
 
       &__list {

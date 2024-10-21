@@ -28,14 +28,18 @@ const Dashboard = () => {
 
   return (
     <main id="dashboard">
-      <section className="dashboard">
+      <section id="dashboard" className="dashboard">
         <div className="dashboard__wrapper">
           <h1 className="dashboard__title">Tableau de Bord</h1>
 
           <div className="dashboard__buttons">
-            <button onClick={() => setAddGameModalOpen(true)}>Ajouter un jeu</button>
-            <button>Modifier un jeu</button>
-            <button onClick={() => setSearchGameModalOpen(true)}>Supprimer un jeu</button>
+            <button className="dashboard__button" onClick={() => setAddGameModalOpen(true)}>
+              Ajouter un jeu
+            </button>
+            <button className="dashboard__button">Modifier un jeu</button>
+            <button className="dashboard__button" onClick={() => setSearchGameModalOpen(true)}>
+              Supprimer un jeu
+            </button>
           </div>
 
           <ModalAddGame show={isAddGameModalOpen} onClose={() => setAddGameModalOpen(false)} />
