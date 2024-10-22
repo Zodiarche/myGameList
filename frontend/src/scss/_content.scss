@@ -148,10 +148,46 @@ main {
     }
   }
 
-  @import "./pages/home/main.scss";
-  @import "./pages/games/main.scss";
-  @import "./pages/profile/main.scss";
-  @import "./pages/additional-pages.scss";
+  &#games {
+    @import "./pages/all-games.scss";
+  }
+
+  &#game-details {
+    @import "./pages/game-details.scss";
+  }
+
+  &#my-games {
+    @import "./pages/my-games.scss";
+  }
+
+  &#profile {
+    @import "./pages/profile.scss";
+  }
+
+  &#login {
+    @import "./pages/login.scss";
+  }
+
+  &#signup {
+    @import "./pages/signup.scss";
+  }
+
+  &#dashboard {
+    @import "./pages/dashboard.scss";
+  }
+
+  &#home {
+    @import "./landing-page.scss";
+  }
+
+  &#additional-pages {
+    font-size: 2rem;
+    padding: 8rem 0;
+
+    h1 {
+      margin-top: 0;
+    }
+  }
 
   @import "./components/top-games.scss";
   @import "./components/modal.scss";
