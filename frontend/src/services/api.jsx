@@ -243,3 +243,16 @@ export const createGameData = async (gameData) => {
 export const deleteGameData = async (gameId) => {
   return await apiCall(`${apiUrl}/games/${gameId}`, { method: 'DELETE' });
 };
+
+/**
+ * Met à jour les données d'un jeu existant.
+ * @param {Object} gameData - Les données du jeu à mettre à jour.
+ * @returns {Promise<Object>} Les données du jeu mis à jour.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const updateGameData = async (gameData) => {
+  return await apiCall(`${apiUrl}/games/${gameData.id}`, {
+    method: 'PUT',
+    body: gameData,
+  });
+};
