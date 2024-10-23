@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ModalSearchGame } from './Modal';
+import { ModalSearchGame } from './index';
 
 const LandingPage = () => {
   const [showModal, setShowModal] = useState(false);

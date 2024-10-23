@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
+import ModalWrapper from './ModalWrapper';
+import renderScreenshotField from '../render/renderTextAreaField';
 import { deleteGameData, updateGameData } from '../../services/api';
-
-import { renderScreenshotField } from '../render/renderTextAreaField';
-
-import { ModalWrapper } from './ModalWrapper';
 
 /**
  * ModalEditGameData component - Fenêtre modale pour modifier un jeu existant.

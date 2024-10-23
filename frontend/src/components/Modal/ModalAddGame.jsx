@@ -4,11 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 
 import { createGameData, fetchFilters } from '../../services/api';
 
-import { ModalWrapper } from './ModalWrapper';
-
-import { renderBackgroundImageField } from '../render/renderBackgroundImageField';
-import { renderTextAreaField } from '../render/renderTextAreaField';
-import { renderScreenshotField } from '../render/renderTextAreaField';
+import ModalWrapper from './ModalWrapper';
+import renderBackgroundImageField from '../render/renderBackgroundImageField';
+import renderTextAreaField from '../render/renderTextAreaField';
+import renderScreenshotField from '../render/renderTextAreaField';
 
 /**
  * ModalAddGame component - Fenêtre modale pour ajouter un nouveau jeu.
@@ -16,14 +15,12 @@ import { renderScreenshotField } from '../render/renderTextAreaField';
  * @param {Object} props - Propriétés du composant.
  * @param {boolean} props.show - Indique si la modale doit être affichée.
  * @param {Function} props.onClose - Fonction à appeler pour fermer la modale.
- * @returns {JSX.Element} Composant ModalAddGame.
+ * @returns {JSX.Element}
  */
 const ModalAddGame = ({ show, onClose }) => {
-  // Définit l'URL de la nouvelle capture d'écran et de l'image de fond
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
   const [newBackgroundImageUrl, setNewBackgroundImageUrl] = useState('');
 
-  // Définit les données du jeu en état local
   const [gameData, setGameData] = useState({
     idGameBD: uuidv4(),
     name: '',
@@ -37,7 +34,6 @@ const ModalAddGame = ({ show, onClose }) => {
     short_screenshots: [],
   });
 
-  // Récupère les options de filtre via une requête asynchrone
   const {
     data: filterOptions = {},
     isLoading,

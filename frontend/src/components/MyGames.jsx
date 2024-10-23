@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { ModalEditUserGame } from './index';
 import { fetchGameUsers, updateGameUser } from '../services/api';
-import { ModalEditUserGame } from './Modal';
 
 const MyGames = () => {
   const queryClient = useQueryClient();

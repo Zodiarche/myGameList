@@ -7,7 +7,7 @@
  * @param {string} backgroundImage - URL de l'image de fond actuelle.
  * @returns {JSX.Element} Composant de champ d'image de fond.
  */
-export const renderBackgroundImageField = (url, onChange, onAdd, backgroundImage) => (
+const renderBackgroundImageField = (url, onChange, onAdd, backgroundImage) => (
   <div className="modal__field">
     <label className="modal__label">Image de fond :</label>
     <div className="modal__multi-input">
@@ -29,3 +29,5 @@ export const renderBackgroundImageField = (url, onChange, onAdd, backgroundImage
     )}
   </div>
 );
+
+export default renderBackgroundImageField;

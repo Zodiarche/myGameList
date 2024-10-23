@@ -1,9 +1,8 @@
 import React, { memo, useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
+import ModalWrapper from './ModalWrapper';
 import { deleteGameUser } from '../../services/api';
-
-import { ModalWrapper } from './ModalWrapper';
 
 const ModalEditUserGame = ({ show, onClose, onSubmit, game }) => {
   const [commentaire, setCommentaire] = useState(game?.commentaire || '');

@@ -1,12 +1,13 @@
-// Ajout des conditions pour l'affichage des titres et des listes
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createGameUser, fetchGameById, fetchGameUserById, fetchProfile } from '../services/api';
+
 import Loading from '../components/Loading';
 import SwiperNavigationButton from '../components/swiperNavigationButton';
+import { ModalAddNote, ModalEditUserGame } from '../components';
+
+import { createGameUser, fetchGameById, fetchGameUserById, fetchProfile } from '../services/api';
 import { initializeSwiperJS } from '../services/swiper/main.js';
-import { useEffect, useState } from 'react';
-import { ModalAddNote, ModalEditUserGame } from '../components/Modal.jsx';
 
 const GameDetails = () => {
   const { id } = useParams();

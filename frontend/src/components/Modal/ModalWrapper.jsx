@@ -9,7 +9,7 @@ import useModal from '../../hooks/useModal';
  * @param {function} props.onClose - Fonction appelée pour fermer le modal.
  * @param {React.ReactNode} props.children - Les éléments à afficher à l'intérieur du modal.
  * @param {string} props.title - Le titre affiché en haut du modal.
- * @returns {JSX.Element|null} Le rendu du modal ou null si le modal est masqué.
+ * @returns {JSX.Element|null}
  */
 const ModalWrapper = ({ show, onClose, children, title }) => {
   const modalRef = useModal(show, onClose);

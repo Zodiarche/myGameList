@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 
+import ModalWrapper from './ModalWrapper';
+
 import { normalizeString } from '../../utils/normalizeString';
 import { fetchGamesBySearch } from '../../services/api';
-
-import { ModalWrapper } from './ModalWrapper';
 
 const ModalSearchGame = ({ show, onClose, onSelectGame, isForDeletion = false, isForEditing = false }) => {
   const navigate = useNavigate();

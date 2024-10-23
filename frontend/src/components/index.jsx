@@ -12,5 +12,3 @@ export { default as ModalEditGameData } from './Modal/ModalEditGameData';
 export { default as ModalEditUserGame } from './Modal/ModalEditUserGame';
 export { default as ModalSearchGame } from './Modal/ModalSearchGame';
 export { default as ModalWrapper } from './Modal/ModalWrapper';
-
-export { default as ModalWrapper } from './Modal/ModalWrapper';
