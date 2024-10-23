@@ -1,9 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 import { fetchProfile, updateUser, deleteUser } from '../services/api';
 
 const ProfileSettings = () => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const usernameRef = useRef('');
   const emailRef = useRef('');
   const oldPasswordRef = useRef('');
@@ -15,8 +17,8 @@ const ProfileSettings = () => {
 
   const {
     data: user,
-    error,
     isLoading,
+    error,
   } = useQuery({
     queryKey: ['userProfile'],
     queryFn: fetchProfile,
@@ -26,6 +28,14 @@ const ProfileSettings = () => {
       emailRef.current.value = user.email;
     },
   });
+
+  useEffect(() => {
+    if (user) return;
+
+    queryClient.removeQueries(['userProfile']);
+    queryClient.setQueryData(['userProfile'], null);
+    navigate('/login');
+  }, [user]);
 
   const mutation = useMutation({
     mutationFn: updateUser,
@@ -103,7 +113,7 @@ const ProfileSettings = () => {
 
   return (
     <div className="profile__profile-settings">
-      <h1 className="profile__title">Profil de {user.username}</h1>
+      <h1 className="profile__title">Profil de {user?.username}</h1>
       {successMessage && <p className="profile__success">{successMessage}</p>}
       {errorMessage && <p className="profile__error">{errorMessage}</p>}
       <div className="profile__field-container">

@@ -21,6 +21,7 @@ const Signup = () => {
 
   useEffect(() => {
     if (!userProfile && !userProfile?._id) return;
+
     navigate('/profile');
   }, [userProfile, navigate]);
 
