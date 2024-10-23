@@ -45,7 +45,6 @@ export const getTopGames = async (request, response) => {
     const limitNum = parseInt(limit, 10);
     const filters = {};
 
-    // Ajouter les filtres pour les paramètres de requête
     if (platform) {
       filters['platforms.name'] = platform;
     }
@@ -62,15 +61,12 @@ export const getTopGames = async (request, response) => {
       filters['released'] = { $gte: new Date(released) };
     }
 
-    // Récupérer les jeux les plus notés
     const mostRatedGames = await GameData.find(filters)
-      .sort({ ratings_count: -1 }) // Trier par nombre de notations d'abord
-      .limit(limitNum * 2); // Limiter le nombre initial à une taille plus grande pour filtrer plus tard
+      .sort({ ratings_count: -1 })
+      .limit(limitNum * 2);
 
-    // Trier par note parmi les jeux les plus notés
     const topRatedGames = mostRatedGames.sort((a, b) => b.rating - a.rating);
 
-    // Limiter le résultat final au nombre demandé
     const topGames = topRatedGames.slice(0, limitNum);
 
     response.json(topGames);
@@ -204,11 +200,11 @@ export const getFilters = async (_, response) => {
       tags,
       stores,
       esrbRatings,
-      releaseYears: releaseYears.map((item) => item.year), // Récupère simplement l'année
-      userRatings: userRatings.map((item) => item.rating), // Évaluations des utilisateurs
-      metacriticRatings: metacriticRatings.map((item) => item.metacritic), // Évaluations Metacritic
-      playtimeRanges: playtimeRanges.map((item) => item.playtime), // Temps de jeu
-      addedByStatus: addedByStatus[0], // Statuts des jeux ajoutés par les utilisateurs
+      releaseYears: releaseYears.map((item) => item.year),
+      userRatings: userRatings.map((item) => item.rating),
+      metacriticRatings: metacriticRatings.map((item) => item.metacritic),
+      playtimeRanges: playtimeRanges.map((item) => item.playtime),
+      addedByStatus: addedByStatus[0],
     });
   } catch (error) {
     console.error('Error fetching filters:', error.message);

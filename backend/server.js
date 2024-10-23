@@ -16,31 +16,31 @@ import { saveGamesToDB } from './import-games.js';
 dotenv.config();
 
 const PORT = process.env.PORT;
+const MONGODB_URI = process.env.MONGODB_URI;
+const CORS_ORIGIN = process.env.CORS_ORIGIN;
+
 const app = express();
 
 /**
  * Configuration de la connexion à MongoDB.
  */
 mongoose
-  .connect('mongodb://localhost:27017/myGameList')
-  .then(
-    /*async*/ () => {
-      console.log('Connected to MongoDB');
-      // await saveGamesToDB();
-    }
-  )
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    // await saveGamesToDB();
+  })
   .catch((error) => {
     console.error('Error connecting to MongoDB', error);
   });
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin: CORS_ORIGIN,
     credentials: true,
   })
 );
 app.use(cookieParser());
-
 app.use(bodyParser.json());
 
 app.use('/user', userRoutes);

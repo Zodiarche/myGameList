@@ -20,6 +20,8 @@ const TopGameList = () => {
     queryFn: () => fetchTopGames(filters),
   });
 
+  console.log(data);
+
   const handleGameClick = (gameId) => {
     navigate(`/games/${gameId}`);
   };
