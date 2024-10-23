@@ -25,7 +25,7 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/site-map" element={<SiteMap />} />
             <Route path="/legal-notice" element={<LegalNotice />} />
-            <Route path="/privacy-policy" element={<PrivacyPolice />} />
+            <Route path="/privacy-police" element={<PrivacyPolice />} />
           </Routes>
         </div>
         <Footer />

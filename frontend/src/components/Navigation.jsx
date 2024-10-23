@@ -47,7 +47,7 @@ export const FooterNavigation = () => {
         </li>
 
         <li className="footer__navigation-menu-item">
-          <Link to="/privacy-policy">Politique de confidentialités</Link>
+          <Link to="/privacy-police">Politique de confidentialités</Link>
         </li>
 
         <li className="footer__navigation-menu-item">
