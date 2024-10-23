@@ -1,5 +1,5 @@
 import React from 'react';
-import useModal from '../hooks/useModal';
+import useModal from '../../hooks/useModal';
 
 /**
  * Composant générique pour afficher une boîte de dialogue modale.
@@ -11,7 +11,7 @@ import useModal from '../hooks/useModal';
  * @param {string} props.title - Le titre affiché en haut du modal.
  * @returns {JSX.Element|null} Le rendu du modal ou null si le modal est masqué.
  */
-export const ModalWrapper = ({ show, onClose, children, title }) => {
+const ModalWrapper = ({ show, onClose, children, title }) => {
   const modalRef = useModal(show, onClose);
 
   if (!show) return null;
@@ -28,3 +28,5 @@ export const ModalWrapper = ({ show, onClose, children, title }) => {
     </div>
   );
 };
+
+export default ModalWrapper;

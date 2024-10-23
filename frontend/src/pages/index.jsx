@@ -1,0 +1,10 @@
+export { default as MainHome } from './Home';
+export { default as Games } from './Games';
+export { default as GameDetails } from './GameDetails';
+export { default as Signup } from './Signup';
+export { default as Login } from './Login';
+export { default as Profile } from './Profile';
+export { default as Contact } from './Contact';
+export { default as SiteMap } from './SiteMap';
+export { default as LegalNotice } from './LegalNotice';
+export { default as PrivacyPolice } from './PrivacyPolice';

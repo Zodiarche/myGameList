@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ModalAddGame, ModalSearchGame, ModalEditGameData } from './Modal';
 import { deleteGameData } from '../services/api';
+import { ModalAddGame, ModalEditGameData, ModalSearchGame } from './Modal';
 
 const Dashboard = () => {
   const [isSearchGameModalOpen, setSearchGameModalOpen] = useState(false);

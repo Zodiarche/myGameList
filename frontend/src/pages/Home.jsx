@@ -1,5 +1,5 @@
 import TopGameList from '../components/TopGameList';
-import LandingPage from '../components/Home/LandingPage';
+import LandingPage from '../components/LandingPage';
 
 const MainHome = () => {
   return (
