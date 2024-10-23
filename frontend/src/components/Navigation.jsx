@@ -51,7 +51,7 @@ export const FooterNavigation = () => {
         </li>
 
         <li className="footer__navigation-menu-item">
-          <Link to="/sitemap">Plan du site</Link>
+          <Link to="/site-map">Plan du site</Link>
         </li>
       </ul>
     </nav>

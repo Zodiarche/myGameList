@@ -1,13 +1,13 @@
+import { Link } from 'react-router-dom';
+
 const SiteMap = () => {
   return (
     <main id="additional-pages">
       <section>
-        <div class="wrapper">
-          <h1 class="animation" data-animation="moveToDown">
-            Plan du site
-          </h1>
+        <div className="wrapper">
+          <h1>Plan du site</h1>
 
-          <ul class="animation" data-animation="moveToUp">
+          <ul>
             <li>
               <Link to="/">Accueil</Link>
             </li>
@@ -21,16 +21,10 @@ const SiteMap = () => {
               <Link to="/contact">Contact</Link>
             </li>
             <li>
-              <Link to="/contact">Contact</Link>
+              <Link to="/legal-notice">Mentions légales</Link>
             </li>
             <li>
-              <a href="formulaire-de-contact.php">Contact</a>
-            </li>
-            <li>
-              <a href="mentions-legales.php">Mentions légales</a>
-            </li>
-            <li>
-              <a href="politique-de-confidentialite.php">Politique de confidentialité</a>
+              <Link to="/privacy-police">Politique de confidentialités</Link>
             </li>
           </ul>
         </div>
