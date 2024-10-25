@@ -119,7 +119,7 @@ const ContactForm = () => {
               <div
                 id="recaptcha-container"
                 className="g-recaptcha"
-                data-sitekey="6LfoiX0pAAAAAKpJGXa7wnOVuswzlqVqo3CXld1_"
+                data-sitekey="6LdN6msqAAAAAMDra2Vyk01RbGQ4Ui6TSsg014Tw"
                 data-callback="onReCAPTCHASuccess"
                 data-expired-callback="onReCAPTCHAExpired"
               ></div>
