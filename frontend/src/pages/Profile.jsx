@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchProfile, logoutUser } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import ProfileSettings from '../components/ProfileSettings';
 import MyGames from '../components/MyGames';
 import Dashboard from '../components/Dashboard';
+
+import { fetchProfile, logoutUser } from '../services/api';
 
 const Profile = () => {
   const queryClient = useQueryClient();

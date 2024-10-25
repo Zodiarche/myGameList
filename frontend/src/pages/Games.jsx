@@ -1,9 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchGames, fetchFilters } from '../services/api';
-import usePagination from '../hooks/usePagination';
-import GameFilters from '../components/GameFilters';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
+import GameFilters from '../components/GameFilters';
+
+import usePagination from '../hooks/usePagination';
+
+import { fetchGames, fetchFilters } from '../services/api';
 
 const Games = () => {
   const navigate = useNavigate();

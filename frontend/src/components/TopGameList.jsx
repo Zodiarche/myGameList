@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { fetchTopGames } from '../services/api';
-import SwiperNavigationButton from './swiperNavigationButton.jsx';
-
-import '../modules/swiper/swiper-bundle.min.js';
-import '../services/swiper/main.js';
-import { initializeSwiperJS } from '../services/swiper/main.js';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
+import { fetchTopGames } from '../services/api';
+
+import { initializeSwiperJS } from '../services/swiper/main.js';
+import SwiperNavigationButton from './swiperNavigationButton.jsx';
 
 const TopGameList = () => {
   const navigate = useNavigate();

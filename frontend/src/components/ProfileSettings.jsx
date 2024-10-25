@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { fetchProfile, updateUser, deleteUser } from '../services/api';
 
 const ProfileSettings = () => {
