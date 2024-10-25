@@ -31,7 +31,7 @@ const LandingPage = () => {
           </div>
 
           <div className="landing-page__col landing-page__col--right">
-            <img src="../../../public/home-landing-page.png" alt="" loading="lazy" className="landing-page__image" />
+            <img src="/home-landing-page.png" alt="" loading="lazy" className="landing-page__image" />
           </div>
         </div>
 
