@@ -5,9 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 import { createGameData, fetchFilters } from '../../services/api';
 
 import ModalWrapper from './ModalWrapper';
+
 import renderBackgroundImageField from '../render/renderBackgroundImageField';
+import renderScreenshotField from '../render/renderScreenshotField';
 import renderTextAreaField from '../render/renderTextAreaField';
-import renderScreenshotField from '../render/renderTextAreaField';
+import renderInputField from '../render/renderInputField';
 
 /**
  * ModalAddGame component - Fenêtre modale pour ajouter un nouveau jeu.
@@ -18,11 +20,13 @@ import renderScreenshotField from '../render/renderTextAreaField';
  * @returns {JSX.Element}
  */
 const ModalAddGame = ({ show, onClose }) => {
+  // État pour gérer l'URL de la capture d'écran et de l'image de fond
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
   const [newBackgroundImageUrl, setNewBackgroundImageUrl] = useState('');
 
+  // État pour gérer les données du nouveau jeu
   const [gameData, setGameData] = useState({
-    idGameBD: uuidv4(),
+    idGameBD: uuidv4(), // Génération d'un identifiant unique pour le jeu
     name: '',
     description: '',
     platforms: [],
@@ -34,6 +38,7 @@ const ModalAddGame = ({ show, onClose }) => {
     short_screenshots: [],
   });
 
+  // Utilisation de useQuery pour récupérer les options de filtres depuis l'API
   const {
     data: filterOptions = {},
     isLoading,
@@ -46,11 +51,11 @@ const ModalAddGame = ({ show, onClose }) => {
 
   /**
    * Met à jour les données du jeu pour une clé donnée.
-   * @param {string} key - Clé à mettre à jour.
+   * @param {string} key - Clé à mettre à jour (ex : "name", "description").
    * @param {*} value - Nouvelle valeur pour la clé.
    */
   const updateGameData = (key, value) => {
-    setGameData((prevData) => ({ ...prevData, [key]: value }));
+    setGameData((prevData) => ({ ...prevData, [key]: value })); // Mise à jour des données du jeu
   };
 
   /**
@@ -59,11 +64,13 @@ const ModalAddGame = ({ show, onClose }) => {
    */
   const handleInputChange = ({ target: { name, value } }) => {
     if (name === 'background_image') {
+      // Si le champ est une image de fond, on valide l'URL avant de l'enregistrer
       validateAndSetImage(value.trim(), (isValid) => {
         if (isValid) updateGameData(name, value.trim());
         else alert("L'URL fournie pour l'image de fond n'est pas valide. Veuillez vérifier le lien.");
       });
     } else {
+      // Sinon, mise à jour simple des données du jeu
       updateGameData(name, value);
     }
   };
@@ -75,6 +82,7 @@ const ModalAddGame = ({ show, onClose }) => {
    * @param {boolean} [isMultiSelect=true] - Indique s'il s'agit d'une sélection multiple.
    */
   const handleSelectChange = ({ target: { value } }, key, isMultiSelect = true) => {
+    // Mise à jour de la clé avec les valeurs sélectionnées (permet la sélection multiple)
     updateGameData(key, isMultiSelect ? [...new Set([...gameData[key], value])] : value);
   };
 
@@ -84,6 +92,7 @@ const ModalAddGame = ({ show, onClose }) => {
    * @param {string} key - Clé des données à mettre à jour.
    */
   const handleItemRemove = (item, key) => {
+    // Supprime un élément spécifique de la liste associée à la clé
     updateGameData(
       key,
       gameData[key].filter((i) => i !== item)
@@ -98,7 +107,7 @@ const ModalAddGame = ({ show, onClose }) => {
   const handleImageInputChange =
     (setter) =>
     ({ target: { value } }) =>
-      setter(value);
+      setter(value); // Gère le changement des champs d'URL d'image
 
   /**
    * Valide l'URL d'une image.
@@ -106,6 +115,7 @@ const ModalAddGame = ({ show, onClose }) => {
    * @param {Function} callback - Fonction à appeler avec le résultat de la validation.
    */
   const validateAndSetImage = (url, callback) => {
+    // Crée une image et vérifie si l'URL est valide (onload et onerror)
     const img = new Image();
     img.onload = () => callback(true);
     img.onerror = () => callback(false);
@@ -119,10 +129,11 @@ const ModalAddGame = ({ show, onClose }) => {
    * @param {Function} setter - Fonction pour réinitialiser l'état local.
    */
   const handleImageAdd = async (url, key, setter) => {
+    // Valide l'URL avant de l'ajouter aux données du jeu
     validateAndSetImage(url.trim(), (isValid) => {
       if (isValid) {
         updateGameData(key, key === 'short_screenshots' ? [...new Set([...gameData[key], url.trim()])] : url.trim());
-        setter('');
+        setter(''); // Réinitialise le champ après l'ajout
       } else {
         alert("L'URL fournie n'est pas une image valide. Veuillez vérifier le lien.");
       }
@@ -136,21 +147,20 @@ const ModalAddGame = ({ show, onClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await createGameData(gameData);
-      onClose();
+      await createGameData(gameData); // Envoie des données du jeu à l'API
+      onClose(); // Ferme la modale après la soumission
     } catch (error) {
-      console.error("Erreur lors de l'ajout du jeu :", error);
+      console.error("Erreur lors de l'ajout du jeu :", error); // Gère l'erreur de soumission
     }
   };
 
+  // Fonction pour rendre un champ de sélection (ex : plateformes, magasins, tags)
   const renderSelectField = (label, key, options, isMultiSelect = true) => (
     <div className="modal__field">
       <label className="modal__label">{label} :</label>
       <div className="modal__multi-input">
-        <select className="modal__select" value="" onChange={(e) => handleSelectChange(e, key, isMultiSelect)}>
-          <option value="" disabled>
-            Choisissez {label}
-          </option>
+        <select className="modal__select" onChange={(e) => handleSelectChange(e, key, isMultiSelect)}>
+          <option disabled>Choisissez {label}</option>
           {options
             ?.filter((option) => (isMultiSelect ? !gameData[key].includes(option) : true))
             ?.map((option) => (
@@ -160,18 +170,19 @@ const ModalAddGame = ({ show, onClose }) => {
             ))}
         </select>
       </div>
-      {renderSelectedItems(gameData[key], key)}
+      {renderSelectedItems(gameData[key], key)} {/* Affiche les éléments sélectionnés */}
     </div>
   );
 
+  // Fonction pour afficher les éléments sélectionnés et permettre leur suppression
   const renderSelectedItems = (items, key) =>
     items.length > 0 && (
       <>
         <div>&nbsp;</div>
         <div className="modal__results">
           {Array.isArray(items) ? (
-            items.map((item, index) => (
-              <div key={index} className="modal__game-item" onClick={() => handleItemRemove(item, key)}>
+            items.map((item) => (
+              <div key={item} className="modal__game-item" onClick={() => handleItemRemove(item, key)}>
                 <p>{item}</p>
               </div>
             ))
@@ -184,19 +195,31 @@ const ModalAddGame = ({ show, onClose }) => {
       </>
     );
 
-  if (isLoading) return <p>Chargement des filtres...</p>;
-  if (error) return <p>Erreur lors de la récupération des filtres.</p>;
+  if (isLoading) return <p>Chargement des filtres...</p>; // Affiche un message pendant le chargement
+  if (error) return <p>Erreur lors de la récupération des filtres.</p>; // Affiche un message en cas d'erreur
 
   return (
     <ModalWrapper show={show} onClose={onClose} title="Ajouter un jeu">
       <form className="modal__form" onSubmit={handleSubmit}>
+        {/* Rendu des champs du formulaire */}
         {renderInputField('Nom du jeu', 'name', gameData.name, handleInputChange)}
         {renderTextAreaField('Description', 'description', gameData.description, handleInputChange)}
-        {renderBackgroundImageField(newBackgroundImageUrl, handleImageInputChange(setNewBackgroundImageUrl), () => handleImageAdd(newBackgroundImageUrl, 'background_image', setNewBackgroundImageUrl), gameData.background_image)}
+        {renderBackgroundImageField(
+          newBackgroundImageUrl,
+          handleImageInputChange(setNewBackgroundImageUrl),
+          () => handleImageAdd(newBackgroundImageUrl, 'background_image', setNewBackgroundImageUrl),
+          gameData.background_image
+        )}
         {['platforms', 'stores', 'tags'].map((key) => renderSelectField(key.charAt(0).toUpperCase() + key.slice(1), key, filterOptions[key], true))}
         {renderSelectField('ESRB Rating', 'esrb_rating', filterOptions.esrbRatings, false)}
         {renderInputField('Date de sortie', 'released', gameData.released, handleInputChange, 'date')}
-        {renderScreenshotField(newScreenshotUrl, handleImageInputChange(setNewScreenshotUrl), () => handleImageAdd(newScreenshotUrl, 'short_screenshots', setNewScreenshotUrl), gameData.short_screenshots, handleItemRemove)}
+        {renderScreenshotField(
+          newScreenshotUrl,
+          handleImageInputChange(setNewScreenshotUrl),
+          () => handleImageAdd(newScreenshotUrl, 'short_screenshots', setNewScreenshotUrl),
+          gameData.short_screenshots,
+          handleItemRemove
+        )}
         <button className="modal__submit" type="submit">
           Ajouter le jeu
         </button>

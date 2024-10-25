@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import ModalWrapper from './ModalWrapper';
+
 import renderScreenshotField from '../render/renderTextAreaField';
+import renderInputField from '../render/renderInputField';
+
 import { deleteGameData, updateGameData } from '../../services/api';
 
 /**

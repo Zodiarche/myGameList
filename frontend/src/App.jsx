@@ -1,20 +1,35 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
 import { MainHome, Games, GameDetails, Signup, Login, Profile, Contact, SiteMap, LegalNotice, PrivacyPolice } from './pages';
-
 import Header from './components/Header';
 import Footer from './components/Footer';
+
+import { initializeTarteAuCitron } from './services/tarteaucitron/main';
 
 const queryClient = new QueryClient();
 
 const App = () => {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/tarteaucitronjs@latest/tarteaucitron.js';
+    script.async = true;
+    script.onload = () => {
+      initializeTarteAuCitron();
+    };
+
+    document.head.appendChild(script);
+
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
         <div id="wrapper">
           <Header />
-
           <Routes>
             <Route path="/" element={<MainHome />} />
             <Route path="/games" element={<Games />} />

@@ -47,8 +47,10 @@ select,
 
 [type="submit"] {
   @extend .btn;
-  border: solid 0.1rem $color-white;
+  background-color: $color-light-blue;
+  color: $color-dark-blue;
   font-size: inherit;
+  margin-bottom: 2rem;
 
   &:hover,
   &:focus {
@@ -74,8 +76,54 @@ select,
   }
 }
 
+.radio-container {
+  @include from("tablet") {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem;
+  }
+  display: block;
+
+  input[type="radio"] {
+    display: none;
+  }
+
+  input[type="radio"]:checked + label {
+    background-color: $color-white;
+    color: $color-dark-blue;
+  }
+
+  input + label {
+    @include from("tablet") {
+      margin-bottom: 0;
+    }
+    margin-bottom: 1.6rem;
+
+    cursor: pointer;
+    color: $color-dark-blue;
+    border: solid 1px $color-dark-blue;
+    border-radius: 3rem;
+    padding: 1rem 2rem;
+    transition-duration: 0.4s;
+
+    &:hover,
+    &:focus {
+      background-color: $color-white;
+      color: $color-dark-blue;
+      outline: none;
+    }
+  }
+
+  label {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+  }
+}
+
 .field {
   margin-top: 2rem;
+  margin-bottom: 0;
 }
 
 .field-container {
@@ -93,5 +141,48 @@ select,
     width: 100%;
     margin: 2rem 0;
     @extend .no-margin-outside;
+  }
+}
+
+.RGPD-container {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  margin-top: 2rem;
+
+  .RGPD-input {
+    display: none;
+  }
+
+  .RGPD-checkbox {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    width: 1.6rem;
+    height: 1.6rem;
+    background-color: $color-light-blue;
+    border: 0.1rem solid $color-dark-blue;
+    border-radius: 0.2rem;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1.4rem;
+      height: 1.4rem;
+      background-color: rgba($color: $color-white, $alpha: 1);
+      border-radius: 0.1rem;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.2s ease-in-out;
+    }
+  }
+
+  input[type="checkbox"]:checked + .RGPD-checkbox::after {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .RGPD-label {
+    margin: 0;
   }
 }

@@ -1,4 +1,3 @@
-// Modules tiers
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
@@ -6,7 +5,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-// Modules personnalisés
 import userRoutes from './routes/user.js';
 import gamesRoutes from './routes/game-data.js';
 import gamesUserRoutes from './routes/game-user.js';
@@ -17,6 +15,7 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI_LOCAL = process.env.MONGODB_URI_LOCAL;
 const CORS_ORIGIN = process.env.CORS_ORIGIN;
 
 const app = express();

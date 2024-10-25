@@ -180,6 +180,10 @@ main {
     @import "./pages/landing-page.scss";
   }
 
+  &#contact {
+    @import "./pages/contact.scss";
+  }
+
   &#additional-pages {
     font-size: 2rem;
     padding: 8rem 0;

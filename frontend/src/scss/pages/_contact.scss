@@ -1,0 +1,34 @@
+#contact {
+  &.contact {
+    @include from("desktop") {
+      padding: 12rem 0;
+    }
+    padding: 6rem 0;
+
+    background-color: $color-white;
+
+    .contact {
+      &__form {
+        @include from("desktop") {
+          box-shadow: 2rem 2rem 0 $color-white;
+        }
+        box-shadow: 1rem 1rem 0 $color-white;
+
+        @include from("wide") {
+          width: 70%;
+          padding: 8rem 6rem;
+        }
+        padding: 4rem 3rem;
+
+        background-color: $color-light-blue;
+        border-radius: 3rem;
+        margin: auto;
+      }
+
+      &__title {
+        text-align: center;
+        margin-top: 0;
+      }
+    }
+  }
+}

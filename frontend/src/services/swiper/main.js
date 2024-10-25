@@ -5,10 +5,6 @@ export let swiperTopGames = null;
 export let swiperScreenshots = null;
 
 /**
- * @module SwiperJS/Main
- */
-
-/**
  * Gère l'initialisation, la destruction et les changements d'état d'une instance de Swiper.
  * @param {Swiper} swiperInstance - Référence à l'instance Swiper actuelle.
  * @param {string} selector - Le sélecteur CSS de l'élément Swiper.

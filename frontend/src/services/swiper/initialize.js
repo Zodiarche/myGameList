@@ -1,8 +1,4 @@
 /**
- * @module SwiperJS/Initialization
- */
-
-/**
  * Initialise une instance de Swiper avec les paramètres spécifiés.
  * @param {string} selector - Le sélecteur CSS de l'élément Swiper.
  * @param {Object.<string, string|boolean|number>} params - Un objet contenant tous les paramètres du Swiper.
@@ -27,14 +23,11 @@ const createSwiperConfig = (params) => {
     speed: params.speed || 300,
   };
 
-  if (params.pagination)
-    config.pagination = swiperPagination(params.pagination);
-  if (params.navigation)
-    config.navigation = swiperNavigation(params.navigation);
+  if (params.pagination) config.pagination = swiperPagination(params.pagination);
+  if (params.navigation) config.navigation = swiperNavigation(params.navigation);
   if (params.autoplay) config.autoplay = swiperAutoplay(params.autoplay);
   if (params.scrollbar) config.scrollbar = swiperScrollBar(params.scrollbar);
-  if (params.breakpoints)
-    config.breakpoints = swiperBreakpoints(params.breakpoints);
+  if (params.breakpoints) config.breakpoints = swiperBreakpoints(params.breakpoints);
   if (params.on) config.on = swiperOn(params.on);
 
   return config;
@@ -100,16 +93,8 @@ const swiperBreakpoints = (breakpoints) => {
       slidesPerView: breakpoints[breakpoint].slidesPerView || 1,
     };
 
-    breakpointConfig = updateAutoplayConfig(
-      breakpointConfig,
-      breakpoints,
-      breakpoint
-    );
-    breakpointConfig = updateNavigationConfig(
-      breakpointConfig,
-      breakpoints,
-      breakpoint
-    );
+    breakpointConfig = updateAutoplayConfig(breakpointConfig, breakpoints, breakpoint);
+    breakpointConfig = updateNavigationConfig(breakpointConfig, breakpoints, breakpoint);
 
     config[breakpoint] = breakpointConfig;
   });
@@ -124,8 +109,7 @@ const swiperBreakpoints = (breakpoints) => {
  */
 const swiperOn = (handlers) => {
   return {
-    slideChangeTransitionEnd:
-      handlers.slideChangeTransitionEnd || function () {},
+    slideChangeTransitionEnd: handlers.slideChangeTransitionEnd || function () {},
   };
 };
 
@@ -162,10 +146,8 @@ const updateNavigationConfig = (config, breakpoints, breakpoint) => {
   return {
     ...config,
     navigation: {
-      nextEl:
-        breakpoints[breakpoint].navigation?.nextEl || ".swiper-button-next",
-      prevEl:
-        breakpoints[breakpoint].navigation?.prevEl || ".swiper-button-prev",
+      nextEl: breakpoints[breakpoint].navigation?.nextEl || '.swiper-button-next',
+      prevEl: breakpoints[breakpoint].navigation?.prevEl || '.swiper-button-prev',
     },
   };
 };
