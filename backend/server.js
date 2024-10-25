@@ -25,9 +25,9 @@ const app = express();
  * Configuration de la connexion à MongoDB.
  */
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI_LOCAL)
   .then(() => {
-    // console.log('Connected to MongoDB');
+    console.log('Connected to MongoDB');
     // await saveGamesToDB();
   })
   .catch((error) => {
@@ -36,7 +36,7 @@ mongoose
 
 app.use(
   cors({
-    origin: '*', // Autoriser toutes les origines (soucis de CORS avec l'URL du site)
+    origin: CORS_ORIGIN_LOCAL,
     credentials: true,
   })
 );
@@ -50,7 +50,7 @@ app.use('/games-user', isAuthenticated, gamesUserRoutes);
 /**
  * Démarrage du serveur.
  */
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port: ${PORT}`);
-//   console.log(`http://localhost:${PORT}`);
-// });
+app.listen(PORT, () => {
+  console.log(`Server is running on port: ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
