@@ -18,7 +18,7 @@ const ProfileSettings = () => {
   const {
     data: user,
     isLoading,
-    error,
+    isError,
   } = useQuery({
     queryKey: ['userProfile'],
     queryFn: fetchProfile,
@@ -108,62 +108,68 @@ const ProfileSettings = () => {
     deleteMutation.mutate(user._id);
   };
 
-  if (isLoading) return <p>Chargement...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error.message}</p>;
-
   return (
     <div className="profile__profile-settings">
-      <h1 className="profile__title">Profil de {user?.username}</h1>
-      {successMessage && <p className="profile__success">{successMessage}</p>}
-      {errorMessage && <p className="profile__error">{errorMessage}</p>}
-      <div className="profile__field-container">
-        <div className="profile__field">
-          <form className="profile__form" onSubmit={handleUsernameSubmit}>
-            <label className="profile__label">Nom d'utilisateur</label>
-            <input className="profile__input" ref={usernameRef} type="text" name="username" />
+      {isLoading && <p className="states__highlight">Le chargement de votre profil est en cours.</p>}
+      {isError && <p className="states__error">Une erreur est survenue durant la récupération de votre profil.</p>}
+
+      {!isLoading && !isError && (
+        <>
+          <h1 className="profile__title">Profil de {user?.username}</h1>
+
+          {successMessage && <p className="profile__success">{successMessage}</p>}
+          {errorMessage && <p className="profile__error">{errorMessage}</p>}
+
+          <div className="profile__field-container">
+            <div className="profile__field">
+              <form className="profile__form" onSubmit={handleUsernameSubmit}>
+                <label className="profile__label">Nom d'utilisateur</label>
+                <input className="profile__input" ref={usernameRef} type="text" name="username" />
+                <button className="profile__submit" type="submit">
+                  Mettre à jour le nom d'utilisateur
+                </button>
+              </form>
+            </div>
+
+            <div className="profile__field">
+              <form className="profile__form" onSubmit={handleEmailSubmit}>
+                <label className="profile__label">Email</label>
+                <input className="profile__input" ref={emailRef} type="text" name="email" />
+                <button className="profile__submit" type="submit">
+                  Mettre à jour l'email
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <form className="profile__form" onSubmit={handlePasswordSubmit}>
+            <div className="profile__field-container">
+              <div className="profile__field">
+                <label className="profile__label">Ancien mot de passe</label>
+                <input className="profile__input" ref={oldPasswordRef} type="password" name="oldPassword" />
+              </div>
+
+              <div className="profile__field">
+                <label className="profile__label">Nouveau mot de passe</label>
+                <input className="profile__input" ref={newPasswordRef} type="password" name="newPassword" />
+              </div>
+
+              <div className="profile__field">
+                <label className="profile__label">Confirmer le nouveau mot de passe</label>
+                <input className="profile__input" ref={confirmPasswordRef} type="password" name="confirmPassword" />
+              </div>
+            </div>
+
             <button className="profile__submit" type="submit">
-              Mettre à jour le nom d'utilisateur
+              Mettre à jour le mot de passe
             </button>
           </form>
-        </div>
 
-        <div className="profile__field">
-          <form className="profile__form" onSubmit={handleEmailSubmit}>
-            <label className="profile__label">Email</label>
-            <input className="profile__input" ref={emailRef} type="text" name="email" />
-            <button className="profile__submit" type="submit">
-              Mettre à jour l'email
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <form className="profile__form" onSubmit={handlePasswordSubmit}>
-        <div className="profile__field-container">
-          <div className="profile__field">
-            <label className="profile__label">Ancien mot de passe</label>
-            <input className="profile__input" ref={oldPasswordRef} type="password" name="oldPassword" />
-          </div>
-
-          <div className="profile__field">
-            <label className="profile__label">Nouveau mot de passe</label>
-            <input className="profile__input" ref={newPasswordRef} type="password" name="newPassword" />
-          </div>
-
-          <div className="profile__field">
-            <label className="profile__label">Confirmer le nouveau mot de passe</label>
-            <input className="profile__input" ref={confirmPasswordRef} type="password" name="confirmPassword" />
-          </div>
-        </div>
-
-        <button className="profile__submit" type="submit">
-          Mettre à jour le mot de passe
-        </button>
-      </form>
-
-      <button className="profile__delete" type="submit" onClick={handleDelete}>
-        Supprimer mon compte
-      </button>
+          <button className="profile__delete" type="submit" onClick={handleDelete}>
+            Supprimer mon compte
+          </button>
+        </>
+      )}
     </div>
   );
 };

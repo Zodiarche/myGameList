@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchGames, fetchFilters } from '../services/api';
 import usePagination from '../hooks/usePagination';
 import GameFilters from '../components/GameFilters';
-import Loading from '../components/Loading';
 import { useNavigate } from 'react-router-dom';
 
 const Games = () => {
@@ -26,7 +25,6 @@ const Games = () => {
     data: games = [],
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ['games', filters],
     queryFn: fetchGames,
@@ -85,8 +83,6 @@ const Games = () => {
     navigate(`/games/${gameId}`);
   };
 
-  if (isError) return <div>Erreur: {error.message}</div>;
-
   return (
     <>
       <main id="games">
@@ -100,9 +96,9 @@ const Games = () => {
               </div>
 
               <div className="all-games__col all-games__col--right">
-                {isLoading ? (
-                  <Loading />
-                ) : (
+                {isLoading && <p className="states__highlight">Le chargement des jeux est en cours.</p>}
+                {isError && <p className="states__error">Une erreur est survenue durant la récupération des jeux.</p>}
+                {!isLoading && !isError && (
                   <div className="game-card__container">
                     {currentGames.map((game) => (
                       <div className="game-card" style={{ backgroundImage: `url(${game.background_image})` }} key={game._id} onClick={() => handleGameClick(game._id)}>
@@ -118,7 +114,6 @@ const Games = () => {
                     ))}
                   </div>
                 )}
-
                 <div>{renderPageButtons()}</div>
               </div>
             </div>

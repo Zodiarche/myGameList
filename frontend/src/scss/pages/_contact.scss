@@ -29,6 +29,17 @@
         text-align: center;
         margin-top: 0;
       }
+
+      &__submit {
+        background-color: $color-light-blue;
+
+        &:hover,
+        &:focus {
+          background-color: $color-white;
+          color: $color-dark-blue;
+          border: solid 0.1rem $color-dark-blue;
+        }
+      }
     }
   }
 }

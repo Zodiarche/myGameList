@@ -15,12 +15,10 @@ const TopGameList = () => {
     sortBy: 'rating',
   };
 
-  const { data, error, isLoading, isError } = useQuery({
+  const { data } = useQuery({
     queryKey: ['topGames', filters],
     queryFn: () => fetchTopGames(filters),
   });
-
-  console.log(data);
 
   const handleGameClick = (gameId) => {
     navigate(`/games/${gameId}`);
@@ -34,11 +32,6 @@ const TopGameList = () => {
 
     initializeSwiperJS();
   }, [data]);
-
-  if (isError) {
-    console.error('Error fetching top games:', isError);
-    return null;
-  }
 
   if (!data || data.length <= 0) return null;
 

@@ -118,7 +118,7 @@ const ContactForm = () => {
               </div>
 
               <p className="field txt-right">
-                <button id="contact-submit" type="submit" name="form-contact">
+                <button id="contact-submit" className="contact__submit" type="submit" name="form-contact">
                   Envoyer ma demande
                 </button>
               </p>

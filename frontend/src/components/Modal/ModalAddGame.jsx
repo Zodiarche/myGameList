@@ -42,7 +42,7 @@ const ModalAddGame = ({ show, onClose }) => {
   const {
     data: filterOptions = {},
     isLoading,
-    error,
+    isError,
   } = useQuery({
     queryKey: ['filters'],
     queryFn: fetchFilters,
@@ -195,13 +195,12 @@ const ModalAddGame = ({ show, onClose }) => {
       </>
     );
 
-  if (isLoading) return <p>Chargement des filtres...</p>; // Affiche un message pendant le chargement
-  if (error) return <p>Erreur lors de la récupération des filtres.</p>; // Affiche un message en cas d'erreur
+  if (isLoading) return <p className="states__highlight">Chargement du formulaire...</p>;
+  if (isError) return <p className="states__error">Erreur lors de la récupération du formulaire.</p>;
 
   return (
     <ModalWrapper show={show} onClose={onClose} title="Ajouter un jeu">
       <form className="modal__form" onSubmit={handleSubmit}>
-        {/* Rendu des champs du formulaire */}
         {renderInputField('Nom du jeu', 'name', gameData.name, handleInputChange)}
         {renderTextAreaField('Description', 'description', gameData.description, handleInputChange)}
         {renderBackgroundImageField(
