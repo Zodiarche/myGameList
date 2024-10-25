@@ -10,20 +10,20 @@ import { initializeTarteAuCitron } from './services/tarteaucitron/main';
 const queryClient = new QueryClient();
 
 const App = () => {
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/tarteaucitronjs@latest/tarteaucitron.js';
-    script.async = true;
-    script.onload = () => {
-      initializeTarteAuCitron();
-    };
+  // useEffect(() => {
+  //   const script = document.createElement('script');
+  //   script.src = 'https://cdn.jsdelivr.net/npm/tarteaucitronjs@latest/tarteaucitron.js';
+  //   script.async = true;
+  //   script.onload = () => {
+  //     initializeTarteAuCitron();
+  //   };
 
-    document.head.appendChild(script);
+  //   document.head.appendChild(script);
 
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
+  //   return () => {
+  //     document.head.removeChild(script);
+  //   };
+  // }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import { useForm, ValidationError } from '@formspree/react';
 
 const ContactForm = () => {
+  const [state, handleSubmit] = useForm('manynzew');
+  if (state.succeeded) {
+    return <p>Merci pour votre demande de contact !</p>;
+  }
+
   const [formData, setFormData] = useState({
     nom: '',
     prenom: '',
@@ -17,10 +23,6 @@ const ContactForm = () => {
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
     });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
   };
 
   const toggleCheckbox = () => {
@@ -44,6 +46,7 @@ const ContactForm = () => {
                     Nom <abbr title="Champ obligatoire">*</abbr>
                   </label>
                   <input type="text" name="nom" id="nom" value={formData.nom} onChange={handleChange} />
+                  <ValidationError prefix="nom" field="nom" errors={state.errors} />
                 </div>
 
                 <div className="field">
@@ -51,6 +54,7 @@ const ContactForm = () => {
                     Prénom <abbr title="Champ obligatoire">*</abbr>
                   </label>
                   <input type="text" name="prenom" id="prenom" value={formData.prenom} onChange={handleChange} />
+                  <ValidationError prefix="prenom" field="prenom" errors={state.errors} />
                 </div>
               </div>
 
@@ -59,6 +63,7 @@ const ContactForm = () => {
                   E-mail <abbr title="Champ obligatoire">*</abbr>
                 </label>
                 <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} />
+                <ValidationError prefix="email" field="email" errors={state.errors} />
               </div>
 
               <div className="field">
@@ -66,6 +71,7 @@ const ContactForm = () => {
                   Téléphone <abbr title="Champ obligatoire">*</abbr>
                 </label>
                 <input type="tel" name="telephone" id="telephone" value={formData.telephone} onChange={handleChange} />
+                <ValidationError prefix="telephone" field="telephone" errors={state.errors} />
               </div>
 
               <div className="field">
@@ -96,6 +102,7 @@ const ContactForm = () => {
                   Votre demande <abbr title="Champ obligatoire">*</abbr>
                 </label>
                 <textarea name="message" id="message" rows="10" value={formData.message} onChange={handleChange}></textarea>
+                <ValidationError prefix="message" field="message" errors={state.errors} />
               </div>
 
               <div className="RGPD-container">

@@ -9,6 +9,7 @@
     "watch": "sass --watch --style=compressed --no-source-map src/scss/main.scss src/css/main.css"
   },
   "dependencies": {
+    "@formspree/react": "^2.5.1",
     "@tanstack/react-query": "^5.51.23",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
