@@ -10,6 +10,16 @@
         margin-top: 0;
       }
 
+      &__field {
+        @extend .field;
+
+        &-container {
+          @extend .field-container;
+
+          margin-bottom: 3rem;
+        }
+      }
+
       &__list {
         list-style-type: none;
         display: grid;
@@ -30,6 +40,12 @@
           background-color: $color-dark-blue;
           color: $color-white;
           transform: scale(1.03);
+
+          .my-games__status,
+          .my-games__rating {
+            background-color: $color-white;
+            color: $color-dark-blue;
+          }
         }
       }
 
@@ -38,10 +54,17 @@
         margin-top: 0;
       }
 
-      &__status {
-      }
-
+      &__status,
       &__rating {
+        text-align: center;
+        background-color: $color-white;
+        color: $color-dark-blue;
+        font-family: $family-neue-haas-unica;
+        font-size: 1.8rem;
+        font-weight: 700; // bold
+        border: solid 0.1rem $color-dark-blue;
+        border-radius: 2rem;
+        padding: 1rem 2rem;
       }
 
       &__comment {
