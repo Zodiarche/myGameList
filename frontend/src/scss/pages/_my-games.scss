@@ -11,24 +11,14 @@
       }
 
       &__list {
-        @include from("desktop") {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        @include from("wide") {
-          grid-template-columns: repeat(4, 1fr);
-        }
-        @include from("extra-wide") {
-          grid-template-columns: repeat(5, 1fr);
-        }
-        grid-template-columns: repeat(2, 1fr);
-
         list-style-type: none;
         display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1.6rem;
+        max-width: 100%;
       }
 
       &__item {
-        gap: 2rem;
         border: solid 0.1rem $color-dark-blue;
         border-radius: 1.5rem;
         transition-duration: 0.4s;
@@ -55,6 +45,14 @@
       }
 
       &__comment {
+        display: -webkit-box;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        overflow: hidden;
+
+        max-width: 100%;
         margin-bottom: 0;
       }
     }
