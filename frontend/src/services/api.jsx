@@ -82,14 +82,25 @@ export const fetchProfile = async () => {
  * @param {number} user.id - L'identifiant de l'utilisateur.
  * @param {string} user.username - Le nom d'utilisateur.
  * @param {string} user.email - L'adresse e-mail de l'utilisateur.
- * @param {string} user.password - Le mot de passe de l'utilisateur.
+ * @param {string} user.oldPassword - L'ancien mot de passe de l'utilisateur.
+ * @param {string} user.newPassword - Le nouveau mot de passe de l'utilisateur.
+ * @param {string} user.confirmPassword - La confirmation du nouveau mot de passe de l'utilisateur.
  * @returns {Promise<Object>} Les données mises à jour de l'utilisateur.
  * @throws {Error} Si la mise à jour échoue ou si une erreur est renvoyée par le serveur.
  */
-export const updateUser = async ({ id, username, email, password }) => {
+export const updateUser = async ({ id, username, email, oldPassword, newPassword, confirmPassword }) => {
+  const body = {};
+  if (username) body.username = username;
+  if (email) body.email = email;
+  if (oldPassword || newPassword || confirmPassword) {
+    body.oldPassword = oldPassword;
+    body.newPassword = newPassword;
+    body.confirmPassword = confirmPassword;
+  }
+
   return await apiCall(`${apiUrl}/user/${id}`, {
     method: 'PUT',
-    body: { username, email, password },
+    body,
   });
 };
 

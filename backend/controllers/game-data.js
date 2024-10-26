@@ -45,28 +45,16 @@ export const getTopGames = async (request, response) => {
     const limitNum = parseInt(limit, 10);
     const filters = {};
 
-    if (platform) {
-      filters['platforms.name'] = platform;
-    }
-
-    if (tag) {
-      filters['tags.name'] = tag;
-    }
-
-    if (rating) {
-      filters['rating'] = { $gte: parseFloat(rating) };
-    }
-
-    if (released) {
-      filters['released'] = { $gte: new Date(released) };
-    }
+    if (platform) filters['platforms.name'] = platform;
+    if (tag) filters['tags.name'] = tag;
+    if (rating) filters['rating'] = { $gte: parseFloat(rating) };
+    if (released) filters['released'] = { $gte: new Date(released) };
 
     const mostRatedGames = await GameData.find(filters)
       .sort({ ratings_count: -1 })
       .limit(limitNum * 2);
 
     const topRatedGames = mostRatedGames.sort((a, b) => b.rating - a.rating);
-
     const topGames = topRatedGames.slice(0, limitNum);
 
     response.json(topGames);

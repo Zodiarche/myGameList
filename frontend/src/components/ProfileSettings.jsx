@@ -45,62 +45,24 @@ const ProfileSettings = () => {
       setErrorMessage('');
     },
     onError: (error) => {
-      if (error.response && error.response.status === 400 && error.response.data.message === 'Ancien mot de passe incorrect.') {
-        setErrorMessage('Ancien mot de passe incorrect.');
-      }
+      setSuccessMessage('');
+      setErrorMessage(error.message || 'Une erreur est survenue. Veuillez réessayer.');
     },
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteUser,
-    onSuccess: () => {
-      navigate('/login');
-    },
-  });
-
-  const handleUsernameSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const username = usernameRef.current.value;
-    if (!username.trim()) {
-      setErrorMessage("Le nom d'utilisateur ne peut pas être vide.");
-      setSuccessMessage('');
-    } else {
-      mutation.mutate({ id: user._id, username });
-      setErrorMessage('');
-    }
-  };
+    const updates = {
+      id: user._id,
+      username: usernameRef.current.value,
+      email: emailRef.current.value,
+      oldPassword: oldPasswordRef.current.value,
+      newPassword: newPasswordRef.current.value,
+      confirmPassword: confirmPasswordRef.current.value,
+    };
 
-  const handleEmailSubmit = (event) => {
-    event.preventDefault();
-    const email = emailRef.current.value;
-    if (!email.trim()) {
-      setErrorMessage("L'email ne peut pas être vide.");
-      setSuccessMessage('');
-    } else if (!validateEmail(email)) {
-      setErrorMessage('Veuillez entrer une adresse email valide.');
-      setSuccessMessage('');
-    } else {
-      mutation.mutate({ id: user._id, email });
-      setErrorMessage('');
-    }
-  };
-
-  const handlePasswordSubmit = (event) => {
-    event.preventDefault();
-    const oldPassword = oldPasswordRef.current.value;
-    const newPassword = newPasswordRef.current.value;
-    const confirmPassword = confirmPasswordRef.current.value;
-
-    if (!oldPassword || !newPassword || !confirmPassword) {
-      setErrorMessage('Tous les champs de mot de passe doivent être remplis.');
-      setSuccessMessage('');
-    } else if (newPassword !== confirmPassword) {
-      setErrorMessage('Les nouveaux mots de passe ne correspondent pas.');
-      setSuccessMessage('');
-    } else {
-      mutation.mutate({ id: user._id, oldPassword, newPassword });
-      setErrorMessage('');
-    }
+    console.log(updates);
+    mutation.mutate(updates);
   };
 
   const handleDelete = () => {
@@ -120,29 +82,21 @@ const ProfileSettings = () => {
           {successMessage && <p className="profile__success">{successMessage}</p>}
           {errorMessage && <p className="profile__error">{errorMessage}</p>}
 
-          <div className="profile__field-container">
-            <div className="profile__field">
-              <form className="profile__form" onSubmit={handleUsernameSubmit}>
+          <form className="profile__form" onSubmit={handleSubmit}>
+            <div className="profile__field-container">
+              <div className="profile__field">
                 <label className="profile__label">Nom d'utilisateur</label>
                 <input className="profile__input" ref={usernameRef} type="text" name="username" />
-                <button className="profile__submit" type="submit">
-                  Mettre à jour le nom d'utilisateur
-                </button>
-              </form>
-            </div>
+              </div>
 
-            <div className="profile__field">
-              <form className="profile__form" onSubmit={handleEmailSubmit}>
+              <div className="profile__field">
                 <label className="profile__label">Email</label>
-                <input className="profile__input" ref={emailRef} type="text" name="email" />
-                <button className="profile__submit" type="submit">
-                  Mettre à jour l'email
-                </button>
-              </form>
+                <input className="profile__input" ref={emailRef} type="email" name="email" />
+              </div>
             </div>
-          </div>
 
-          <form className="profile__form" onSubmit={handlePasswordSubmit}>
+            <p>&nbsp;</p>
+
             <div className="profile__field-container">
               <div className="profile__field">
                 <label className="profile__label">Ancien mot de passe</label>
@@ -161,11 +115,11 @@ const ProfileSettings = () => {
             </div>
 
             <button className="profile__submit" type="submit">
-              Mettre à jour le mot de passe
+              Mettre à jour le profil
             </button>
           </form>
 
-          <button className="profile__delete" type="submit" onClick={handleDelete}>
+          <button className="profile__delete" onClick={handleDelete}>
             Supprimer mon compte
           </button>
         </>

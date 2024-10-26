@@ -19,7 +19,6 @@ const GameDetails = () => {
     data: game,
     isLoading,
     isError,
-    error,
   } = useQuery({
     queryKey: ['game', id],
     queryFn: () => fetchGameById(id),
@@ -75,7 +74,7 @@ const GameDetails = () => {
   };
 
   // Fonction pour afficher plus ou moins de tags
-  const displayedTags = showMoreTags ? game.tags : game.tags.slice(0, TAGS_LIMIT);
+  const displayedTags = showMoreTags ? game?.tags : game?.tags.slice(0, TAGS_LIMIT);
 
   // Fonction pour gérer le clic sur le bouton
   const handleAddToCollectionClick = (event) => {

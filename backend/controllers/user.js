@@ -2,17 +2,19 @@ import user from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+import { isAdminValid, isEmailValid, isPasswordValid, isUsernameValid } from '../utils/formValidate.js';
+
 export const loginUser = async (request, response) => {
   const { email, password } = request.body;
 
   try {
     const existingUser = await user.findOne({ email });
-    if (!existingUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
+    if (!existingUser) return response.status(400).json({ message: 'Identifiants incorrects' });
 
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-    if (!isPasswordValid) return response.status(400).json({ message: 'Mot de passe incorrect' });
+    if (!isPasswordValid) return response.status(400).json({ message: 'Identifiants incorrects' });
 
-    const token = jwt.sign({ userId: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '1y' });
 
     response.cookie('token', token, {
       httpOnly: true,
@@ -55,30 +57,22 @@ export const getUserProfile = async (request, response) => {
  */
 export const createUser = async (request, response) => {
   const { username, email, password, isAdmin } = request.body;
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!username || typeof username !== 'string' || username.length < 3) {
-    return response.status(400).json({ field: 'username', message: 'Le nom d’utilisateur doit être une chaîne de caractères et comporter au moins 3 caractères.' });
-  }
+  const usernameError = isUsernameValid(username);
+  if (usernameError) return response.status(400).json({ field: 'username', message: usernameError });
 
-  if (!email || typeof email !== 'string' || !emailRegex.test(email)) {
-    return response.status(400).json({ field: 'email', message: "L'adresse email doit être une chaîne de caractères valide." });
-  }
+  const emailError = isEmailValid(email);
+  if (emailError) return response.status(400).json({ field: 'email', message: emailError });
 
-  if (!password || typeof password !== 'string' || password.length < 6) {
-    return response.status(400).json({ field: 'password', message: 'Le mot de passe doit être une chaîne de caractères et comporter au moins 6 caractères.' });
-  }
+  const passwordError = isPasswordValid(password);
+  if (passwordError) return response.status(400).json({ field: 'password', message: passwordError });
 
-  if (typeof isAdmin !== 'boolean') {
-    return response.status(400).json({ field: 'isAdmin', message: "La valeur d'administrateur doit être un booléen." });
-  }
+  const isAdminError = isAdminValid(isAdmin);
+  if (isAdminError) return response.status(400).json({ field: 'isAdmin', message: isAdminError });
 
   try {
-    // Vérification si l'utilisateur existe déjà
     const existingUser = await user.findOne({ email });
-    if (existingUser) {
-      return response.status(400).json({ message: 'Cet utilisateur existe déjà.' });
-    }
+    if (existingUser) return response.status(400).json({ message: 'Cet utilisateur existe déjà.' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new user({ username, email, password: hashedPassword, isAdmin });
@@ -124,32 +118,47 @@ export const getUserById = async (request, response) => {
 };
 
 /**
- * Met à jour un user par ID.
+ * Met à jour un utilisateur par ID.
  * @param {Express.Request} request - L'objet de requête.
  * @param {Express.Response} response - L'objet de réponse.
  * @returns {Promise<void>}
  */
 export const updateUser = async (request, response) => {
   try {
-    const { oldPassword, newPassword, ...otherUpdates } = request.body;
+    const { username, email, oldPassword, newPassword, confirmPassword, ...otherUpdates } = request.body;
+
+    console.log('Données reçues :', request.body);
 
     const existingUser = await user.findById(request.params.id);
     if (!existingUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
-    if (oldPassword && newPassword) {
-      const isPasswordValid = await bcrypt.compare(oldPassword, existingUser.password);
-      if (!isPasswordValid) return response.status(400).json({ message: 'Ancien mot de passe incorrect.' });
+    const usernameError = isUsernameValid(username);
+    if (usernameError) return response.status(400).json({ message: usernameError });
+
+    const emailError = isEmailValid(email);
+    if (emailError) return response.status(400).json({ message: emailError });
+
+    if (oldPassword || newPassword || confirmPassword) {
+      const isOldPasswordValid = await bcrypt.compare(oldPassword, existingUser.password);
+      if (!isOldPasswordValid) return response.status(400).json({ message: 'Ancien mot de passe incorrect.' });
+
+      const passwordError = isPasswordValid(newPassword);
+      if (passwordError) return response.status(400).json({ message: passwordError });
+
+      if (newPassword !== confirmPassword) return response.status(400).json({ message: 'Le nouveau mot de passe et la confirmation ne correspondent pas.' });
+      if (oldPassword === newPassword) return response.status(400).json({ message: "Le nouveau mot de passe ne peut pas être le même que l'ancien." });
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       otherUpdates.password = hashedPassword;
     }
 
-    const updatedUser = await user.findByIdAndUpdate(request.params.id, { $set: otherUpdates }, { new: true });
-    if (!updatedUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
+    const updatedUser = await user.findByIdAndUpdate(request.params.id, { $set: { username, email, ...otherUpdates } }, { new: true });
+    if (!updatedUser) return response.status(404).json({ message: 'Échec de la mise à jour de l’utilisateur' });
 
     response.json(updatedUser);
   } catch (error) {
-    response.status(400).json({ message: error.message });
+    console.error(error);
+    response.status(500).json({ message: 'Une erreur interne est survenue.' });
   }
 };
 

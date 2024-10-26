@@ -1,11 +1,12 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>240</x><y>310</y><w>170</w><h>160</h></coordinates><panel_attributes>// Class Element
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>70</x><y>210</y><w>170</w><h>160</h></coordinates><panel_attributes>// Class Element
 
-Users
+User
 --
-- ID: Integer
-- username: string
-- email : string
-- password : string
+- ID: ObjectID
+- username: String
+- email : String
+- password : String
+- isAdmin: Boolean
 
 _umletcode=
 fg='black'
@@ -25,14 +26,28 @@ drawArc(5,15,26,8,180,180,true) //Parameters (x, y, width, height, start, extent
 bg='#222222'
 drawArc(5,20,26,8,180,180,true) //Parameters (x, y, width, height, start, extent, open)
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>310</y><w>170</w><h>160</h></coordinates><panel_attributes>// Class Element
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>420</x><y>360</y><w>170</w><h>330</h></coordinates><panel_attributes>// Class Element
 
-Users
+GameData
 --
-- ID: Integer
-- username: string
-- email : string
-- password : string
+- ID: ObjectID
+- name: String
+- description: String
+- playtime: Int32
+- platforms: Array
+- stores: Array
+- released: Date
+- rating: Double
+- ratings: Array
+- ratings_count: Int32
+- added: Int32
+- added_by_status: Object
+- metacritic: Int32
+- suggestions_count: Int32
+- background_image: String
+- tags: Array
+- esrb_rating: Object
+- short_screenshots: Array
 
 _umletcode=
 fg='black'
@@ -52,4 +67,40 @@ drawArc(5,15,26,8,180,180,true) //Parameters (x, y, width, height, start, extent
 bg='#222222'
 drawArc(5,20,26,8,180,180,true) //Parameters (x, y, width, height, start, extent, open)
 
-</panel_attributes><additional_attributes></additional_attributes></element></diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>70</x><y>530</y><w>170</w><h>160</h></coordinates><panel_attributes>// Class Element
+
+GameUser
+--
+- ID: ObjectID
+- heure: Double
+- etat: Int32
+- note: Int32
+- commentaire: String
+- idUser: ObjectID
+- idGameBD: ObjectID
+
+_umletcode=
+fg='black'
+bg='#222222'
+drawArc(5,5,26,8,0,180,true) //Parameters (x, y, width, height, start, extent, open)
+bg='bg'
+drawArc(5,5,26,8,180,180,true) //Parameters (x, y, width, height, start, extent, open)
+fg='#929292'
+bg='#222222'
+drawRectangle(5,9,26,15) //Parameters (x, y, width, height);
+fg='black';
+drawLine(5,9,5,24) //Parameters (x1, y1, x2, y2) 
+drawLine(31,9,31,24) //Parameters (x1, y1, x2, y2) 
+bg='bg'
+drawArc(5,10,26,8,180,180,true) //Parameters (x, y, width, height, start, extent, open)
+drawArc(5,15,26,8,180,180,true) //Parameters (x, y, width, height, start, extent, open)
+bg='#222222'
+drawArc(5,20,26,8,180,180,true) //Parameters (x, y, width, height, start, extent, open)
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>140</x><y>360</y><w>40</w><h>190</h></coordinates><panel_attributes>lt=-
+m1=n
+m2=1
+</panel_attributes><additional_attributes>10;170;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>600</y><w>210</w><h>50</h></coordinates><panel_attributes>lt=-
+m1=1
+m2=n
+</panel_attributes><additional_attributes>190;20;10;20</additional_attributes></element></diagram>
