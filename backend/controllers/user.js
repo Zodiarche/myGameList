@@ -150,6 +150,10 @@ export const updateUser = async (request, response) => {
       otherUpdates.password = hashedPassword;
     }
 
+    if (existingUser.username === username && existingUser.email === email && !oldPassword && !newPassword && !confirmPassword) {
+      return response.status(400).json({ message: 'Aucune modification n’a été effectuée.' });
+    }
+
     const updatedUser = await user.findByIdAndUpdate(request.params.id, { $set: { username, email, ...otherUpdates } }, { new: true });
     if (!updatedUser) return response.status(404).json({ message: 'Échec de la mise à jour de l’utilisateur' });
 

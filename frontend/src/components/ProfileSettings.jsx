@@ -23,18 +23,12 @@ const ProfileSettings = () => {
     queryKey: ['userProfile'],
     queryFn: fetchProfile,
     retry: false,
-    onSuccess: (user) => {
-      usernameRef.current.value = user.username;
-      emailRef.current.value = user.email;
-    },
   });
 
   useEffect(() => {
     if (user) return;
-
     queryClient.removeQueries(['userProfile']);
     queryClient.setQueryData(['userProfile'], null);
-    navigate('/login');
   }, [user]);
 
   const mutation = useMutation({
@@ -74,7 +68,7 @@ const ProfileSettings = () => {
       {isLoading && <p className="states__highlight">Le chargement de votre profil est en cours.</p>}
       {isError && <p className="states__error">Une erreur est survenue durant la récupération de votre profil.</p>}
 
-      {!isLoading && !isError && (
+      {!isLoading && !isError && user && (
         <>
           <h1 className="profile__title">Profil de {user?.username}</h1>
 
@@ -85,12 +79,12 @@ const ProfileSettings = () => {
             <div className="profile__field-container">
               <div className="profile__field">
                 <label className="profile__label">Nom d'utilisateur</label>
-                <input className="profile__input" ref={usernameRef} type="text" name="username" />
+                <input className="profile__input" ref={usernameRef} type="text" name="username" defaultValue={user.username} />
               </div>
 
               <div className="profile__field">
                 <label className="profile__label">Email</label>
-                <input className="profile__input" ref={emailRef} type="email" name="email" />
+                <input className="profile__input" ref={emailRef} type="email" name="email" defaultValue={user.email} />
               </div>
             </div>
 
