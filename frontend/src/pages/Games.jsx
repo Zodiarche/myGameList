@@ -38,7 +38,6 @@ const Games = () => {
   useEffect(() => {
     fetchFilters().then((filtersData) => {
       setAvailableFilters(filtersData);
-      console.log('Filtres disponibles:', filtersData);
     });
   }, []);
 

@@ -61,7 +61,6 @@ const ProfileSettings = () => {
       confirmPassword: confirmPasswordRef.current.value,
     };
 
-    console.log(updates);
     mutation.mutate(updates);
   };
 

@@ -127,8 +127,6 @@ export const updateUser = async (request, response) => {
   try {
     const { username, email, oldPassword, newPassword, confirmPassword, ...otherUpdates } = request.body;
 
-    console.log('Données reçues :', request.body);
-
     const existingUser = await user.findById(request.params.id);
     if (!existingUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
