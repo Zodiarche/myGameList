@@ -38,22 +38,33 @@ const ModalEditUserGame = ({ show, onClose, onSubmit, game }) => {
   };
 
   return (
-    <ModalWrapper show={show} onClose={onClose} title="Modifier votre avis sur ce jeu">
+    <ModalWrapper show={show} onClose={onClose} title="Modifier votre avis !">
       <form className="modal__form" onSubmit={handleSubmit}>
-        <div className="modal__field-container">
-          <div className="modal__field">
-            <label className="modal__label">Note (sur 5) :</label>
-            <input className="modal__input" type="number" value={note} min="0" max="5" onChange={(event) => setNote(event.target.value)} />
+        <div className="modal__field modal__field--flex">
+          <p className="modal__description">Votre note :</p>
+          <div className="modal__radio">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <React.Fragment key={value}>
+                <input id={`note-${value}`} type="radio" name="note" value={value} checked={note === value} onChange={() => setNote(value)} />
+                <label htmlFor={`note-${value}`}>{value}</label>
+              </React.Fragment>
+            ))}
           </div>
+        </div>
 
-          <div className="modal__field">
-            <label className="modal__label">État :</label>
-            <select className="modal__select" value={etat} onChange={(event) => setEtat(event.target.value)}>
-              <option value={0}>À jouer</option>
-              <option value={1}>En cours</option>
-              <option value={2}>Abandonné</option>
-              <option value={3}>Terminé</option>
-            </select>
+        <div className="modal__field">
+          <div className="modal__radio">
+            {[
+              { value: 0, label: 'À jouer' },
+              { value: 1, label: 'En cours' },
+              { value: 2, label: 'Abandonné' },
+              { value: 3, label: 'Terminé' },
+            ].map(({ value, label }) => (
+              <React.Fragment key={value}>
+                <input id={`etat-${value}`} type="radio" name="etat" value={value} checked={etat === value} onChange={() => setEtat(value)} />
+                <label htmlFor={`etat-${value}`}>{label}</label>
+              </React.Fragment>
+            ))}
           </div>
         </div>
 
