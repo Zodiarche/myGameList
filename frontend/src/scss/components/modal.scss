@@ -19,6 +19,7 @@
     padding: 1.5rem 2rem;
 
     position: relative;
+    max-height: 80%;
     background-color: $color-white;
     border-radius: 1rem;
     overflow-y: auto;
@@ -79,19 +80,9 @@
   }
 
   &__results {
-    @include from("desktop") {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    @include from("wide") {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    @include from("extra-wide") {
-      grid-template-columns: repeat(5, 1fr);
-    }
-    grid-template-columns: repeat(2, 1fr);
-
     text-align: center;
     display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.6rem;
   }
 
@@ -178,8 +169,10 @@
   &__add {
     @extend .btn;
 
+    display: block;
     padding: 0.5rem 1.5rem;
     margin-top: 1.5rem;
+    margin-left: auto;
 
     &:disabled {
       cursor: not-allowed;

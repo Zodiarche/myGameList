@@ -52,20 +52,10 @@
       }
 
       &__list {
-        @include from("desktop") {
-          grid-template-columns: repeat(3, 1fr);
-        }
-        @include from("wide") {
-          grid-template-columns: repeat(4, 1fr);
-        }
-        @include from("extra-wide") {
-          grid-template-columns: repeat(5, 1fr);
-        }
-        grid-template-columns: repeat(2, 1fr);
-
         list-style-type: none;
         text-align: center;
         display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 1.6rem;
 
         &--overview {
