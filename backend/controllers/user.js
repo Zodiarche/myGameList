@@ -14,7 +14,7 @@ export const loginUser = async (request, response) => {
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
     if (!isPasswordValid) return response.status(400).json({ message: 'Identifiants incorrects' });
 
-    const token = jwt.sign({ userId: existingUser._id, email: existingUser.email }, process.env.JWT_SECRET, { expiresIn: '1y' });
+    const token = jwt.sign({ userId: existingUser._id, email: existingUser.email, isAdmin: existingUser.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1y' });
 
     response.cookie('token', token, {
       httpOnly: true,

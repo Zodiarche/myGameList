@@ -1,11 +1,11 @@
 import express from 'express';
 import { createUser, getUsers, getUserById, updateUser, deleteUser, loginUser, getUserProfile, logoutUser } from '../controllers/user.js';
-import { isAuthenticated } from '../middlewares/isAuthenticated.js';
+import { isAdmin, isAuthenticated, isSelfOrAdmin } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
 // Récupération de tous les users
-router.get('/', getUsers);
+router.get('/', isAdmin, getUsers);
 
 // Route pour l'inscription
 router.post('/signup', createUser);
@@ -14,18 +14,18 @@ router.post('/signup', createUser);
 router.post('/login', loginUser);
 
 // Route pour la déconnexion
-router.post('/logout', logoutUser);
+router.post('/logout', isAuthenticated, logoutUser);
 
 // Route protégée pour obtenir le profil de l'utilisateur
 router.get('/profile', isAuthenticated, getUserProfile);
 
 // Récupération d'un user par ID
-router.get('/:id', getUserById);
+router.get('/:id', isSelfOrAdmin, getUserById);
 
 // Mise à jour d'un user
-router.put('/:id', updateUser);
+router.put('/:id', isSelfOrAdmin, updateUser);
 
 // Suppression d'un user
-router.delete('/:id', deleteUser);
+router.delete('/:id', isSelfOrAdmin, deleteUser);
 
 export default router;

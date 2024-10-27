@@ -39,32 +39,44 @@ const apiCall = async (url, { method = 'GET', body, headers = {}, credentials = 
 };
 
 /**
- * Récupère les jeux les plus populaires avec des filtres optionnels.
- * @param {Object} [filters={}] - Objets contenant les filtres appliqués aux jeux.
- * @returns {Promise<Object>} Les données des jeux populaires filtrés.
- * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun jeu n'est trouvé.
+ * Inscrit un nouvel utilisateur avec un nom d'utilisateur, une adresse e-mail et un mot de passe.
+ * @param {Object} userData - Les informations de l'utilisateur à inscrire.
+ * @param {string} userData.username - Le nom d'utilisateur choisi.
+ * @param {string} userData.email - L'adresse e-mail de l'utilisateur.
+ * @param {string} userData.password - Le mot de passe de l'utilisateur.
+ * @param {Boolean} userData.isAdmin - Si l'utilisateur est un administrateur.
+ * @returns {Promise<Object>} Les données utilisateur après l'inscription.
+ * @throws {Error} Si l'inscription échoue ou si une erreur est renvoyée par le serveur.
  */
-export const fetchTopGames = async (filters = {}) => {
-  const params = new URLSearchParams(filters).toString();
-  return await apiCall(`${apiUrl}/games/top-games?${params}`);
+export const signupUser = async ({ username, email, password, isAdmin }) => {
+  return await apiCall(`${apiUrl}/user/signup`, {
+    method: 'POST',
+    body: { username, email, password, isAdmin },
+  });
 };
 
 /**
- * Récupère la liste de tous les jeux.
- * @returns {Promise<Object>} Les données de tous les jeux disponibles.
- * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun jeu n'est trouvé.
+ * Connecte un utilisateur avec son adresse e-mail et son mot de passe.
+ * @param {Object} credentials - Les informations de connexion de l'utilisateur.
+ * @param {string} credentials.email - L'adresse e-mail de l'utilisateur.
+ * @param {string} credentials.password - Le mot de passe de l'utilisateur.
+ * @returns {Promise<Object>} Les données utilisateur après la connexion.
+ * @throws {Error} Si la connexion échoue ou si une erreur est renvoyée par le serveur.
  */
-export const fetchGames = async () => {
-  return await apiCall(`${apiUrl}/games`);
+export const loginUser = async ({ email, password }) => {
+  return await apiCall(`${apiUrl}/user/login`, {
+    method: 'POST',
+    body: { email, password },
+  });
 };
 
 /**
- * Récupère les filtres applicables pour la recherche de jeux.
- * @returns {Promise<Object>} Les filtres disponibles pour les jeux.
- * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun filtre n'est trouvé.
+ * Déconnecte l'utilisateur actuellement connecté.
+ * @returns {Promise<Object>} Le résultat de la déconnexion.
+ * @throws {Error} Si la déconnexion échoue ou si une erreur est renvoyée par le serveur.
  */
-export const fetchFilters = async () => {
-  return await apiCall(`${apiUrl}/games/filters`);
+export const logoutUser = async () => {
+  return await apiCall(`${apiUrl}/user/logout`, { method: 'POST' });
 };
 
 /**
@@ -115,44 +127,36 @@ export const deleteUser = async (id) => {
 };
 
 /**
- * Connecte un utilisateur avec son adresse e-mail et son mot de passe.
- * @param {Object} credentials - Les informations de connexion de l'utilisateur.
- * @param {string} credentials.email - L'adresse e-mail de l'utilisateur.
- * @param {string} credentials.password - Le mot de passe de l'utilisateur.
- * @returns {Promise<Object>} Les données utilisateur après la connexion.
- * @throws {Error} Si la connexion échoue ou si une erreur est renvoyée par le serveur.
+ * Crée un nouveau jeu avec les données fournies.
+ * @param {Object} gameData - Les données du jeu à créer.
+ * @returns {Promise<Object>} Les données du jeu créé.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
-export const loginUser = async ({ email, password }) => {
-  return await apiCall(`${apiUrl}/user/login`, {
+export const createGameData = async (gameData) => {
+  return await apiCall(`${apiUrl}/games`, {
     method: 'POST',
-    body: { email, password },
+    body: gameData,
   });
 };
 
 /**
- * Déconnecte l'utilisateur actuellement connecté.
- * @returns {Promise<Object>} Le résultat de la déconnexion.
- * @throws {Error} Si la déconnexion échoue ou si une erreur est renvoyée par le serveur.
+ * Récupère la liste de tous les jeux.
+ * @returns {Promise<Object>} Les données de tous les jeux disponibles.
+ * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun jeu n'est trouvé.
  */
-export const logoutUser = async () => {
-  return await apiCall(`${apiUrl}/user/logout`, { method: 'POST' });
+export const fetchGames = async () => {
+  return await apiCall(`${apiUrl}/games`);
 };
 
 /**
- * Inscrit un nouvel utilisateur avec un nom d'utilisateur, une adresse e-mail et un mot de passe.
- * @param {Object} userData - Les informations de l'utilisateur à inscrire.
- * @param {string} userData.username - Le nom d'utilisateur choisi.
- * @param {string} userData.email - L'adresse e-mail de l'utilisateur.
- * @param {string} userData.password - Le mot de passe de l'utilisateur.
- * @param {Boolean} userData.isAdmin - Si l'utilisateur est un administrateur.
- * @returns {Promise<Object>} Les données utilisateur après l'inscription.
- * @throws {Error} Si l'inscription échoue ou si une erreur est renvoyée par le serveur.
+ * Récupère les jeux les plus populaires avec des filtres optionnels.
+ * @param {Object} [filters={}] - Objets contenant les filtres appliqués aux jeux.
+ * @returns {Promise<Object>} Les données des jeux populaires filtrés.
+ * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun jeu n'est trouvé.
  */
-export const signupUser = async ({ username, email, password, isAdmin }) => {
-  return await apiCall(`${apiUrl}/user/signup`, {
-    method: 'POST',
-    body: { username, email, password, isAdmin },
-  });
+export const fetchTopGames = async (filters = {}) => {
+  const params = new URLSearchParams(filters).toString();
+  return await apiCall(`${apiUrl}/games/top-games?${params}`);
 };
 
 /**
@@ -166,12 +170,26 @@ export const fetchGameById = async (id) => {
 };
 
 /**
- * Récupère la liste des utilisateurs associés aux jeux.
- * @returns {Promise<Object>} Les données des utilisateurs de jeux.
+ * Met à jour les données d'un jeu existant.
+ * @param {Object} gameData - Les données du jeu à mettre à jour.
+ * @returns {Promise<Object>} Les données du jeu mis à jour.
  * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
  */
-export const fetchGameUsers = async () => {
-  return await apiCall(`${apiUrl}/games-user`);
+export const updateGameData = async (gameData) => {
+  return await apiCall(`${apiUrl}/games/${gameData.id}`, {
+    method: 'PUT',
+    body: gameData,
+  });
+};
+
+/**
+ * Supprime un jeu en fonction de son identifiant.
+ * @param {string} gameId - L'identifiant du jeu à supprimer.
+ * @returns {Promise<Object>} Les données de la suppression.
+ * @throws {Error} Si la suppression échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const deleteGameData = async (gameId) => {
+  return await apiCall(`${apiUrl}/games/${gameId}`, { method: 'DELETE' });
 };
 
 /**
@@ -185,6 +203,25 @@ export const createGameUser = async (gameData) => {
     method: 'POST',
     body: gameData,
   });
+};
+
+/**
+ * Récupère la liste des utilisateurs associés aux jeux.
+ * @returns {Promise<Object>} Les données des utilisateurs de jeux.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const fetchGameUsers = async () => {
+  return await apiCall(`${apiUrl}/games-user`);
+};
+
+/**
+ * Récupère un jeu en fonction de son identifiant.
+ * @param {number} id - L'identifiant du jeu à récupérer.
+ * @returns {Promise<Object>} Les données du jeu.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const fetchGameUserById = async (idGame, idUser) => {
+  return await apiCall(`${apiUrl}/games-user/${idGame}?userId=${idUser}`);
 };
 
 /**
@@ -211,16 +248,6 @@ export const deleteGameUser = async (gameUserId) => {
 };
 
 /**
- * Récupère un jeu en fonction de son identifiant.
- * @param {number} id - L'identifiant du jeu à récupérer.
- * @returns {Promise<Object>} Les données du jeu.
- * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
- */
-export const fetchGameUserById = async (idGame, idUser) => {
-  return await apiCall(`${apiUrl}/games-user/${idGame}?userId=${idUser}`);
-};
-
-/**
  * Fonction de requête asynchrone pour récupérer les jeux à partir d'une API en fonction de la recherche.
  *
  * @param {string} searchQuery - La chaîne de recherche utilisée pour trouver les jeux.
@@ -233,37 +260,10 @@ export const fetchGamesBySearch = async (searchQuery) => {
 };
 
 /**
- * Crée un nouveau jeu avec les données fournies.
- * @param {Object} gameData - Les données du jeu à créer.
- * @returns {Promise<Object>} Les données du jeu créé.
- * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ * Récupère les filtres applicables pour la recherche de jeux.
+ * @returns {Promise<Object>} Les filtres disponibles pour les jeux.
+ * @throws {Error} Si la réponse du serveur n'est pas correcte ou si aucun filtre n'est trouvé.
  */
-export const createGameData = async (gameData) => {
-  return await apiCall(`${apiUrl}/games`, {
-    method: 'POST',
-    body: gameData,
-  });
-};
-
-/**
- * Supprime un jeu en fonction de son identifiant.
- * @param {string} gameId - L'identifiant du jeu à supprimer.
- * @returns {Promise<Object>} Les données de la suppression.
- * @throws {Error} Si la suppression échoue ou si une erreur est renvoyée par le serveur.
- */
-export const deleteGameData = async (gameId) => {
-  return await apiCall(`${apiUrl}/games/${gameId}`, { method: 'DELETE' });
-};
-
-/**
- * Met à jour les données d'un jeu existant.
- * @param {Object} gameData - Les données du jeu à mettre à jour.
- * @returns {Promise<Object>} Les données du jeu mis à jour.
- * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
- */
-export const updateGameData = async (gameData) => {
-  return await apiCall(`${apiUrl}/games/${gameData.id}`, {
-    method: 'PUT',
-    body: gameData,
-  });
+export const fetchFilters = async () => {
+  return await apiCall(`${apiUrl}/games/filters`);
 };
