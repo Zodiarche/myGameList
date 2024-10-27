@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import ModalWrapper from './ModalWrapper';
-import { deleteGameData, updateGameData, fetchFilters } from '../../services/api';
+import { updateGameData, fetchFilters } from '../../services/api';
 
 const ModalEditGameData = ({ show, onClose, game, refetch }) => {
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
@@ -49,18 +49,18 @@ const ModalEditGameData = ({ show, onClose, game, refetch }) => {
     });
   }, [game]);
 
-  const updateGameData = (key, value) => {
+  const sendGameDataUpdate = (key, value) => {
     setGameData((prevData) => ({ ...prevData, [key]: value }));
   };
 
   const handleInputChange = ({ target: { name, value } }) => {
     if (name === 'background_image') {
       validateAndSetImage(value.trim(), (isValid) => {
-        if (isValid) updateGameData(name, value.trim());
+        if (isValid) sendGameDataUpdate(name, value.trim());
         else alert("L'URL fournie pour l'image de fond n'est pas valide. Veuillez vérifier le lien.");
       });
     } else {
-      updateGameData(name, value);
+      sendGameDataUpdate(name, value);
     }
   };
 
@@ -68,7 +68,7 @@ const ModalEditGameData = ({ show, onClose, game, refetch }) => {
     const { value } = event.target;
 
     // Mise à jour des données
-    updateGameData(key, isMultiSelect ? [...new Set([...gameData[key], value])] : value);
+    sendGameDataUpdate(key, isMultiSelect ? [...new Set([...gameData[key], value])] : value);
 
     // Réinitialise la sélection à l'option "Choisissez ..." en remettant l'index sélectionné à 0
     event.target.selectedIndex = 0;
@@ -76,12 +76,12 @@ const ModalEditGameData = ({ show, onClose, game, refetch }) => {
 
   const handleItemRemove = (item, key) => {
     if (Array.isArray(gameData[key])) {
-      updateGameData(
+      sendGameDataUpdate(
         key,
         gameData[key].filter((i) => i !== item)
       );
     } else {
-      updateGameData(key, '');
+      sendGameDataUpdate(key, '');
     }
   };
 
@@ -100,7 +100,7 @@ const ModalEditGameData = ({ show, onClose, game, refetch }) => {
   const handleImageAdd = async (url, key, setter) => {
     validateAndSetImage(url.trim(), (isValid) => {
       if (isValid) {
-        updateGameData(key, key === 'short_screenshots' ? [...new Set([...gameData[key], url.trim()])] : url.trim());
+        sendGameDataUpdate(key, key === 'short_screenshots' ? [...new Set([...gameData[key], url.trim()])] : url.trim());
         setter('');
       } else {
         alert("L'URL fournie n'est pas une image valide. Veuillez vérifier le lien.");
@@ -118,20 +118,6 @@ const ModalEditGameData = ({ show, onClose, game, refetch }) => {
       if (refetch) refetch();
     } catch (error) {
       console.error('Erreur lors de la modification du jeu :', error);
-    }
-  };
-
-  const handleDeleteGame = async () => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce jeu ?')) return;
-
-    try {
-      await deleteGameData(game._id);
-      alert('Jeu supprimé avec succès');
-      queryClient.invalidateQueries(['games']);
-      onClose();
-      if (refetch) refetch();
-    } catch (error) {
-      console.error('Erreur lors de la suppression du jeu:', error);
     }
   };
 
@@ -269,9 +255,6 @@ const ModalEditGameData = ({ show, onClose, game, refetch }) => {
 
         <button className="modal__submit" type="submit">
           Mettre à jour
-        </button>
-        <button className="modal__delete" type="button" onClick={handleDeleteGame}>
-          Supprimer le jeu
         </button>
       </form>
     </ModalWrapper>

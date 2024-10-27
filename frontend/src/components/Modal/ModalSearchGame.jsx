@@ -48,7 +48,10 @@ const ModalSearchGame = ({ show, onClose, onSelectGame, isForDeletion = false, i
 
     return null;
   };
+
   const handleGameClick = (game) => {
+    handleClearSearch();
+
     if (isForDeletion) {
       onSelectGame(game._id, refetch);
     } else if (isForEditing) {
