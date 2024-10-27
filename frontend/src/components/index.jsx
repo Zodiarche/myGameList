@@ -6,7 +6,7 @@ export { default as LandingPage } from './LandingPage';
 export { default as Loading } from './Loading';
 export { default as MenuButton } from './MenuButton';
 
-export { default as ModalAddGame } from './Modal/ModalAddGame';
+export { default as ModalAddGameData } from './Modal/ModalAddGameData';
 export { default as ModalAddNote } from './Modal/ModalAddNote';
 export { default as ModalEditGameData } from './Modal/ModalEditGameData';
 export { default as ModalEditUserGame } from './Modal/ModalEditUserGame';

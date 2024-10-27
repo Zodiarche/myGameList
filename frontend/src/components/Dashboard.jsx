@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { ModalAddGame, ModalSearchGame, ModalEditGameData } from '../components';
+import { ModalAddGameData, ModalSearchGame, ModalEditGameData } from '../components';
 
 import { deleteGameData } from '../services/api';
 
@@ -65,8 +65,14 @@ const Dashboard = () => {
             </button>
           </div>
 
-          <ModalAddGame show={isAddGameModalOpen} onClose={() => setAddGameModalOpen(false)} />
-          <ModalSearchGame show={isSearchGameModalOpen} onClose={() => setSearchGameModalOpen(false)} isForDeletion={isDeletionMode} isForEditing={!isDeletionMode} onSelectGame={isDeletionMode ? handleSelectGameForDeletion : handleSelectGameForEditing} />
+          <ModalAddGameData show={isAddGameModalOpen} onClose={() => setAddGameModalOpen(false)} />
+          <ModalSearchGame
+            show={isSearchGameModalOpen}
+            onClose={() => setSearchGameModalOpen(false)}
+            isForDeletion={isDeletionMode}
+            isForEditing={!isDeletionMode}
+            onSelectGame={isDeletionMode ? handleSelectGameForDeletion : handleSelectGameForEditing}
+          />
           {selectedGame && <ModalEditGameData show={isEditGameModalOpen} onClose={() => setEditGameModalOpen(false)} game={selectedGame} refetch={() => setSearchGameModalOpen(true)} />}
         </div>
       </section>

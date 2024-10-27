@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useQuery } from '@tanstack/react-query';
+
 import { createGameData, fetchFilters } from '../../services/api';
 import ModalWrapper from './ModalWrapper';
 
-const ModalAddGame = ({ show, onClose }) => {
+const ModalAddGameData = ({ show, onClose }) => {
   const [newScreenshotUrl, setNewScreenshotUrl] = useState('');
   const [newBackgroundImageUrl, setNewBackgroundImageUrl] = useState('');
   const [gameData, setGameData] = useState({
@@ -236,4 +237,4 @@ const ModalAddGame = ({ show, onClose }) => {
   );
 };
 
-export default ModalAddGame;
+export default ModalAddGameData;
