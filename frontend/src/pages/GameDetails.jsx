@@ -96,7 +96,7 @@ const GameDetails = () => {
           {!isLoading && !isError && (
             <>
               <h1 className="game-details__title">{game.name}</h1>
-              <p>{game.description}</p>
+              <p className="game-details__description">{game.description}</p>
 
               <div className="game-details__cols">
                 <div className="game-details__col game-details__col--left">

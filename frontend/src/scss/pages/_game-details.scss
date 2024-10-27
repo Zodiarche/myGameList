@@ -46,6 +46,12 @@
       }
 
       &__title {
+        margin-top: 0;
+        margin-bottom: 6rem;
+      }
+
+      &__description {
+        @extend .states__info;
       }
 
       &__subtitle {
