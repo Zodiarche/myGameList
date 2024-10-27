@@ -27,8 +27,10 @@ const ProfileSettings = () => {
 
   useEffect(() => {
     if (user) return;
+
     queryClient.removeQueries(['userProfile']);
     queryClient.setQueryData(['userProfile'], null);
+    navigate('/login');
   }, [user]);
 
   const mutation = useMutation({

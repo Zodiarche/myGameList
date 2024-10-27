@@ -8,7 +8,6 @@ import cookieParser from 'cookie-parser';
 import userRoutes from './routes/user.js';
 import gamesRoutes from './routes/game-data.js';
 import gamesUserRoutes from './routes/game-user.js';
-import { isAuthenticated } from './middlewares/isAuthenticated.js';
 import { saveGamesToDB } from './import-games.js';
 
 dotenv.config();
@@ -45,7 +44,7 @@ app.use(bodyParser.json());
 
 app.use('/user', userRoutes);
 app.use('/games', gamesRoutes);
-app.use('/games-user', isAuthenticated, gamesUserRoutes);
+app.use('/games-user', gamesUserRoutes);
 
 /**
  * Démarrage du serveur.
