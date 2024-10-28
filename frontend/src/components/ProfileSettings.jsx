@@ -14,6 +14,7 @@ const ProfileSettings = () => {
 
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [infoMessage, setInfoMessage] = useState('');
 
   const {
     data: user,
@@ -39,8 +40,17 @@ const ProfileSettings = () => {
       queryClient.invalidateQueries(['userProfile']);
       setSuccessMessage('Modification effectuée avec succès !');
       setErrorMessage('');
+      setInfoMessage('');
     },
     onError: (error) => {
+      if (error.message === 'Aucune modification n’a été effectuée.') {
+        setSuccessMessage('');
+        setErrorMessage('');
+        setInfoMessage('Aucune modification n’a été effectuée.');
+        return;
+      }
+
+      setInfoMessage('');
       setSuccessMessage('');
       setErrorMessage(error.message || 'Une erreur est survenue. Veuillez réessayer.');
     },
@@ -74,8 +84,9 @@ const ProfileSettings = () => {
         <>
           <h1 className="profile__title">Profil de {user?.username}</h1>
 
-          {successMessage && <p className="profile__success">{successMessage}</p>}
-          {errorMessage && <p className="profile__error">{errorMessage}</p>}
+          {successMessage && <p className="states__success">{successMessage}</p>}
+          {errorMessage && <p className="states__error">{errorMessage}</p>}
+          {infoMessage && <p className="states__highlight">{infoMessage}</p>}
 
           <form className="profile__form" onSubmit={handleSubmit}>
             <div className="profile__field-container">

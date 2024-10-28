@@ -17,16 +17,6 @@
         margin: 0;
       }
 
-      &__success {
-        @extend .states;
-        @extend .states__success;
-      }
-
-      &__error {
-        @extend .states;
-        @extend .states__error;
-      }
-
       &__cols {
         @include from("desktop") {
           display: flex;
