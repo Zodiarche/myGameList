@@ -3,8 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import ProfileSettings from '../components/ProfileSettings';
-import MyGames from '../components/MyGames';
 import Dashboard from '../components/Dashboard';
+import MyGames from '../components/MyGames';
+import { Followed } from '../components';
 
 import { fetchProfile, logoutUser } from '../services/api';
 
@@ -63,6 +64,18 @@ const Profile = () => {
                     </a>
                   </li>
 
+                  <li className="profile__item">
+                    <a
+                      href="#"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        setActiveTab('followers');
+                      }}
+                    >
+                      Suivi(e)s
+                    </a>
+                  </li>
+
                   {user?.isAdmin && (
                     <li className="profile__item">
                       <a
@@ -96,6 +109,7 @@ const Profile = () => {
               {activeTab === 'profile' && <ProfileSettings />}
               {activeTab === 'games' && <MyGames />}
               {activeTab === 'dashboard' && <Dashboard />}
+              {activeTab === 'followers' && <Followed />}
             </div>
           </div>
         </div>

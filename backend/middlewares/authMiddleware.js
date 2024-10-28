@@ -66,7 +66,7 @@ export const isSelfOrAdmin = (request, response, next) => {
   const userId = request.params.id;
   const requestUserId = userData.userId;
   const isAdmin = userData.isAdmin;
-  if (!isAdmin || userId !== requestUserId) return response.status(403).json({ message: 'Accès refusé, privilèges insuffisants' });
+  if (!isAdmin && userId !== requestUserId) return response.status(403).json({ message: 'Accès refusé, privilèges insuffisants' });
 
   request.userData = userData;
   next();

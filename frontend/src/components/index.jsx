@@ -1,4 +1,5 @@
 export { default as Dashboard } from './Dashboard';
+export { default as Followed } from './Followed';
 export { default as Footer } from './Footer';
 export { default as GameFilters } from './GameFilters';
 export { default as Header } from './Header';
@@ -11,4 +12,5 @@ export { default as ModalAddNote } from './Modal/ModalAddNote';
 export { default as ModalEditGameData } from './Modal/ModalEditGameData';
 export { default as ModalEditUserGame } from './Modal/ModalEditUserGame';
 export { default as ModalSearchGame } from './Modal/ModalSearchGame';
+export { default as ModalSearchUser } from './Modal/ModalSearchUser';
 export { default as ModalWrapper } from './Modal/ModalWrapper';

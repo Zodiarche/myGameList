@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import SwiperNavigationButton from '../components/swiperNavigationButton';
 import { ModalAddNote, ModalEditUserGame } from '../components';
 
-import { createGameUser, fetchGameById, fetchGameUserById, fetchProfile } from '../services/api';
+import { createGameUser, fetchGameById, fetchGameUserById, fetchProfile, updateGameUser } from '../services/api';
 import { initializeSwiperJS } from '../services/swiper/main.js';
 
 const GameDetails = () => {
@@ -60,17 +60,41 @@ const GameDetails = () => {
     },
   });
 
+  const updateGameMutation = useMutation({
+    mutationFn: updateGameUser,
+    onSuccess: () => {
+      alert('Jeu modifié avec succès !');
+      setIsModalOpen(false);
+    },
+    onError: (error) => {
+      console.error('Erreur lors de la modification du jeu', error);
+    },
+  });
+
   const handleSubmit = ({ note, etat, commentaire }) => {
     const hour = new Date().getTime();
 
-    mutation.mutate({
-      idGameBD: id,
-      note,
-      etat,
-      commentaire,
-      heure: hour,
-      idUser: user._id,
-    });
+    // Si le jeu est déjà dans la bibliothèque de l'utilisateur, on le met à jour
+    if (gameUser) {
+      updateGameMutation.mutate({
+        id: id,
+        note,
+        etat,
+        commentaire,
+        heure: hour,
+        idUser: user._id,
+      });
+    } else {
+      // Sinon, on l'ajoute à la bibliothèque de l'utilisateur
+      mutation.mutate({
+        idGameBD: id,
+        note,
+        etat,
+        commentaire,
+        heure: hour,
+        idUser: user._id,
+      });
+    }
   };
 
   // Fonction pour afficher plus ou moins de tags
@@ -96,7 +120,7 @@ const GameDetails = () => {
           {!isLoading && !isError && (
             <>
               <h1 className="game-details__title">{game.name}</h1>
-              <p className="game-details__description">{game.description}</p>
+              {game.description && <p className="game-details__description">{game.description}</p>}
 
               <div className="game-details__cols">
                 <div className="game-details__col game-details__col--left">

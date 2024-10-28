@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { ModalEditUserGame } from './index';
-import { fetchGameUsers, updateGameUser } from '../services/api';
+import { fetchGameUsers, fetchProfile, updateGameUser } from '../services/api';
 
 const MyGames = () => {
   const queryClient = useQueryClient();
@@ -33,10 +33,16 @@ const MyGames = () => {
     setIsModalOpen(true);
   };
 
-  const handleSubmitEditGame = (updatedGameData) => {
+  const handleSubmitEditGame = ({ note, etat, commentaire }) => {
+    const hour = new Date().getTime();
+
     updateGameMutation.mutate({
-      id: selectedGame._id,
-      ...updatedGameData,
+      id: selectedGame.idGameBD,
+      note,
+      etat,
+      commentaire,
+      heure: hour,
+      idUser: selectedGame.idUser,
     });
   };
 

@@ -39,6 +39,19 @@ const apiCall = async (url, { method = 'GET', body, headers = {}, credentials = 
 };
 
 /**
+ * Recherche les utilisateurs par nom d'utilisateur (username) en fonction de la chaîne de recherche fournie.
+ *
+ * @param {string} usernameQuery - La chaîne de recherche utilisée pour trouver les utilisateurs par nom d'utilisateur.
+ * @returns {Promise<Object[]>} - Retourne une promesse résolue avec une liste d'objets utilisateur correspondant aux critères de recherche.
+ * @throws {Error} - Renvoie une erreur si la requête échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const fetchUsersByUsername = async (usernameQuery) => {
+  const params = new URLSearchParams({ query: usernameQuery }).toString();
+
+  return await apiCall(`${apiUrl}/user/search?${params}`);
+};
+
+/**
  * Inscrit un nouvel utilisateur avec un nom d'utilisateur, une adresse e-mail et un mot de passe.
  * @param {Object} userData - Les informations de l'utilisateur à inscrire.
  * @param {string} userData.username - Le nom d'utilisateur choisi.
@@ -80,12 +93,34 @@ export const logoutUser = async () => {
 };
 
 /**
+ * Suit un utilisateur en fonction de son identifiant.
+ * @param {string} userIdToFollow - L'identifiant de l'utilisateur à suivre.
+ * @returns {Promise<Object>} Les données mises à jour de l'utilisateur après le suivi.
+ * @throws {Error} Si le suivi échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const followUser = async (userIdToFollow) => {
+  return await apiCall(`${apiUrl}/user/${userIdToFollow}/follow`, {
+    method: 'POST',
+  });
+};
+
+/**
  * Récupère les informations du profil utilisateur connecté.
  * @returns {Promise<Object>} Les données du profil utilisateur.
  * @throws {Error} Si l'utilisateur n'est pas autorisé ou s'il y a une erreur de serveur.
  */
 export const fetchProfile = async () => {
   return await apiCall(`${apiUrl}/user/profile`, { method: 'GET' });
+};
+
+/**
+ * Récupère les informations d'un utilisateur en fonction de son identifiant.
+ * @param {string} userId - L'identifiant de l'utilisateur à récupérer.
+ * @returns {Promise<Object>} Les données de l'utilisateur.
+ * @throws {Error} Si l'appel échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const fetchUserById = async (userId) => {
+  return await apiCall(`${apiUrl}/user/${userId}`, { method: 'GET' });
 };
 
 /**
@@ -212,6 +247,18 @@ export const createGameUser = async (gameData) => {
  */
 export const fetchGameUsers = async () => {
   return await apiCall(`${apiUrl}/games-user`);
+};
+
+/**
+ * Récupère la bibliothèque de jeux d'un utilisateur suivi par son identifiant.
+ * @param {string} userId - L'identifiant de l'utilisateur dont la bibliothèque doit être récupérée.
+ * @returns {Promise<Object[]>} - Retourne une liste des jeux dans la bibliothèque de l'utilisateur.
+ * @throws {Error} - Renvoie une erreur si la requête échoue ou si une erreur est renvoyée par le serveur.
+ */
+export const fetchUserLibrary = async (userId) => {
+  return await apiCall(`${apiUrl}/games-user/library/${userId}`, {
+    method: 'GET',
+  });
 };
 
 /**

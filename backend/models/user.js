@@ -7,6 +7,8 @@ const userSchema = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
+  followers: [{ type: Schema.Types.ObjectId, ref: 'user' }],
+  following: [{ type: Schema.Types.ObjectId, ref: 'user' }],
 });
 
 export default mongoose.model('user', userSchema);

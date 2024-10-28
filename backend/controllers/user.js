@@ -104,6 +104,25 @@ export const getUsers = async (_, response) => {
 };
 
 /**
+ * Recherche des utilisateurs en fonction du nom d'utilisateur.
+ * @param {Express.Request} request - L'objet de requête.
+ * @param {Express.Response} response - L'objet de réponse.
+ * @returns {Promise<void>}
+ */
+export const searchUsers = async (request, response) => {
+  const { query } = request.query;
+
+  try {
+    // Recherche insensible à la casse
+    const users = await user.find({ username: { $regex: query, $options: 'i' } }).select('username _id');
+
+    response.json(users);
+  } catch (error) {
+    response.status(500).json({ message: 'Erreur lors de la recherche des utilisateurs' });
+  }
+};
+
+/**
  * Récupère un user par ID.
  * @param {Express.Request} request - L'objet de requête.
  * @param {Express.Response} response - L'objet de réponse.
@@ -111,10 +130,13 @@ export const getUsers = async (_, response) => {
  */
 export const getUserById = async (request, response) => {
   try {
-    const user = await user.findById(request.params.id);
-    if (!user) return response.status(404).json({ message: 'Utilisateur non trouvé' });
+    const userData = await user.findById(request.params.id, 'username _id');
+    if (!userData) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
-    response.json(user);
+    response.json({
+      username: userData.username,
+      id: userData._id,
+    });
   } catch (error) {
     response.status(500).json({ message: error.message });
   }
@@ -228,4 +250,30 @@ export const logoutUser = async (_, response) => {
   });
 
   response.status(200).json({ message: 'Déconnexion réussie, token effacé.' });
+};
+
+export const followUser = async (request, response) => {
+  const userId = request.userData.userId;
+  const followId = request.params.id;
+
+  try {
+    // Vérifiez si l'utilisateur essaie de se suivre lui-même
+    if (userId === followId) return response.status(400).json({ message: 'Vous ne pouvez pas vous suivre vous-même.' });
+
+    // Ajouter l'ID de `followId` dans la liste `following` de l'utilisateur courant
+    const currentUser = await user.findByIdAndUpdate(userId, { $addToSet: { following: followId } }, { new: true });
+
+    // Ajouter l'ID de `userId` dans la liste `followers` de l'utilisateur suivi
+    const followedUser = await user.findByIdAndUpdate(followId, { $addToSet: { followers: userId } }, { new: true });
+
+    if (!currentUser || !followedUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
+
+    response.json({
+      message: 'Utilisateur suivi avec succès',
+      currentUser,
+      followedUser,
+    });
+  } catch (error) {
+    response.status(500).json({ message: 'Erreur lors du suivi de l’utilisateur' });
+  }
 };

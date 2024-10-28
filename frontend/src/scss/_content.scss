@@ -184,6 +184,10 @@ main {
     @import "./pages/contact.scss";
   }
 
+  &#followed {
+    @import "./pages/followed.scss";
+  }
+
   &#additional-pages {
     font-size: 2rem;
     padding: 8rem 0;
