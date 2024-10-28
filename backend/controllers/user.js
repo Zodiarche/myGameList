@@ -71,8 +71,11 @@ export const createUser = async (request, response) => {
   if (isAdminError) return response.status(400).json({ field: 'isAdmin', message: isAdminError });
 
   try {
+    const existingUsername = await user.findOne({ username });
+    if (existingUsername) return response.status(400).json({ field: 'username', message: "Ce nom d'utilisateur existe déjà." });
+
     const existingUser = await user.findOne({ email });
-    if (existingUser) return response.status(400).json({ message: 'Cet utilisateur existe déjà.' });
+    if (existingUser) return response.status(400).json({ field: 'email', message: 'Cet utilisateur existe déjà.' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new user({ username, email, password: hashedPassword, isAdmin });
@@ -127,38 +130,60 @@ export const updateUser = async (request, response) => {
   try {
     const { username, email, oldPassword, newPassword, confirmPassword, ...otherUpdates } = request.body;
 
+    // Recherche de l'utilisateur dans la base de données par ID
     const existingUser = await user.findById(request.params.id);
     if (!existingUser) return response.status(404).json({ message: 'Utilisateur non trouvé' });
 
+    // Validation du nom d'utilisateur
     const usernameError = isUsernameValid(username);
     if (usernameError) return response.status(400).json({ message: usernameError });
 
+    // Validation de l'email
     const emailError = isEmailValid(email);
     if (emailError) return response.status(400).json({ message: emailError });
 
+    // Vérification de l'unicité du nom d'utilisateur
+    const existingUsername = await user.findOne({ username });
+    if (existingUsername && existingUser.username !== username) return response.status(400).json({ message: "Ce nom d'utilisateur existe déjà." });
+
+    // Vérification de l'unicité de l'email
+    const existingEmail = await user.findOne({ email });
+    if (existingEmail && existingUser.email !== email) return response.status(400).json({ message: 'Ce mail est déjà connecté à un autre compte.' });
+
+    // Gestion des champs de mot de passe si ceux-ci sont fournis
     if (oldPassword || newPassword || confirmPassword) {
+      // Validation de l'ancien mot de passe en comparant avec celui en base
       const isOldPasswordValid = await bcrypt.compare(oldPassword, existingUser.password);
       if (!isOldPasswordValid) return response.status(400).json({ message: 'Ancien mot de passe incorrect.' });
 
+      // Validation du nouveau mot de passe
       const passwordError = isPasswordValid(newPassword);
       if (passwordError) return response.status(400).json({ message: passwordError });
 
+      // Vérification que le nouveau mot de passe et la confirmation correspondent
       if (newPassword !== confirmPassword) return response.status(400).json({ message: 'Le nouveau mot de passe et la confirmation ne correspondent pas.' });
+
+      // Vérification que le nouveau mot de passe est différent de l'ancien
       if (oldPassword === newPassword) return response.status(400).json({ message: "Le nouveau mot de passe ne peut pas être le même que l'ancien." });
 
+      // Hachage du nouveau mot de passe avant mise à jour
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       otherUpdates.password = hashedPassword;
     }
 
+    // Vérification qu'au moins un changement a été effectué
     if (existingUser.username === username && existingUser.email === email && !oldPassword && !newPassword && !confirmPassword) {
       return response.status(400).json({ message: 'Aucune modification n’a été effectuée.' });
     }
 
+    // Mise à jour de l'utilisateur dans la base de données avec les nouvelles informations
     const updatedUser = await user.findByIdAndUpdate(request.params.id, { $set: { username, email, ...otherUpdates } }, { new: true });
     if (!updatedUser) return response.status(404).json({ message: 'Échec de la mise à jour de l’utilisateur' });
 
+    // Réponse avec l'utilisateur mis à jour
     response.json(updatedUser);
   } catch (error) {
+    // Gestion des erreurs internes et réponse avec un code d'erreur 500
     console.error(error);
     response.status(500).json({ message: 'Une erreur interne est survenue.' });
   }
