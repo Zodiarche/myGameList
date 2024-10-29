@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>myGameList</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script src="/modules/jquery/jquery.min.js"></script>
+    <script src="/modules/swiper/swiper-bundle.min.js"></script>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      function onReCAPTCHASuccess(token) {
+        const submitButton = document.getElementById('contact-submit');
+        if (!submitButton) return;
+
+        submitButton.disabled = false;
+      }
+
+      function onReCAPTCHAExpired() {
+        const submitButton = document.getElementById('contact-submit');
+        if (!submitButton) return;
+
+        submitButton.disabled = true;
+      }
+    </script>
+  </body>
+</html>
