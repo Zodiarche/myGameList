@@ -54,7 +54,7 @@ const PrivacyPolicy = () => {
           <h3>Contact</h3>
           <p>
             Pour toute question relative à cette politique de confidentialité ou si vous souhaitez exercer vos droits relatifs à vos données personnelles, veuillez nous contacter à
-            <a href="mailto:digital@agencebuzz.com">digital@agencebuzz.com</a>
+            <Link to="/">myGameList</Link>
             ou via notre formulaire de contact disponible sur le site.
           </p>
 
